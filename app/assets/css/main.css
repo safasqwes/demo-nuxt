@@ -1,0 +1,32 @@
+/* Global styles for NovelHub */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #f7fafc;
+  color: #2d3748;
+}
+
+html, body, #__nuxt {
+  height: 100%;
+}
+
+/* Skip to main content link for accessibility */
+.skip-to-content {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #667eea;
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  z-index: 100;
+}
+
+.skip-to-content:focus {
+  top: 0;
+}
+
