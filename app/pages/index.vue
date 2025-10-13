@@ -1,5 +1,27 @@
 <template>
   <div class="home">
+    <!-- Banner Carousel -->
+    <BannerCarousel />
+    
+    <!-- Search Bar -->
+    <SearchBar />
+    
+    <!-- Rankings Section -->
+    <div class="rankings-section">
+      <RankingList
+        title="📊 Monthly Reading Ranking"
+        icon="🔥"
+        :novels="novelStore.monthlyRanking"
+        type="monthly"
+      />
+      <RankingList
+        title="💖 Bookmark Ranking"
+        icon="⭐"
+        :novels="novelStore.bookmarkRanking"
+        type="bookmark"
+      />
+    </div>
+    
     <div class="welcome-card">
       <h2>Welcome to NovelHub!</h2>
       <p class="version">Powered by Nuxt {{ nuxtVersion }}</p>
@@ -115,6 +137,9 @@ useHead({
   ],
 })
 
+// Stores
+const novelStore = useNovelStore()
+
 // Component state
 const nuxtVersion = '4.1.3'
 const count = ref(1)
@@ -166,23 +191,32 @@ const testApi = async () => {
   width: 100%;
 }
 
+/* Rankings Section */
+.rankings-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
 .welcome-card {
-  background: white;
+  background: var(--bg-card);
   border-radius: 12px;
   padding: 40px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
 }
 
 h2 {
   font-size: 36px;
   margin: 0 0 10px 0;
-  color: #2d3748;
+  color: var(--text-primary);
   text-align: center;
 }
 
 .version {
   text-align: center;
-  color: #667eea;
+  color: var(--color-primary);
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 40px;
@@ -196,16 +230,17 @@ h2 {
 }
 
 .feature-card {
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: var(--gradient-secondary);
   padding: 30px;
   border-radius: 10px;
   text-align: center;
   transition: transform 0.3s, box-shadow 0.3s;
+  border: 1px solid var(--border-color);
 }
 
 .feature-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-lg);
 }
 
 .icon {
@@ -215,23 +250,23 @@ h2 {
 
 .feature-card h3 {
   margin: 0 0 10px 0;
-  color: #2d3748;
+  color: var(--text-primary);
   font-size: 20px;
 }
 
 .feature-card p {
   margin: 0;
-  color: #4a5568;
+  color: var(--text-secondary);
   font-size: 14px;
   line-height: 1.6;
 }
 
 .counter-demo {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-primary);
   padding: 30px;
   border-radius: 10px;
   text-align: center;
-  color: white;
+  color: var(--text-inverse);
 }
 
 .counter-demo h3 {
@@ -243,7 +278,7 @@ h2 {
   font-size: 72px;
   font-weight: bold;
   margin: 20px 0;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  text-shadow: 2px 2px 4px var(--overlay-dark);
 }
 
 .buttons {
@@ -259,16 +294,16 @@ button {
   font-weight: bold;
   border: none;
   border-radius: 8px;
-  background: white;
-  color: #667eea;
+  background: var(--text-inverse);
+  color: var(--color-primary);
   cursor: pointer;
   transition: all 0.3s;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-sm);
 }
 
 button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-md);
 }
 
 button:active {
@@ -278,9 +313,9 @@ button:active {
 .api-demo {
   margin-top: 30px;
   padding: 30px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-primary);
   border-radius: 10px;
-  color: white;
+  color: var(--text-inverse);
 }
 
 .api-demo h3 {
@@ -294,8 +329,8 @@ button:active {
 }
 
 .test-btn {
-  background: white;
-  color: #667eea;
+  background: var(--text-inverse);
+  color: var(--color-primary);
   border: none;
   padding: 12px 30px;
   border-radius: 8px;
@@ -303,12 +338,12 @@ button:active {
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-sm);
 }
 
 .test-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-md);
 }
 
 .test-btn:disabled {
@@ -318,23 +353,24 @@ button:active {
 
 .novels-list {
   margin-top: 25px;
-  background: white;
+  background: var(--bg-card);
   padding: 20px;
   border-radius: 8px;
-  color: #2d3748;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
 }
 
 .novels-list h4 {
   margin: 0 0 15px 0;
-  color: #667eea;
+  color: var(--color-primary);
 }
 
 .novel-card {
   padding: 15px;
   margin-bottom: 10px;
-  background: #f7fafc;
+  background: var(--bg-secondary);
   border-radius: 6px;
-  border-left: 3px solid #667eea;
+  border-left: 3px solid var(--color-primary);
 }
 
 .novel-header {
@@ -345,36 +381,36 @@ button:active {
 }
 
 .novel-header strong {
-  color: #2d3748;
+  color: var(--text-primary);
   font-size: 16px;
 }
 
 .rating {
-  color: #f6ad55;
+  color: var(--color-accent);
   font-size: 14px;
 }
 
 .author {
   margin: 5px 0;
-  color: #4a5568;
+  color: var(--text-secondary);
   font-size: 14px;
 }
 
 .chapters {
   margin: 5px 0;
-  color: #718096;
+  color: var(--text-tertiary);
   font-size: 13px;
 }
 
 .fingerprint-info {
   margin-top: 15px;
   padding-top: 15px;
-  border-top: 2px solid #e2e8f0;
+  border-top: 2px solid var(--border-color);
 }
 
 .fingerprint-info p {
   margin: 5px 0;
-  color: #48bb78;
+  color: var(--color-success);
   font-size: 13px;
   font-weight: 600;
 }
@@ -382,14 +418,20 @@ button:active {
 .api-error {
   margin-top: 20px;
   padding: 15px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--overlay-light);
   border-radius: 6px;
-  border-left: 3px solid #fc8181;
+  border-left: 3px solid var(--color-error);
 }
 
 .api-error p {
   margin: 0;
-  color: white;
+  color: var(--text-inverse);
+}
+
+@media (max-width: 768px) {
+  .rankings-section {
+    grid-template-columns: 1fr;
+  }
 }
 </style>
 

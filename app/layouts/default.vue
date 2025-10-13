@@ -8,6 +8,9 @@
           <NuxtLink to="/" aria-label="Go to home page">Home</NuxtLink>
           <NuxtLink to="/about" aria-label="Learn about NovelHub">About</NuxtLink>
           
+          <!-- Theme Toggle -->
+          <ThemeToggle />
+          
           <!-- User Menu -->
           <div v-if="userStore.isAuthenticated" class="user-menu">
             <button class="user-btn" @click="showUserMenu = !showUserMenu">
@@ -70,14 +73,14 @@ const handleLogout = async () => {
 }
 
 // Close dropdown when clicking outside
-if (process.client) {
+onMounted(() => {
   document.addEventListener('click', (e) => {
     const target = e.target as HTMLElement
     if (!target.closest('.user-menu')) {
       showUserMenu.value = false
     }
   })
-}
+})
 </script>
 
 <style scoped>
@@ -85,6 +88,7 @@ if (process.client) {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: var(--bg-primary);
 }
 
 .container {
@@ -94,16 +98,16 @@ if (process.client) {
 }
 
 .header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: var(--gradient-primary);
+  color: var(--text-inverse);
   padding: 20px 0;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-md);
 }
 
 .logo {
   font-size: 28px;
   font-weight: bold;
-  color: white;
+  color: var(--text-inverse);
   text-decoration: none;
   margin-bottom: 15px;
   display: block;
@@ -122,30 +126,32 @@ if (process.client) {
 }
 
 .header nav a {
-  color: white;
+  color: var(--text-inverse);
   text-decoration: none;
   padding: 8px 16px;
   border-radius: 6px;
   transition: all 0.3s;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--overlay-light);
 }
 
 .header nav a:hover,
 .header nav a.router-link-active {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--overlay-medium);
   transform: translateY(-2px);
 }
 
 .main {
   flex: 1;
   padding: 40px 0;
+  background: var(--bg-primary);
 }
 
 .footer {
-  background: #2d3748;
-  color: white;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
   padding: 20px 0;
   text-align: center;
+  border-top: 1px solid var(--border-color);
 }
 
 .footer p {
@@ -161,24 +167,24 @@ if (process.client) {
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--overlay-light);
   border: none;
   border-radius: 6px;
-  color: white;
+  color: var(--text-inverse);
   cursor: pointer;
   transition: all 0.3s;
 }
 
 .user-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--overlay-medium);
 }
 
 .user-avatar {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: white;
-  color: #667eea;
+  background: var(--text-inverse);
+  color: var(--color-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -203,9 +209,10 @@ if (process.client) {
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
-  background: white;
+  background: var(--bg-card);
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-color);
   min-width: 160px;
   z-index: 100;
   overflow: hidden;
@@ -220,7 +227,7 @@ if (process.client) {
   padding: 12px 16px;
   background: none;
   border: none;
-  color: #2d3748;
+  color: var(--text-primary);
   text-decoration: none;
   cursor: pointer;
   transition: background 0.2s;
@@ -230,7 +237,7 @@ if (process.client) {
 
 .dropdown a:hover,
 .dropdown button:hover {
-  background: #f7fafc;
+  background: var(--bg-hover);
 }
 
 .auth-buttons {
@@ -248,22 +255,22 @@ if (process.client) {
 }
 
 .btn-login {
-  color: white;
-  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-inverse);
+  background: var(--overlay-light);
 }
 
 .btn-login:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--overlay-medium);
 }
 
 .btn-register {
-  color: #667eea;
-  background: white;
+  color: var(--color-primary);
+  background: var(--text-inverse);
 }
 
 .btn-register:hover {
   transform: translateY(-2px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-md);
 }
 
 @media (max-width: 768px) {

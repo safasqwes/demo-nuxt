@@ -6,8 +6,8 @@
 body {
   margin: 0;
   padding: 0;
-  background: #f7fafc;
-  color: #2d3748;
+  background: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 html, body, #__nuxt {
@@ -19,8 +19,8 @@ html, body, #__nuxt {
   position: absolute;
   top: -40px;
   left: 0;
-  background: #667eea;
-  color: white;
+  background: var(--color-primary);
+  color: var(--text-inverse);
   padding: 8px;
   text-decoration: none;
   z-index: 100;

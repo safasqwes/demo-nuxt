@@ -1,0 +1,240 @@
+/**
+ * Theme System with CSS Variables
+ * Supports Light and Dark modes with smooth transitions
+ */
+
+/* ============================================
+   CSS Variables for Light Theme
+   ============================================ */
+:root[data-theme='light'],
+.light {
+  /* Background Colors */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f7fafc;
+  --bg-tertiary: #edf2f7;
+  --bg-card: #ffffff;
+  --bg-hover: #e2e8f0;
+  
+  /* Text Colors */
+  --text-primary: #2d3748;
+  --text-secondary: #4a5568;
+  --text-tertiary: #718096;
+  --text-inverse: #ffffff;
+  
+  /* Brand Colors */
+  --color-primary: #2563eb;
+  --color-primary-dark: #1e40af;
+  --color-primary-light: #3b82f6;
+  --color-secondary: #1e3a8a;
+  
+  /* Accent Colors */
+  --color-accent: #f6ad55;
+  --color-success: #48bb78;
+  --color-warning: #ed8936;
+  --color-error: #fc8181;
+  --color-info: #4299e1;
+  
+  /* Border Colors */
+  --border-color: #e2e8f0;
+  --border-color-light: #edf2f7;
+  --border-color-dark: #cbd5e0;
+  
+  /* Shadow Colors */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  
+  /* Gradient - Deep Blue Theme */
+  --gradient-primary: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+  --gradient-secondary: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  
+  /* Overlay */
+  --overlay-light: rgba(255, 255, 255, 0.1);
+  --overlay-medium: rgba(255, 255, 255, 0.2);
+  --overlay-dark: rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================
+   CSS Variables for Dark Theme (Default)
+   ============================================ */
+:root[data-theme='dark'],
+.dark,
+:root {
+  /* Background Colors */
+  --bg-primary: #0f1419;
+  --bg-secondary: #1a1f2e;
+  --bg-tertiary: #252d3d;
+  --bg-card: #1e2433;
+  --bg-hover: #2d3548;
+  
+  /* Text Colors */
+  --text-primary: #e2e8f0;
+  --text-secondary: #cbd5e0;
+  --text-tertiary: #a0aec0;
+  --text-inverse: #1a202c;
+  
+  /* Brand Colors */
+  --color-primary: #3b82f6;
+  --color-primary-dark: #2563eb;
+  --color-primary-light: #60a5fa;
+  --color-secondary: #1e40af;
+  
+  /* Accent Colors */
+  --color-accent: #f6ad55;
+  --color-success: #68d391;
+  --color-warning: #f6ad55;
+  --color-error: #fc8181;
+  --color-info: #63b3ed;
+  
+  /* Border Colors */
+  --border-color: #2d3748;
+  --border-color-light: #374151;
+  --border-color-dark: #1a202c;
+  
+  /* Shadow Colors */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+  
+  /* Gradient - Deep Blue Theme */
+  --gradient-primary: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+  --gradient-secondary: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+  
+  /* Overlay */
+  --overlay-light: rgba(255, 255, 255, 0.05);
+  --overlay-medium: rgba(255, 255, 255, 0.1);
+  --overlay-dark: rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================
+   Global Theme Transitions
+   ============================================ */
+* {
+  transition: background-color 0.3s ease, 
+              color 0.3s ease, 
+              border-color 0.3s ease,
+              box-shadow 0.3s ease;
+}
+
+/* Disable transitions for certain elements */
+button,
+a,
+input,
+textarea,
+select {
+  transition: background-color 0.3s ease, 
+              color 0.3s ease, 
+              border-color 0.3s ease,
+              transform 0.2s ease,
+              box-shadow 0.2s ease;
+}
+
+/* ============================================
+   Base Element Styling
+   ============================================ */
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* Links */
+a {
+  color: var(--color-primary);
+}
+
+a:hover {
+  color: var(--color-primary-dark);
+}
+
+/* Cards */
+.card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-md);
+}
+
+/* Buttons */
+.btn-primary {
+  background: var(--gradient-primary);
+  color: var(--text-inverse);
+  border: none;
+}
+
+.btn-secondary {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+/* Inputs */
+input,
+textarea,
+select {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-tertiary);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--color-primary);
+  outline: none;
+  box-shadow: 0 0 0 3px var(--overlay-light);
+}
+
+/* Code blocks */
+code,
+pre {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+/* Scrollbar styling for dark theme */
+:root[data-theme='dark'] ::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+:root[data-theme='dark'] ::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+:root[data-theme='dark'] ::-webkit-scrollbar-thumb {
+  background: var(--bg-tertiary);
+  border-radius: 6px;
+  border: 2px solid var(--bg-secondary);
+}
+
+:root[data-theme='dark'] ::-webkit-scrollbar-thumb:hover {
+  background: var(--bg-hover);
+}
+
+/* Scrollbar styling for light theme */
+:root[data-theme='light'] ::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+:root[data-theme='light'] ::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+:root[data-theme='light'] ::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 6px;
+  border: 2px solid var(--bg-secondary);
+}
+
+:root[data-theme='light'] ::-webkit-scrollbar-thumb:hover {
+  background: var(--border-color-dark);
+}
+

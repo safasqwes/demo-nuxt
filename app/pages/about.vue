@@ -131,18 +131,19 @@ const vueVersion = '3.5.13'
 }
 
 .about-card {
-  background: white;
+  background: var(--bg-card);
   border-radius: 12px;
   padding: 40px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
 }
 
 h2 {
   font-size: 36px;
   margin: 0 0 30px 0;
-  color: #2d3748;
+  color: var(--text-primary);
   text-align: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-primary);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -157,18 +158,19 @@ h2 {
 section {
   padding: 20px;
   border-radius: 8px;
-  background: #f7fafc;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
 }
 
 section h3 {
   margin: 0 0 15px 0;
-  color: #2d3748;
+  color: var(--text-primary);
   font-size: 22px;
 }
 
 section p {
   margin: 0;
-  color: #4a5568;
+  color: var(--text-secondary);
   line-height: 1.8;
   font-size: 16px;
 }
@@ -176,7 +178,7 @@ section p {
 ul {
   margin: 0;
   padding-left: 20px;
-  color: #4a5568;
+  color: var(--text-secondary);
 }
 
 ul li {
@@ -194,8 +196,8 @@ ul li {
 .links a {
   display: inline-block;
   padding: 12px 24px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: var(--gradient-primary);
+  color: var(--text-inverse);
   text-decoration: none;
   border-radius: 8px;
   transition: all 0.3s;
@@ -204,16 +206,16 @@ ul li {
 
 .links a:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(102, 126, 234, 0.4);
+  box-shadow: var(--shadow-md);
 }
 
 .tech-stack {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: var(--gradient-primary);
+  color: var(--text-inverse);
 }
 
 .tech-stack h3 {
-  color: white;
+  color: var(--text-inverse);
 }
 
 .tech-grid {
@@ -223,7 +225,7 @@ ul li {
 }
 
 .tech-item {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--overlay-light);
   padding: 20px;
   border-radius: 8px;
   text-align: center;
@@ -232,7 +234,7 @@ ul li {
 }
 
 .tech-item:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--overlay-medium);
   transform: scale(1.05);
 }
 
