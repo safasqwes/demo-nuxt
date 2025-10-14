@@ -9,16 +9,16 @@
 
         <form @submit.prevent="handleSubmit" class="auth-form">
           <div class="form-group">
-            <label for="email">Email Address</label>
+            <label for="username">Username or Email</label>
             <input
-              id="email"
-              v-model="form.email"
-              type="email"
-              placeholder="your@email.com"
+              id="username"
+              v-model="form.username"
+              type="text"
+              placeholder="Enter your username or email"
               required
               :disabled="loading"
             />
-            <span v-if="errors.email" class="error">{{ errors.email }}</span>
+            <span v-if="errors.username" class="error">{{ errors.username }}</span>
           </div>
 
           <div class="form-group">
@@ -99,13 +99,13 @@ const { notify } = useNotification()
 const router = useRouter()
 
 const form = reactive({
-  email: '',
+  username: '',
   password: '',
   remember: false,
 })
 
 const errors = reactive({
-  email: '',
+  username: '',
   password: '',
 })
 
@@ -114,17 +114,16 @@ const showPassword = ref(false)
 
 // Validation
 const validateForm = (): boolean => {
-  errors.email = ''
+  errors.username = ''
   errors.password = ''
 
-  if (!form.email) {
-    errors.email = 'Email is required'
+  if (!form.username) {
+    errors.username = 'Username or email is required'
     return false
   }
 
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  if (!emailRegex.test(form.email)) {
-    errors.email = 'Invalid email format'
+  if (form.username.length < 3) {
+    errors.username = 'Username must be at least 3 characters'
     return false
   }
 
@@ -148,7 +147,7 @@ const handleSubmit = async () => {
   loading.value = true
 
   try {
-    const result = await userStore.login(form.email, form.password)
+    const result = await userStore.login(form.username, form.password)
 
     if (result.success) {
       notify.success('Welcome!', 'Login successful')

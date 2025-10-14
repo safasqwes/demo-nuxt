@@ -222,8 +222,6 @@
 </template>
 
 <script setup lang="ts">
-import { http } from '~/utils/http'
-
 definePageMeta({
   middleware: 'auth', // Will create this middleware
 })
@@ -333,20 +331,21 @@ const handleChangePassword = async () => {
   passwordLoading.value = true
 
   try {
-    const response = await http.post('/user/change-password', {
-      currentPassword: passwordForm.currentPassword,
-      newPassword: passwordForm.newPassword,
-    })
+    // 使用 userStore 的 changePassword 方法对接后端
+    const result = await userStore.changePassword(
+      passwordForm.currentPassword,
+      passwordForm.newPassword
+    )
 
-    if (response.success) {
-      notify.success('Success', 'Password changed successfully')
+    if (result.success) {
+      notify.success('Success', result.message || 'Password changed successfully')
       
       // Reset form
       passwordForm.currentPassword = ''
       passwordForm.newPassword = ''
       passwordForm.confirmPassword = ''
     } else {
-      notify.error('Error', response.message || 'Could not change password')
+      notify.error('Error', result.message || 'Could not change password')
     }
   } catch (error: any) {
     notify.error('Error', error.message || 'Something went wrong')
@@ -363,23 +362,36 @@ const handleDeleteAccount = async () => {
   if (!confirmed) return
 
   try {
-    const response = await http.delete('/user/account')
+    // 注意：后端暂未实现删除账号接口，此处为预留功能
+    notify.info('Coming Soon', 'Account deletion feature will be available soon')
     
-    if (response.success) {
-      notify.success('Account Deleted', 'Your account has been deleted')
-      await userStore.logout()
-      router.push('/')
-    }
+    // const { http } = await import('~/utils/http')
+    // const response = await http.delete('/user/account')
+    // 
+    // if (response.success) {
+    //   notify.success('Account Deleted', 'Your account has been deleted')
+    //   await userStore.logout()
+    //   router.push('/')
+    // }
   } catch (error: any) {
     notify.error('Error', error.message || 'Could not delete account')
   }
 }
 
-// Check authentication
-onMounted(() => {
+// Check authentication and load profile
+onMounted(async () => {
   if (!userStore.isAuthenticated) {
     router.push('/auth/login')
+    return
   }
+  
+  // Fetch latest profile data from backend
+  await userStore.fetchProfile()
+  
+  // Update form with latest data
+  profileForm.username = userStore.userInfo?.username || ''
+  profileForm.email = userStore.userInfo?.email || ''
+  profileForm.bio = userStore.userInfo?.bio || ''
 })
 </script>
 

@@ -101,7 +101,7 @@ export const useUserStore = defineStore('user', {
       this.isAuthenticated = true
       
       // Persist to localStorage
-      if (process.client) {
+      if (typeof window !== 'undefined') {
         localStorage.setItem('auth_token', token)
         if (refreshToken) {
           localStorage.setItem('refresh_token', refreshToken)
@@ -116,31 +116,71 @@ export const useUserStore = defineStore('user', {
       this.userInfo = info
       
       // Persist to localStorage
-      if (process.client) {
+      if (typeof window !== 'undefined') {
         localStorage.setItem('user_info', JSON.stringify(info))
       }
     },
 
     /**
      * Login action
+     * @param username - 用户名或邮箱
+     * @param password - 密码
      */
-    async login(email: string, password: string) {
+    async login(username: string, password: string) {
       this.loading = true
       try {
-        // Call login API
+        // Call login API - 对接后端 /api/auth/login
         const { http } = await import('~/utils/http')
-        const response = await http.post('/auth/login', { email, password })
+        const response = await http.post('/auth/login', { 
+          username, 
+          password 
+        })
         
-        if (response.success) {
-          this.setToken(response.data.token, response.data.refreshToken)
-          this.setUserInfo(response.data.user)
+        // 后端返回格式：{ code: 200, msg: "Login successful", user: {...}, accessToken: "...", refreshToken: "..." }
+        if (response.code === 200) {
+          this.setToken(response.accessToken, response.refreshToken)
+          this.setUserInfo(response.user)
           this.updateActivity()
           return { success: true }
         }
         
-        return { success: false, message: response.message }
+        return { success: false, message: response.msg || 'Login failed' }
       } catch (error: any) {
-        return { success: false, message: error.message }
+        const message = error.response?.data?.msg || error.response?.data?.message || error.message || 'Login failed'
+        return { success: false, message }
+      } finally {
+        this.loading = false
+      }
+    },
+
+    /**
+     * Register action
+     * @param username - 用户名
+     * @param email - 邮箱
+     * @param password - 密码
+     */
+    async register(username: string, email: string, password: string) {
+      this.loading = true
+      try {
+        // Call register API - 对接后端 /api/auth/register
+        const { http } = await import('~/utils/http')
+        const response = await http.post('/auth/register', { 
+          username, 
+          email, 
+          password 
+        })
+        
+        if (response.code === 200) {
+          this.setToken(response.accessToken, response.refreshToken)
+          this.setUserInfo(response.user)
+          this.updateActivity()
+          return { success: true }
+        }
+        
+        return { success: false, message: response.msg || 'Registration failed' }
+      } catch (error: any) {
+        const message = error.response?.data?.msg || error.response?.data?.message || error.message || 'Registration failed'
+        return { success: false, message }
       } finally {
         this.loading = false
       }
@@ -173,7 +213,7 @@ export const useUserStore = defineStore('user', {
       this.userInfo = null
       
       // Clear localStorage
-      if (process.client) {
+      if (typeof window !== 'undefined') {
         localStorage.removeItem('auth_token')
         localStorage.removeItem('refresh_token')
         localStorage.removeItem('user_info')
@@ -195,8 +235,8 @@ export const useUserStore = defineStore('user', {
           refreshToken: this.refreshToken,
         })
 
-        if (response.success) {
-          this.setToken(response.data.token, response.data.refreshToken)
+        if (response.code === 200) {
+          this.setToken(response.accessToken, response.refreshToken)
           return true
         }
 
@@ -215,16 +255,64 @@ export const useUserStore = defineStore('user', {
       this.loading = true
       try {
         const { http } = await import('~/utils/http')
-        const response = await http.put('/user/profile', data)
+        const response = await http.put('/auth/profile', data)
         
-        if (response.success) {
-          this.setUserInfo({ ...this.userInfo, ...response.data.user })
+        if (response.code === 200) {
+          const userData = response.user || response.data?.user || response.data || response
+          this.setUserInfo({ ...this.userInfo, ...userData })
           return { success: true }
         }
         
-        return { success: false, message: response.message }
+        return { success: false, message: response.msg || 'Update failed' }
       } catch (error: any) {
-        return { success: false, message: error.message }
+        const message = error.response?.data?.msg || error.response?.data?.message || error.message || 'Update failed'
+        return { success: false, message }
+      } finally {
+        this.loading = false
+      }
+    },
+
+    /**
+     * Get user profile from backend
+     */
+    async fetchProfile() {
+      try {
+        const { http } = await import('~/utils/http')
+        const response = await http.get('/auth/profile')
+        
+        if (response.code === 200) {
+          const userData = response.user || response.data?.user || response.data || response
+          this.setUserInfo(userData)
+          return { success: true }
+        }
+        
+        return { success: false, message: response.msg || 'Failed to fetch profile' }
+      } catch (error: any) {
+        const message = error.response?.data?.msg || error.response?.data?.message || error.message || 'Failed to fetch profile'
+        return { success: false, message }
+      }
+    },
+
+    /**
+     * Change password
+     */
+    async changePassword(oldPassword: string, newPassword: string) {
+      this.loading = true
+      try {
+        const { http } = await import('~/utils/http')
+        const response = await http.post('/auth/change-password', {
+          oldPassword,
+          newPassword,
+        })
+        
+        if (response.code === 200) {
+          return { success: true, message: 'Password changed successfully' }
+        }
+        
+        return { success: false, message: response.msg || 'Failed to change password' }
+      } catch (error: any) {
+        const message = error.response?.data?.msg || error.response?.data?.message || error.message || 'Failed to change password'
+        return { success: false, message }
       } finally {
         this.loading = false
       }
@@ -241,7 +329,7 @@ export const useUserStore = defineStore('user', {
      * Initialize from localStorage
      */
     initFromStorage() {
-      if (!process.client) return
+      if (typeof window === 'undefined') return
 
       const token = localStorage.getItem('auth_token')
       const refreshToken = localStorage.getItem('refresh_token')
@@ -271,16 +359,16 @@ export const useUserStore = defineStore('user', {
     },
 
     /**
-     * Check authentication status
+     * Check authentication status by fetching profile
      */
     async checkAuth() {
       if (!this.token) return false
 
       try {
         const { http } = await import('~/utils/http')
-        const response = await http.get('/auth/verify', {}, { not_show_error: true })
+        const response = await http.get('/auth/profile', {}, { not_show_error: true })
         
-        if (response.success) {
+        if (response.code === 200) {
           this.updateActivity()
           return true
         }

@@ -118,8 +118,6 @@
 </template>
 
 <script setup lang="ts">
-import { http } from '~/utils/http'
-
 // SEO metadata
 useHead({
   title: 'Register - NovelHub',
@@ -239,21 +237,13 @@ const handleSubmit = async () => {
   loading.value = true
 
   try {
-    const response = await http.post('/auth/register', {
-      username: form.username,
-      email: form.email,
-      password: form.password,
-    })
+    const result = await userStore.register(form.username, form.email, form.password)
 
-    if (response.success) {
-      // Auto login after registration
-      userStore.setToken(response.data.token, response.data.refreshToken)
-      userStore.setUserInfo(response.data.user)
-      
+    if (result.success) {
       notify.success('Welcome!', 'Account created successfully')
       await router.push('/')
     } else {
-      notify.error('Registration Failed', response.message || 'Could not create account')
+      notify.error('Registration Failed', result.message || 'Could not create account')
     }
   } catch (error: any) {
     const message = error.response?.data?.message || error.message || 'Something went wrong'

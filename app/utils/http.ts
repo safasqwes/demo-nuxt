@@ -10,9 +10,14 @@ import $config from '../config'
 import xcode from './xcode'
 import { getFingerprint, getMd5ByString } from './fingerprint'
 
+// Extended config type to include custom options
+interface ExtendedAxiosRequestConfig extends AxiosRequestConfig {
+  not_show_error?: boolean
+}
+
 // Initialize fingerprint
 let fp = '817ddfb1-ea6c-4e07-b37d-3aa9281e4fb7'
-if (process.client) {
+if (typeof window !== 'undefined') {
   getFingerprint().then((res) => {
     fp = res as string
   })
@@ -34,7 +39,7 @@ const instance = axios.create({
 instance.interceptors.request.use(
   async (config) => {
     const userStore = useUserStore()
-    const id_token = userStore.token
+    const accessToken = userStore.token  // JWT access token from backend
     const userInfo = userStore.userInfo
     let fp1 = ''
 
@@ -74,10 +79,10 @@ instance.interceptors.request.use(
       }
     }
 
-    // Add authorization token if enabled
-    if ($config?.apiConfig?.isHttpNeedToken && id_token) {
+    // Add JWT Authorization token if enabled
+    if ($config?.apiConfig?.isHttpNeedToken && accessToken) {
       if (!config.headers['Authorization']) {
-        config.headers['Authorization'] = 'Bearer ' + id_token
+        config.headers['Authorization'] = 'Bearer ' + accessToken
       }
     }
 
@@ -117,7 +122,7 @@ instance.interceptors.request.use(
     // Special handling for specific endpoints
     if (config.url?.includes('/api/pn/v1/generate_video_face')) {
       let sendData
-      if (id_token) {
+      if (accessToken) {
         sendData = {
           request_type: 1,
           ...config.data,
@@ -147,13 +152,24 @@ instance.interceptors.response.use(
   (response) => {
     return response
   },
-  (error: AxiosError) => {
+  async (error: AxiosError) => {
     const status = error.response?.status
 
     // Handle different error status codes
     if (status === 401) {
-      // Unauthorized - clear token and redirect to login
+      // Unauthorized - try to refresh token or redirect to login
       const userStore = useUserStore()
+      
+      // Try to refresh token
+      const refreshed = await userStore.refreshAuthToken()
+      
+      if (refreshed && error.config) {
+        // Retry the original request with new token
+        error.config.headers['Authorization'] = 'Bearer ' + userStore.token
+        return instance.request(error.config)
+      }
+      
+      // Clear auth and redirect to login
       userStore.clearAuth()
       
       Swal.fire({
@@ -164,10 +180,10 @@ instance.interceptors.response.use(
         customClass: {
           confirmButton: 'btn btn-primary',
         },
-      }).then(() => {
+        }).then(() => {
         // Redirect to login page
-        if (process.client) {
-          navigateTo('/login')
+        if (typeof window !== 'undefined') {
+          navigateTo('/auth/login')
         }
       })
       
@@ -182,7 +198,7 @@ instance.interceptors.response.use(
           confirmButton: 'btn btn-primary',
         },
       }).then(() => {
-        if (process.client) {
+        if (typeof window !== 'undefined') {
           window.location.reload()
         }
       })
@@ -206,7 +222,7 @@ instance.interceptors.response.use(
       const message = errorData?.detail || errorData?.message || error.message
 
       // Show error message if not disabled
-      const config: any = error.config
+      const config = error.config as ExtendedAxiosRequestConfig
       if (!config?.not_show_error) {
         Swal.fire({
           title: message,
@@ -226,7 +242,7 @@ instance.interceptors.response.use(
 /**
  * Generic HTTP request function
  */
-const g_http = <T = any>(config: AxiosRequestConfig): Promise<T> => {
+const g_http = <T = any>(config: ExtendedAxiosRequestConfig): Promise<T> => {
   return new Promise((resolve, reject) => {
     instance(config)
       .then((res: AxiosResponse<T>) => {
@@ -245,7 +261,7 @@ export const http = {
   /**
    * GET request
    */
-  get: <T = any>(url: string, params?: any, config?: AxiosRequestConfig) => {
+  get: <T = any>(url: string, params?: any, config?: ExtendedAxiosRequestConfig) => {
     return g_http<T>({
       method: 'get',
       url,
@@ -257,7 +273,7 @@ export const http = {
   /**
    * POST request
    */
-  post: <T = any>(url: string, data?: any, config?: AxiosRequestConfig) => {
+  post: <T = any>(url: string, data?: any, config?: ExtendedAxiosRequestConfig) => {
     return g_http<T>({
       method: 'post',
       url,
@@ -269,7 +285,7 @@ export const http = {
   /**
    * PUT request
    */
-  put: <T = any>(url: string, data?: any, config?: AxiosRequestConfig) => {
+  put: <T = any>(url: string, data?: any, config?: ExtendedAxiosRequestConfig) => {
     return g_http<T>({
       method: 'put',
       url,
@@ -281,7 +297,7 @@ export const http = {
   /**
    * DELETE request
    */
-  delete: <T = any>(url: string, params?: any, config?: AxiosRequestConfig) => {
+  delete: <T = any>(url: string, params?: any, config?: ExtendedAxiosRequestConfig) => {
     return g_http<T>({
       method: 'delete',
       url,
@@ -293,7 +309,7 @@ export const http = {
   /**
    * PATCH request
    */
-  patch: <T = any>(url: string, data?: any, config?: AxiosRequestConfig) => {
+  patch: <T = any>(url: string, data?: any, config?: ExtendedAxiosRequestConfig) => {
     return g_http<T>({
       method: 'patch',
       url,
@@ -305,7 +321,7 @@ export const http = {
   /**
    * Upload file
    */
-  upload: <T = any>(url: string, formData: FormData, config?: AxiosRequestConfig) => {
+  upload: <T = any>(url: string, formData: FormData, config?: ExtendedAxiosRequestConfig) => {
     return g_http<T>({
       method: 'post',
       url,

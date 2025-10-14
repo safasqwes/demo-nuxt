@@ -9,8 +9,27 @@ export default defineNuxtConfig({
     compatibilityVersion: 4,
   },
   
-  // Pinia state management
-  modules: ['@pinia/nuxt'],
+  // Modules
+  modules: [
+    '@pinia/nuxt',
+    '@element-plus/nuxt',
+    '@nuxtjs/tailwindcss',
+  ],
+  
+  // Element Plus configuration
+  elementPlus: {
+    /** Options */
+    importStyle: 'css',
+    themes: ['dark'],
+  },
+  
+  // Tailwind CSS configuration
+  tailwindcss: {
+    cssPath: '~/assets/css/tailwind.css',
+    configPath: 'tailwind.config.js',
+    exposeConfig: false,
+    viewer: true,
+  },
   
   css: ['~/assets/css/main.css'],
   

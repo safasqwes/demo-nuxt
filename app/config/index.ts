@@ -13,7 +13,7 @@ export default {
     isHttpNeedToken: true,   // Enable token authentication
   },
   
-  // API base URL
-  baseURL: process.env.NUXT_PUBLIC_API_BASE_URL || '/api',
+  // API base URL - 对接 demo-novelhub 后端
+  baseURL: process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:8080/api',
 }
 
