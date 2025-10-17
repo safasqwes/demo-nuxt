@@ -130,8 +130,8 @@ export const useUserStore = defineStore('user', {
       this.loading = true
       try {
         // Call login API - 对接后端 /api/auth/login
-        const { http } = await import('~/utils/http')
-        const response = await http.post('/auth/login', { 
+        const { http } = await import('~/shared/utils/http')
+        const response = await http.post('/api/auth/login', { 
           username, 
           password 
         })
@@ -163,8 +163,8 @@ export const useUserStore = defineStore('user', {
       this.loading = true
       try {
         // Call register API - 对接后端 /api/auth/register
-        const { http } = await import('~/utils/http')
-        const response = await http.post('/auth/register', { 
+        const { http } = await import('~/shared/utils/http')
+        const response = await http.post('/api/auth/register', { 
           username, 
           email, 
           password 
@@ -193,8 +193,8 @@ export const useUserStore = defineStore('user', {
       try {
         // Call logout API if needed
         if (this.token) {
-          const { http } = await import('~/utils/http')
-          await http.post('/auth/logout', {}, { not_show_error: true })
+          const { http } = await import('~/shared/utils/http')
+          await http.post('/api/auth/logout', {}, { not_show_error: true })
         }
       } catch (error) {
         console.error('Logout API error:', error)
@@ -230,8 +230,8 @@ export const useUserStore = defineStore('user', {
       }
 
       try {
-        const { http } = await import('~/utils/http')
-        const response = await http.post('/auth/refresh', {
+        const { http } = await import('~/shared/utils/http')
+        const response = await http.post('/api/auth/refresh', {
           refreshToken: this.refreshToken,
         })
 
@@ -254,8 +254,8 @@ export const useUserStore = defineStore('user', {
     async updateProfile(data: Partial<UserInfo>) {
       this.loading = true
       try {
-        const { http } = await import('~/utils/http')
-        const response = await http.put('/auth/profile', data)
+        const { http } = await import('~/shared/utils/http')
+        const response = await http.put('/api/auth/profile', data)
         
         if (response.code === 200) {
           const userData = response.user || response.data?.user || response.data || response
@@ -277,8 +277,8 @@ export const useUserStore = defineStore('user', {
      */
     async fetchProfile() {
       try {
-        const { http } = await import('~/utils/http')
-        const response = await http.get('/auth/profile')
+        const { http } = await import('~/shared/utils/http')
+        const response = await http.get('/api/auth/profile')
         
         if (response.code === 200) {
           const userData = response.user || response.data?.user || response.data || response
@@ -299,8 +299,8 @@ export const useUserStore = defineStore('user', {
     async changePassword(oldPassword: string, newPassword: string) {
       this.loading = true
       try {
-        const { http } = await import('~/utils/http')
-        const response = await http.post('/auth/change-password', {
+        const { http } = await import('~/shared/utils/http')
+        const response = await http.post('/api/auth/change-password', {
           oldPassword,
           newPassword,
         })
@@ -365,8 +365,8 @@ export const useUserStore = defineStore('user', {
       if (!this.token) return false
 
       try {
-        const { http } = await import('~/utils/http')
-        const response = await http.get('/auth/profile', {}, { not_show_error: true })
+        const { http } = await import('~/shared/utils/http')
+        const response = await http.get('/api/auth/profile', {}, { not_show_error: true })
         
         if (response.code === 200) {
           this.updateActivity()

@@ -7,8 +7,10 @@ import axios from 'axios'
 import type { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios'
 import Swal from 'sweetalert2'
 import $config from '../config'
+import { API_CONFIG } from '../config/api'
 import xcode from './xcode'
 import { getFingerprint, getMd5ByString } from './fingerprint'
+import { useUserStore } from '../stores/user'
 
 // Extended config type to include custom options
 interface ExtendedAxiosRequestConfig extends AxiosRequestConfig {
@@ -28,8 +30,8 @@ const origin_from = getMd5ByString($config.brand_name)
 
 // Create axios instance
 const instance = axios.create({
-  baseURL: $config.baseURL,
-  timeout: 30000,
+  baseURL: API_CONFIG.BASE_URL,
+  timeout: API_CONFIG.TIMEOUT,
   withCredentials: $config.brand_id === 2,
 })
 

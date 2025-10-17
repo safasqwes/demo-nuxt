@@ -118,6 +118,9 @@
 </template>
 
 <script setup lang="ts">
+import { useUserStore } from '~/shared/stores/user'
+import { useNotification } from '~/shared/composables/useNotification'
+
 // SEO metadata
 useHead({
   title: 'Register - NovelHub',

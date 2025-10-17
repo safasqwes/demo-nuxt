@@ -60,7 +60,7 @@
 </template>
 
 <script setup lang="ts">
-import { http } from '~/utils/http'
+import { http } from '~/shared/utils/http'
 
 // SEO metadata
 useHead({
@@ -119,7 +119,7 @@ const handleSubmit = async () => {
   loading.value = true
 
   try {
-    const response = await http.post('/auth/reset-password', {
+    const response = await http.post('/api/auth/reset-password', {
       token: token.value,
       password: form.password,
     })

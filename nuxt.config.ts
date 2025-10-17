@@ -31,6 +31,14 @@ export default defineNuxtConfig({
     viewer: true,
   },
   
+  // PostCSS configuration
+  postcss: {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {},
+    },
+  },
+  
   css: ['~/assets/css/main.css'],
   
   // SEO Configuration

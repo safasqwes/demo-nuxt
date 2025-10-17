@@ -8,11 +8,10 @@
           <NuxtLink to="/" aria-label="Go to home page">Home</NuxtLink>
           <NuxtLink to="/about" aria-label="Learn about NovelHub">About</NuxtLink>
           
-          <!-- Theme Toggle -->
-          <ThemeToggle />
+          <!-- Theme Toggle - Disabled for now -->
           
           <!-- User Menu -->
-          <div v-if="userStore.isAuthenticated" class="user-menu">
+          <div v-if="userStore && userStore.isAuthenticated" class="user-menu">
             <button class="user-btn" @click="showUserMenu = !showUserMenu">
               <span class="user-avatar">{{ userInitials }}</span>
               <span class="user-name">{{ userStore.displayName }}</span>
@@ -54,22 +53,32 @@
 </template>
 
 <script setup lang="ts">
+import { useUserStore } from '~/shared/stores/user'
+import { useNotification } from '~/shared/composables/useNotification'
+
 const userStore = useUserStore()
 const { notify } = useNotification()
 const router = useRouter()
 
 const showUserMenu = ref(false)
 
+// Initialize user store from localStorage
+onMounted(() => {
+  userStore.initFromStorage()
+})
+
 const userInitials = computed(() => {
-  const name = userStore.displayName
+  const name = userStore?.displayName || 'User'
   return name.substring(0, 2).toUpperCase()
 })
 
 const handleLogout = async () => {
-  await userStore.logout()
-  showUserMenu.value = false
-  notify.info('Goodbye', 'You have been logged out')
-  router.push('/')
+  if (userStore) {
+    await userStore.logout()
+    showUserMenu.value = false
+    notify.info('Goodbye', 'You have been logged out')
+    router.push('/')
+  }
 }
 
 // Close dropdown when clicking outside

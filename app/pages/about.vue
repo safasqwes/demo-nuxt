@@ -1,247 +1,99 @@
 <template>
-  <div class="about">
-    <div class="about-card">
-      <h2>About NovelHub</h2>
+  <div class="about-page">
+    <div class="container">
+      <h1 class="page-title">About NovelHub</h1>
       
       <div class="content">
-        <section>
-          <h3>🎯 What is NovelHub?</h3>
-          <p>
-            NovelHub is a modern web novel platform built with cutting-edge technology. 
-            We provide readers with access to thousands of web novels, light novels, and serialized 
-            fiction from around the world. Our mission is to connect readers with amazing stories 
-            through a fast, beautiful, and user-friendly reading experience.
-          </p>
-        </section>
+        <p class="lead">
+          Welcome to NovelHub, your gateway to amazing web novels and stories from around the world.
+        </p>
         
-        <section>
-          <h3>✨ Platform Features</h3>
+        <div class="features">
+          <h2>Features</h2>
           <ul>
-            <li>📚 Extensive library of web novels and light novels</li>
-            <li>🌍 Multi-language support and translations</li>
-            <li>⚡ Lightning-fast page loads with SSG technology</li>
-            <li>📱 Responsive design for all devices</li>
-            <li>🔖 Bookmark and reading progress tracking</li>
-            <li>🎨 Customizable reading experience</li>
+            <li>📚 Extensive collection of web novels</li>
+            <li>🔍 Advanced search and filtering</li>
+            <li>📖 Personalized reading experience</li>
+            <li>⭐ Rating and review system</li>
+            <li>📱 Mobile-friendly design</li>
           </ul>
-        </section>
+        </div>
         
-        <section>
-          <h3>📚 Popular Genres</h3>
-          <div class="links">
-            <a href="#" rel="noopener">
-              ⚔️ Fantasy
-            </a>
-            <a href="#" rel="noopener">
-              🔮 Cultivation
-            </a>
-            <a href="#" rel="noopener">
-              💼 Contemporary
-            </a>
-            <a href="#" rel="noopener">
-              🚀 Sci-Fi
-            </a>
-            <a href="#" rel="noopener">
-              💕 Romance
-            </a>
-            <a href="#" rel="noopener">
-              🎮 Game World
-            </a>
-          </div>
-        </section>
-        
-        <section class="tech-stack">
-          <h3>🛠️ Technology Stack</h3>
-          <div class="tech-grid">
-            <div class="tech-item">
-              <span class="tech-icon">⚡</span>
-              <span>Vue {{ vueVersion }}</span>
-            </div>
-            <div class="tech-item">
-              <span class="tech-icon">🚀</span>
-              <span>Nuxt {{ nuxtVersion }}</span>
-            </div>
-            <div class="tech-item">
-              <span class="tech-icon">📘</span>
-              <span>TypeScript</span>
-            </div>
-            <div class="tech-item">
-              <span class="tech-icon">🎨</span>
-              <span>Vite</span>
-            </div>
-          </div>
-        </section>
+        <div class="mission">
+          <h2>Our Mission</h2>
+          <p>
+            We believe that great stories should be accessible to everyone. 
+            NovelHub brings together the best web novels and provides a platform 
+            for readers to discover, read, and share their favorite stories.
+          </p>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-// Page SEO metadata
+// Page metadata
 useHead({
-  title: 'About Us - NovelHub | Web Novel Reading Platform',
+  title: 'About - NovelHub',
   meta: [
-    {
-      name: 'description',
-      content: 'Learn about NovelHub, a modern web novel platform built with cutting-edge technology. Discover our mission to connect readers with amazing stories from around the world.',
-    },
-    {
-      name: 'keywords',
-      content: 'about novelhub, web novel platform, light novel site, online reading platform, novel genres, fantasy, cultivation, sci-fi, romance',
-    },
-    // Open Graph
-    {
-      property: 'og:title',
-      content: 'About Us - NovelHub | Web Novel Platform',
-    },
-    {
-      property: 'og:description',
-      content: 'Modern web novel platform connecting readers with amazing stories worldwide. Fast, beautiful, and user-friendly.',
-    },
-    {
-      property: 'og:url',
-      content: 'https://novelhub.example.com/about',
-    },
-    // Twitter
-    {
-      name: 'twitter:title',
-      content: 'About Us - NovelHub',
-    },
-    {
-      name: 'twitter:description',
-      content: 'Learn about NovelHub, your gateway to web novels and light novels.',
-    },
-  ],
-  link: [
-    {
-      rel: 'canonical',
-      href: 'https://novelhub.example.com/about',
-    },
-  ],
+    { name: 'description', content: 'Learn about NovelHub, your gateway to amazing web novels and stories.' }
+  ]
 })
-
-// Component data
-const nuxtVersion = '4.1.3'
-const vueVersion = '3.5.13'
 </script>
 
 <style scoped>
-.about {
-  width: 100%;
+.about-page {
+  padding: 40px 0;
 }
 
-.about-card {
-  background: var(--bg-card);
-  border-radius: 12px;
-  padding: 40px;
-  box-shadow: var(--shadow-md);
-  border: 1px solid var(--border-color);
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
-h2 {
-  font-size: 36px;
-  margin: 0 0 30px 0;
-  color: var(--text-primary);
+.page-title {
+  font-size: 2.5rem;
+  font-weight: bold;
   text-align: center;
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  margin-bottom: 2rem;
+  color: var(--text-primary);
 }
 
 .content {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-}
-
-section {
-  padding: 20px;
-  border-radius: 8px;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-}
-
-section h3 {
-  margin: 0 0 15px 0;
-  color: var(--text-primary);
-  font-size: 22px;
-}
-
-section p {
-  margin: 0;
-  color: var(--text-secondary);
-  line-height: 1.8;
-  font-size: 16px;
-}
-
-ul {
-  margin: 0;
-  padding-left: 20px;
-  color: var(--text-secondary);
-}
-
-ul li {
-  margin-bottom: 10px;
   line-height: 1.6;
-  font-size: 16px;
 }
 
-.links {
-  display: flex;
-  gap: 15px;
-  flex-wrap: wrap;
-}
-
-.links a {
-  display: inline-block;
-  padding: 12px 24px;
-  background: var(--gradient-primary);
-  color: var(--text-inverse);
-  text-decoration: none;
-  border-radius: 8px;
-  transition: all 0.3s;
-  font-weight: bold;
-}
-
-.links a:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-}
-
-.tech-stack {
-  background: var(--gradient-primary);
-  color: var(--text-inverse);
-}
-
-.tech-stack h3 {
-  color: var(--text-inverse);
-}
-
-.tech-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 15px;
-}
-
-.tech-item {
-  background: var(--overlay-light);
-  padding: 20px;
-  border-radius: 8px;
+.lead {
+  font-size: 1.2rem;
   text-align: center;
-  backdrop-filter: blur(10px);
-  transition: all 0.3s;
+  margin-bottom: 3rem;
+  color: var(--text-secondary);
 }
 
-.tech-item:hover {
-  background: var(--overlay-medium);
-  transform: scale(1.05);
+.features, .mission {
+  margin-bottom: 2rem;
 }
 
-.tech-icon {
-  display: block;
-  font-size: 32px;
-  margin-bottom: 10px;
+.features h2, .mission h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.features ul {
+  list-style: none;
+  padding: 0;
+}
+
+.features li {
+  padding: 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.mission p {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
 }
 </style>
-

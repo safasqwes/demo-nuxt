@@ -1,222 +1,84 @@
 <template>
-  <div class="admin-layout">
-    <!-- Admin Header -->
-    <header class="admin-header">
-      <div class="header-content">
-        <div class="header-left">
-          <h1 class="logo">📚 NovelHub Admin</h1>
-        </div>
-        <div class="header-right">
-          <span class="admin-name">👤 {{ adminStore.currentAdmin?.username }}</span>
-          <button @click="handleLogout" class="logout-btn">Logout</button>
-        </div>
+  <div class="min-h-screen bg-gray-100 flex">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white border-r hidden md:block">
+      <div class="h-16 flex items-center justify-center border-b">
+        <span class="font-bold text-lg">Admin Panel</span>
       </div>
-    </header>
-
-    <!-- Admin Sidebar -->
-    <aside class="admin-sidebar">
-      <nav class="sidebar-nav">
-        <NuxtLink to="/admin" class="nav-item">
-          <span class="icon">📊</span>
-          Dashboard
+      <nav class="p-4 space-y-1">
+        <NuxtLink class="nav-item" to="/admin">
+          <el-icon class="mr-2"><Odometer /></el-icon>Dashboard
         </NuxtLink>
-        <NuxtLink to="/admin/banners" class="nav-item">
-          <span class="icon">🖼️</span>
-          Banners
+        <NuxtLink class="nav-item" to="/admin/users">
+          <el-icon class="mr-2"><User /></el-icon>用户管理
         </NuxtLink>
-        <NuxtLink to="/" class="nav-item" target="_blank">
-          <span class="icon">🏠</span>
-          View Site
+        <NuxtLink class="nav-item" to="/admin/novels">
+          <el-icon class="mr-2"><Notebook /></el-icon>小说管理
+        </NuxtLink>
+        <NuxtLink class="nav-item" to="/admin/orders">
+          <el-icon class="mr-2"><Tickets /></el-icon>订单管理
+        </NuxtLink>
+        <NuxtLink class="nav-item" to="/admin/plans">
+          <el-icon class="mr-2"><Coin /></el-icon>套餐管理
+        </NuxtLink>
+        <NuxtLink class="nav-item" to="/admin/promotions">
+          <el-icon class="mr-2"><Discount /></el-icon>促销活动
+        </NuxtLink>
+        <NuxtLink class="nav-item" to="/admin/banners">
+          <el-icon class="mr-2"><Picture /></el-icon>横幅管理
+        </NuxtLink>
+        <NuxtLink class="nav-item" to="/admin/analytics">
+          <el-icon class="mr-2"><DataAnalysis /></el-icon>数据统计
         </NuxtLink>
       </nav>
     </aside>
 
-    <!-- Main Content -->
-    <main class="admin-main">
-      <div class="admin-container">
+    <!-- Main -->
+    <div class="flex-1 flex flex-col min-w-0">
+      <!-- Topbar -->
+      <header class="h-16 bg-white border-b flex items-center justify-between px-4">
+        <div class="flex items-center gap-3">
+          <el-button class="md:hidden" @click="toggleMobileMenu"><el-icon><Menu /></el-icon></el-button>
+          <span class="font-semibold">NovelHub 管理后台</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <el-button @click="goHome">回到站点</el-button>
+          <el-button type="danger" @click="logout">退出</el-button>
+        </div>
+      </header>
+
+      <!-- Content -->
+      <main class="p-4">
         <slot />
-      </div>
-    </main>
+      </main>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-const adminStore = useAdminStore()
-const router = useRouter()
+import { Menu, Odometer, User, Notebook, Tickets, Coin, Discount, Picture, DataAnalysis } from '@element-plus/icons-vue'
+import { useAdminStore } from '~/modules/admin/stores/admin'
 
-const handleLogout = () => {
+const adminStore = useAdminStore()
+
+const logout = () => {
   adminStore.logout()
-  router.push('/admin/login')
+  navigateTo('/admin/login')
 }
 
-// Check authentication on mount
-onMounted(() => {
-  adminStore.checkAuth()
-  if (!adminStore.isAuthenticated) {
-    router.push('/admin/login')
-  }
-})
+const goHome = () => navigateTo('/')
+const toggleMobileMenu = () => {}
 </script>
 
 <style scoped>
-.admin-layout {
-  min-height: 100vh;
-  display: grid;
-  grid-template-columns: 250px 1fr;
-  grid-template-rows: 60px 1fr;
-  grid-template-areas:
-    'header header'
-    'sidebar main';
-  background: var(--bg-primary);
-}
-
-/* Header */
-.admin-header {
-  grid-area: header;
-  background: var(--gradient-primary);
-  color: white;
-  box-shadow: var(--shadow-md);
-  z-index: 100;
-}
-
-.header-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 100%;
-  padding: 0 30px;
-}
-
-.header-left .logo {
-  font-size: 20px;
-  font-weight: bold;
-  margin: 0;
-  color: white;
-}
-
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.admin-name {
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.logout-btn {
-  padding: 8px 16px;
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: white;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-  transition: all 0.3s;
-}
-
-.logout-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
-}
-
-/* Sidebar */
-.admin-sidebar {
-  grid-area: sidebar;
-  background: var(--bg-card);
-  border-right: 1px solid var(--border-color);
-  padding: 20px 0;
-}
-
-.sidebar-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
 .nav-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 20px;
-  color: var(--text-primary);
-  text-decoration: none;
-  transition: all 0.3s;
-  font-weight: 500;
-  border-left: 3px solid transparent;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: #374151;
 }
-
-.nav-item:hover {
-  background: var(--bg-hover);
-  border-left-color: var(--color-primary);
-}
-
-.nav-item.router-link-active {
-  background: var(--bg-hover);
-  border-left-color: var(--color-primary);
-  color: var(--color-primary);
-}
-
-.nav-item .icon {
-  font-size: 20px;
-}
-
-/* Main Content */
-.admin-main {
-  grid-area: main;
-  padding: 30px;
-  overflow-y: auto;
-  background: var(--bg-primary);
-}
-
-.admin-container {
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .admin-layout {
-    grid-template-columns: 1fr;
-    grid-template-rows: 60px auto 1fr;
-    grid-template-areas:
-      'header'
-      'sidebar'
-      'main';
-  }
-
-  .admin-sidebar {
-    border-right: none;
-    border-bottom: 1px solid var(--border-color);
-    padding: 10px 0;
-  }
-
-  .sidebar-nav {
-    flex-direction: row;
-    overflow-x: auto;
-    padding: 0 10px;
-  }
-
-  .nav-item {
-    white-space: nowrap;
-    border-left: none;
-    border-bottom: 3px solid transparent;
-  }
-
-  .nav-item:hover,
-  .nav-item.router-link-active {
-    border-left-color: transparent;
-    border-bottom-color: var(--color-primary);
-  }
-
-  .admin-main {
-    padding: 20px;
-  }
-
-  .admin-name {
-    display: none;
-  }
-}
+.nav-item:hover { background: #f3f4f6; }
+.nav-item.router-link-active { background: #eef2ff; color: #3730a3; }
 </style>
 

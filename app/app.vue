@@ -1,8 +1,5 @@
 <template>
   <div id="app">
-    <!-- Structured data for SEO -->
-    <StructuredData />
-    
     <!-- Main application layout -->
     <NuxtLayout>
       <NuxtPage />
@@ -11,12 +8,12 @@
 </template>
 
 <script setup lang="ts">
-// Initialize theme system
-const { initTheme } = useTheme()
+// Initialize theme system - disabled for now
+// const { initTheme } = useTheme()
 
 // Apply theme on mount
 onMounted(() => {
-  initTheme()
+  // initTheme()
 })
 </script>
 

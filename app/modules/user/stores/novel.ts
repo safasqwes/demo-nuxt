@@ -4,6 +4,7 @@
  */
 
 import { defineStore } from 'pinia'
+import { API_ENDPOINTS } from '~/shared/config/api'
 
 export interface Novel {
   id: number
@@ -232,25 +233,100 @@ export const useNovelStore = defineStore('novel', {
 
   actions: {
     /**
-     * Search novels
+     * Fetch novels list
      */
-    async searchNovels(query: string) {
+    async fetchNovels(filters: any = {}) {
       this.loading = true
       try {
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 300))
+        const { http } = await import('~/shared/utils/http')
+        const response = await http.get(API_ENDPOINTS.NOVELS.LIST, filters)
+        
+        if (response.code === 200) {
+          this.novels = response.data || []
+          return { success: true, total: response.total || 0 }
+        }
+        
+        return { success: false, message: response.msg || 'Failed to fetch novels' }
+      } catch (error: any) {
+        const message = error.response?.data?.msg || error.message || 'Failed to fetch novels'
+        return { success: false, message }
+      } finally {
+        this.loading = false
+      }
+    },
 
-        const searchTerm = query.toLowerCase()
-        this.searchResults = this.novels.filter(
-          (novel) =>
-            novel.title.toLowerCase().includes(searchTerm) ||
-            novel.author.toLowerCase().includes(searchTerm) ||
-            novel.tags.some((tag) => tag.toLowerCase().includes(searchTerm)) ||
-            novel.genre.toLowerCase().includes(searchTerm)
-        )
-      } catch (error) {
-        console.error('Search failed:', error)
-        this.searchResults = []
+    /**
+     * Fetch novel details
+     */
+    async fetchNovelDetail(novelId: number) {
+      this.loading = true
+      try {
+        const { http } = await import('~/shared/utils/http')
+        const response = await http.get(API_ENDPOINTS.NOVELS.DETAIL(novelId))
+        
+        if (response.code === 200) {
+          // Update or add novel to the list
+          const novelIndex = this.novels.findIndex(novel => novel.id === novelId)
+          if (novelIndex !== -1) {
+            this.novels[novelIndex] = response.data
+          } else {
+            this.novels.push(response.data)
+          }
+          return { success: true, data: response.data }
+        }
+        
+        return { success: false, message: response.msg || 'Failed to fetch novel details' }
+      } catch (error: any) {
+        const message = error.response?.data?.msg || error.message || 'Failed to fetch novel details'
+        return { success: false, message }
+      } finally {
+        this.loading = false
+      }
+    },
+
+    /**
+     * Fetch chapter content
+     */
+    async fetchChapterContent(novelId: number, chapterId: number) {
+      this.loading = true
+      try {
+        const { http } = await import('~/shared/utils/http')
+        const response = await http.get(API_ENDPOINTS.NOVELS.CHAPTER(novelId, chapterId))
+        
+        if (response.code === 200) {
+          return { success: true, data: response.data }
+        }
+        
+        return { success: false, message: response.msg || 'Failed to fetch chapter content' }
+      } catch (error: any) {
+        const message = error.response?.data?.msg || error.message || 'Failed to fetch chapter content'
+        return { success: false, message }
+      } finally {
+        this.loading = false
+      }
+    },
+
+    /**
+     * Search novels
+     */
+    async searchNovels(query: string, filters: any = {}) {
+      this.loading = true
+      try {
+        const { http } = await import('~/shared/utils/http')
+        const response = await http.get(API_ENDPOINTS.NOVELS.SEARCH, {
+          q: query,
+          ...filters,
+        })
+        
+        if (response.code === 200) {
+          this.searchResults = response.data || []
+          return { success: true, total: response.total || 0 }
+        }
+        
+        return { success: false, message: response.msg || 'Search failed' }
+      } catch (error: any) {
+        const message = error.response?.data?.msg || error.message || 'Search failed'
+        return { success: false, message }
       } finally {
         this.loading = false
       }
@@ -264,20 +340,18 @@ export const useNovelStore = defineStore('novel', {
 
       this.loading = true
       try {
-        // Mock chapter data
-        const mockChapters: Chapter[] = Array.from({ length: 50 }, (_, i) => ({
-          id: i + 1,
-          novelId,
-          chapterNumber: i + 1,
-          title: `Chapter ${i + 1}: ${this.getChapterTitle(i + 1)}`,
-          content: this.generateMockContent(i + 1),
-          publishedAt: new Date(Date.now() - (50 - i) * 86400000).toISOString(),
-          wordCount: 2000 + Math.floor(Math.random() * 1000),
-        }))
-
-        this.chapters[novelId] = mockChapters
-      } catch (error) {
-        console.error('Failed to fetch chapters:', error)
+        const { http } = await import('~/shared/utils/http')
+        const response = await http.get(API_ENDPOINTS.NOVELS.CHAPTERS(novelId))
+        
+        if (response.code === 200) {
+          this.chapters[novelId] = response.data || []
+          return { success: true }
+        }
+        
+        return { success: false, message: response.msg || 'Failed to fetch chapters' }
+      } catch (error: any) {
+        const message = error.response?.data?.msg || error.message || 'Failed to fetch chapters'
+        return { success: false, message }
       } finally {
         this.loading = false
       }
