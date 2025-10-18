@@ -87,12 +87,31 @@ export default defineNuxtConfig({
   // Enable SSG for better SEO
   ssr: true,
   
+  // Runtime configuration
+  runtimeConfig: {
+    // Private keys (only available on server-side)
+    backendApiUrl: process.env.BACKEND_API_URL || 'http://localhost:8080/api',
+    // Public keys (exposed to client-side)
+    public: {
+      apiBase: '/api',
+      googleClientId: process.env.GOOGLE_CLIENT_ID || '819627263362-ov95e4dfdafddtrfuq837gh6q4jgo7tn.apps.googleusercontent.com',
+      stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY || '',
+      baseUrl: process.env.BASE_URL || 'http://localhost:3000'
+    }
+  },
+  
   // Sitemap configuration (you can add @nuxtjs/sitemap module later)
   nitro: {
     prerender: {
       crawlLinks: true,
       routes: ['/', '/about'],
     },
+    // Proxy API requests to backend server
+    routeRules: {
+      '/api/**': { 
+        proxy: 'http://localhost:8080/api/**' 
+      }
+    }
   },
 })
 

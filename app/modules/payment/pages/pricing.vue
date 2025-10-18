@@ -121,11 +121,30 @@ const selectedPlanId = ref<number | null>(null)
 const fetchPlans = async () => {
   loading.value = true
   try {
-    // TODO: 调用API获取套餐列表
-    // const response = await $fetch('/api/payment/plans')
-    // plans.value = response.data
+    const response = await $fetch('/api/payment/plans')
+    if (response.success) {
+      plans.value = response.data.map((plan: any) => ({
+        id: plan.id,
+        plan_id: plan.planId,
+        price_id: plan.priceId,
+        name: plan.name,
+        description: plan.description,
+        price: plan.price,
+        currency: plan.currency,
+        points: plan.points,
+        duration_days: plan.durationDays,
+        plan_type: plan.planType,
+        features: plan.features ? JSON.parse(plan.features) : [],
+        is_popular: plan.id === 2 // Mark second plan as popular
+      }))
+    } else {
+      throw new Error(response.message || 'Failed to fetch plans')
+    }
+  } catch (error: any) {
+    console.error('Failed to fetch plans:', error)
+    ElMessage.error('获取套餐信息失败: ' + (error.message || 'Unknown error'))
     
-    // 模拟数据
+    // Fallback to mock data
     plans.value = [
       {
         id: 1,
@@ -187,8 +206,6 @@ const fetchPlans = async () => {
         ]
       }
     ]
-  } catch (error) {
-    ElMessage.error('获取套餐信息失败')
   } finally {
     loading.value = false
   }
@@ -199,22 +216,24 @@ const selectPlan = async (plan: PaymentPlan) => {
   selectedPlanId.value = plan.id
   
   try {
-    // TODO: 调用API创建支付会话
-    // const response = await $fetch('/api/payment/create-session', {
-    //   method: 'POST',
-    //   body: { plan_id: plan.plan_id, price_id: plan.price_id }
-    // })
-    // 
-    // // 跳转到支付页面
-    // window.location.href = response.checkout_url
+    const response = await $fetch('/api/payment/create-session', {
+      method: 'POST',
+      body: { 
+        planId: plan.plan_id,
+        successUrl: `${window.location.origin}/payment/success`,
+        cancelUrl: `${window.location.origin}/payment/cancel`
+      }
+    })
     
-    // 模拟跳转到支付页面
-    ElMessage.info('正在跳转到支付页面...')
-    setTimeout(() => {
-      router.push(`/payment/checkout?plan_id=${plan.plan_id}`)
-    }, 1000)
-  } catch (error) {
-    ElMessage.error('创建支付会话失败')
+    if (response.success) {
+      // 跳转到Stripe支付页面
+      window.location.href = response.data.checkoutUrl
+    } else {
+      throw new Error(response.message || 'Failed to create checkout session')
+    }
+  } catch (error: any) {
+    console.error('Failed to create checkout session:', error)
+    ElMessage.error('创建支付会话失败: ' + (error.message || 'Unknown error'))
   } finally {
     selectedPlanId.value = null
   }

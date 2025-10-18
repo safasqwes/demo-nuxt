@@ -72,12 +72,12 @@ instance.interceptors.request.use(
         const secret_key = signx.secret_key
         const aesSecret = signx.aesSecret
 
-        // Encrypt fp1
+        // Encrypt fp1 using aesSecret
         fp1 = xcode.aseEncrypt(fp as string, aesSecret as string)
 
         config.headers['fp'] = fp
         config.headers['fp1'] = fp1
-        config.headers['x-guide'] = secret_key
+        config.headers['x-guide'] = aesSecret  // Use aesSecret as x-guide for decryption
       }
     }
 

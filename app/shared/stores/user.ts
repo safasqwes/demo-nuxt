@@ -194,10 +194,13 @@ export const useUserStore = defineStore('user', {
         // Call logout API if needed
         if (this.token) {
           const { http } = await import('~/shared/utils/http')
+          console.log('Sending logout request with fingerprint...')
           await http.post('/api/auth/logout', {}, { not_show_error: true })
+          console.log('Logout request successful')
         }
       } catch (error) {
         console.error('Logout API error:', error)
+        // Still clear auth even if API call fails
       } finally {
         this.clearAuth()
       }
