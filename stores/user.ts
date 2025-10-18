@@ -12,7 +12,17 @@ interface UserInfo {
   avatar?: string
   plan_name?: string
   created_at?: string
+  goldCoins?: number
+  silverCoins?: number
   [key: string]: any
+}
+
+interface ClaimInfo {
+  streakDays: number
+  hasClaimedToday: boolean
+  todayPoints: number
+  nextDayPoints: number
+  lastUpdate?: number // 最后更新时间戳
 }
 
 interface UserState {
@@ -29,6 +39,10 @@ interface UserState {
   
   // Session
   lastActivity: number
+  
+  // Daily claim
+  claimInfo: ClaimInfo | null
+  claimLoading: boolean
 }
 
 export const useUserStore = defineStore('user', {
@@ -42,6 +56,8 @@ export const useUserStore = defineStore('user', {
     userInfo: null,
     loading: false,
     lastActivity: Date.now(),
+    claimInfo: null,
+    claimLoading: false,
   }),
 
   /**
@@ -75,6 +91,34 @@ export const useUserStore = defineStore('user', {
      */
     displayName: (state) => {
       return state.userInfo?.username || state.userInfo?.email?.split('@')[0] || 'Guest'
+    },
+
+    /**
+     * Get user gold coins (金币)
+     */
+    goldCoins: (state) => {
+      return state.userInfo?.goldCoins || 0
+    },
+
+    /**
+     * Get user silver coins (银币)
+     */
+    silverCoins: (state) => {
+      return state.userInfo?.silverCoins || 0
+    },
+
+    /**
+     * Check if user has claimed today
+     */
+    hasClaimedToday: (state) => {
+      return state.claimInfo?.hasClaimedToday || false
+    },
+
+    /**
+     * Get streak days
+     */
+    streakDays: (state) => {
+      return state.claimInfo?.streakDays || 0
     },
 
     /**
@@ -118,6 +162,27 @@ export const useUserStore = defineStore('user', {
       // Persist to localStorage
       if (typeof window !== 'undefined') {
         localStorage.setItem('user_info', JSON.stringify(info))
+        // 同时保存 claimInfo
+        if (this.claimInfo) {
+          localStorage.setItem('claim_info', JSON.stringify(this.claimInfo))
+        }
+      }
+    },
+
+    /**
+     * Set claim information
+     */
+    setClaimInfo(info: ClaimInfo) {
+      // 添加时间戳
+      const claimInfoWithTimestamp = {
+        ...info,
+        lastUpdate: Date.now()
+      }
+      this.claimInfo = claimInfoWithTimestamp
+      
+      // Persist to localStorage
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('claim_info', JSON.stringify(claimInfoWithTimestamp))
       }
     },
 
@@ -147,6 +212,43 @@ export const useUserStore = defineStore('user', {
         return { success: false, message: response.msg || 'Login failed' }
       } catch (error: any) {
         const message = error.response?.data?.msg || error.response?.data?.message || error.message || 'Login failed'
+        return { success: false, message }
+      } finally {
+        this.loading = false
+      }
+    },
+
+    /**
+     * Google Login action
+     * @param credential - Google credential from Google Identity Services
+     */
+    async googleLogin(credential: string) {
+      this.loading = true
+      try {
+        // Call Google login API - 对接后端 /api/auth/google/login
+        const { http } = await import('~/utils/http')
+        const response = await http.post('/api/auth/google/login', { 
+          credential 
+        })
+        
+        // 后端返回格式：{ code: 200, msg: "Google login successful", data: { success: true, user: {...}, token: "...", refreshToken: "...", claimInfo: {...} } }
+        if (response.code === 200) {
+          const data = response.data
+          this.setToken(data.token, data.refreshToken)
+          this.setUserInfo(data.user)
+          this.updateActivity()
+          
+          // 更新签到信息
+          if (data.claimInfo) {
+            this.setClaimInfo(data.claimInfo)
+          }
+          
+          return { success: true }
+        }
+        
+        return { success: false, message: response.msg || 'Google login failed' }
+      } catch (error: any) {
+        const message = error.response?.data?.msg || error.response?.data?.message || error.message || 'Google login failed'
         return { success: false, message }
       } finally {
         this.loading = false
@@ -187,22 +289,33 @@ export const useUserStore = defineStore('user', {
     },
 
     /**
-     * Logout action
+     * Logout action - 调用服务端logout接口
      */
     async logout() {
+      this.loading = true
       try {
-        // Call logout API if needed
-        if (this.token) {
-          const { http } = await import('~/utils/http')
-          console.log('Sending logout request with fingerprint...')
-          await http.post('/api/auth/logout', {}, { not_show_error: true })
-          console.log('Logout request successful')
+        // 调用服务端logout接口
+        const { http } = await import('~/utils/http')
+        console.log('Calling server logout API...')
+        
+        const response = await http.post('/api/auth/logout', {}, { 
+          not_show_error: true // 不显示错误提示，避免影响用户体验
+        })
+        
+        // 检查服务端响应
+        if (response && response.code === 200) {
+          console.log('Logout successful on server')
+        } else {
+          console.warn('Server logout response:', response)
         }
+        
       } catch (error) {
-        console.error('Logout API error:', error)
-        // Still clear auth even if API call fails
+        console.error('Server logout API error:', error)
+        // 即使服务端调用失败，也要清除本地认证信息
       } finally {
+        // 无论服务端调用是否成功，都要清除本地认证信息
         this.clearAuth()
+        this.loading = false
       }
     },
 
@@ -214,12 +327,14 @@ export const useUserStore = defineStore('user', {
       this.refreshToken = null
       this.isAuthenticated = false
       this.userInfo = null
+      this.claimInfo = null
       
       // Clear localStorage
       if (typeof window !== 'undefined') {
         localStorage.removeItem('auth_token')
         localStorage.removeItem('refresh_token')
         localStorage.removeItem('user_info')
+        localStorage.removeItem('claim_info')
       }
     },
 
@@ -239,7 +354,9 @@ export const useUserStore = defineStore('user', {
         })
 
         if (response.code === 200) {
-          this.setToken(response.accessToken, response.refreshToken)
+          // 后端返回格式：{ code: 200, data: { token: "...", refreshToken: "..." } }
+          const data = response.data
+          this.setToken(data.token, data.refreshToken)
           return true
         }
 
@@ -329,6 +446,18 @@ export const useUserStore = defineStore('user', {
     },
 
     /**
+     * Check if claim info is expired (crossed day)
+     */
+    isClaimInfoExpired(claimInfo: ClaimInfo | null) {
+      if (!claimInfo) return true
+      
+      // 检查是否跨天了
+      const today = new Date().toDateString()
+      const lastUpdate = new Date(claimInfo.lastUpdate || 0).toDateString()
+      return today !== lastUpdate
+    },
+
+    /**
      * Initialize from localStorage
      */
     initFromStorage() {
@@ -337,6 +466,7 @@ export const useUserStore = defineStore('user', {
       const token = localStorage.getItem('auth_token')
       const refreshToken = localStorage.getItem('refresh_token')
       const userInfo = localStorage.getItem('user_info')
+      const claimInfo = localStorage.getItem('claim_info')
 
       if (token) {
         this.token = token
@@ -352,6 +482,23 @@ export const useUserStore = defineStore('user', {
           this.userInfo = JSON.parse(userInfo)
         } catch (error) {
           console.error('Failed to parse user info:', error)
+        }
+      }
+
+      if (claimInfo) {
+        try {
+          const parsedClaimInfo = JSON.parse(claimInfo)
+          // 检查 claimInfo 是否过期（跨天了）
+          if (this.isClaimInfoExpired(parsedClaimInfo)) {
+            // 如果过期了，清除本地存储的 claimInfo
+            localStorage.removeItem('claim_info')
+            this.claimInfo = null
+          } else {
+            this.claimInfo = parsedClaimInfo
+          }
+        } catch (error) {
+          console.error('Failed to parse claim info:', error)
+          localStorage.removeItem('claim_info')
         }
       }
 
@@ -381,6 +528,105 @@ export const useUserStore = defineStore('user', {
       } catch (error) {
         this.clearAuth()
         return false
+      }
+    },
+
+    /**
+     * Get daily claim info
+     */
+    async fetchClaimInfo() {
+      if (!this.isAuthenticated) return { success: false, message: 'Not authenticated' }
+
+      this.claimLoading = true
+      try {
+        const { http } = await import('~/utils/http')
+        const response = await http.get('/api/auth/claim-info')
+        
+        if (response.code === 200) {
+          this.setClaimInfo(response.data)
+          return { success: true, data: response.data }
+        }
+        
+        return { success: false, message: response.msg || 'Failed to get claim info' }
+      } catch (error: any) {
+        const message = error.response?.data?.msg || error.response?.data?.message || error.message || 'Failed to get claim info'
+        return { success: false, message }
+      } finally {
+        this.claimLoading = false
+      }
+    },
+
+    /**
+     * Claim daily free points
+     */
+    async claimDailyPoints() {
+      if (!this.isAuthenticated) return { success: false, message: 'Not authenticated' }
+
+      this.claimLoading = true
+      try {
+        const { http } = await import('~/utils/http')
+        const response = await http.post('/api/auth/claim-free-points')
+        
+        if (response.code === 200) {
+          // 更新签到信息
+          this.setClaimInfo(response.data)
+          
+          // 更新用户信息中的银币数量
+          if (this.userInfo) {
+            this.userInfo.silverCoins = (this.userInfo.silverCoins || 0) + (response.data.points || 0)
+            this.setUserInfo(this.userInfo)
+          }
+          
+          return { success: true, data: response.data }
+        }
+        
+        // 检查是否是"今天已经领取过银币了"的错误
+        if (response.code === 500 && response.msg === '今天已经领取过银币了') {
+          // 更新签到状态为已领取
+          const currentClaimInfo = this.claimInfo || {
+            streakDays: 0,
+            hasClaimedToday: false,
+            todayPoints: 0,
+            nextDayPoints: 0
+          }
+          
+          // 设置为已领取状态
+          const updatedClaimInfo = {
+            ...currentClaimInfo,
+            hasClaimedToday: true
+          }
+          this.setClaimInfo(updatedClaimInfo)
+          
+          return { success: false, message: response.msg, alreadyClaimed: true }
+        }
+        
+        return { success: false, message: response.msg || 'Failed to claim points' }
+      } catch (error: any) {
+        const message = error.response?.data?.msg || error.response?.data?.message || error.message || 'Failed to claim points'
+        
+        // 检查是否是"今天已经领取过银币了"的错误
+        if (error.response?.data?.msg === '今天已经领取过银币了') {
+          // 更新签到状态为已领取
+          const currentClaimInfo = this.claimInfo || {
+            streakDays: 0,
+            hasClaimedToday: false,
+            todayPoints: 0,
+            nextDayPoints: 0
+          }
+          
+          // 设置为已领取状态
+          const updatedClaimInfo = {
+            ...currentClaimInfo,
+            hasClaimedToday: true
+          }
+          this.setClaimInfo(updatedClaimInfo)
+          
+          return { success: false, message, alreadyClaimed: true }
+        }
+        
+        return { success: false, message }
+      } finally {
+        this.claimLoading = false
       }
     },
   },

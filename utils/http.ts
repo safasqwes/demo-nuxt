@@ -6,8 +6,6 @@
 import axios from 'axios'
 import type { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios'
 import Swal from 'sweetalert2'
-import $config from '../config'
-import { API_CONFIG } from '../config/api'
 import xcode from './xcode'
 import { getFingerprint, getMd5ByString } from './fingerprint'
 import { useUserStore } from '../stores/user'
@@ -15,6 +13,7 @@ import { useUserStore } from '../stores/user'
 // Extended config type to include custom options
 interface ExtendedAxiosRequestConfig extends AxiosRequestConfig {
   not_show_error?: boolean
+  _retry?: boolean
 }
 
 // Initialize fingerprint
@@ -25,14 +24,29 @@ if (typeof window !== 'undefined') {
   })
 }
 
+// Get runtime config
+const getConfig = () => {
+  if (typeof window !== 'undefined') {
+    return useRuntimeConfig()
+  }
+  return {
+    public: {
+      apiBase: '/api',
+      baseUrl: 'http://localhost:3000'
+    }
+  }
+}
+
 // Origin from
-const origin_from = getMd5ByString($config.brand_name)
+const origin_from = getMd5ByString('NovelHub')
 
 // Create axios instance
 const instance = axios.create({
-  baseURL: API_CONFIG.BASE_URL,
-  timeout: API_CONFIG.TIMEOUT,
-  withCredentials: $config.brand_id === 2,
+  baseURL: process.env.NODE_ENV === 'production' 
+    ? 'https://your-production-api.com' 
+    : '/', // Use Nuxt proxy in development
+  timeout: 30000,
+  withCredentials: false,
   // Add connection timeout and retry configuration
   maxRedirects: 5,
   validateStatus: (status) => status < 500, // Don't throw for 4xx errors
@@ -49,7 +63,8 @@ instance.interceptors.request.use(
     let fp1 = ''
 
     // Add fingerprint headers if enabled
-    if ($config?.apiConfig?.isHttpNeedFp) {
+    const isHttpNeedFp = true
+    if (isHttpNeedFp) {
       if (config.url?.includes('upload_img')) {
         // Upload request
         const signux = xcode.signux()
@@ -57,7 +72,8 @@ instance.interceptors.request.use(
         config.headers['x-sign'] = signux.sign
 
         // Add x-type header for specific brand
-        if ($config.brand_id === 1) {
+        const brandId = 1
+        if (brandId === 1) {
           if (userInfo && userInfo?.plan_name && userInfo.email) {
             if (
               userInfo.plan_name === 'free' ||
@@ -70,29 +86,32 @@ instance.interceptors.request.use(
           }
         }
       } else {
-        // Regular request
+        // Regular request - generate fresh fingerprint for each request
+        const currentFp = await getFingerprint()
         const signx = xcode.signx()
         const secret_key = signx.secret_key
         const aesSecret = signx.aesSecret
 
         // Encrypt fp1 using aesSecret
-        fp1 = xcode.aseEncrypt(fp as string, aesSecret as string)
+        fp1 = xcode.aseEncrypt(currentFp, aesSecret)
 
-        config.headers['fp'] = fp
+        config.headers['fp'] = currentFp
         config.headers['fp1'] = fp1
         config.headers['x-guide'] = aesSecret  // Use aesSecret as x-guide for decryption
       }
     }
 
     // Add JWT Authorization token if enabled
-    if ($config?.apiConfig?.isHttpNeedToken && accessToken) {
+    const isHttpNeedToken = true
+    if (isHttpNeedToken && accessToken) {
       if (!config.headers['Authorization']) {
         config.headers['Authorization'] = 'Bearer ' + accessToken
       }
     }
 
     // Add theme version
-    if ($config.brand_id === 1) {
+    const brandId = 1
+    if (brandId === 1) {
       const themeVersion = document.getElementById('theme-version')?.getAttribute('data-kt-theme-version') || ''
       config.headers['theme-version'] = themeVersion
     }
@@ -109,10 +128,10 @@ instance.interceptors.request.use(
     if (config.method === 'post') {
       config.data = config.data || {}
       if (config.data instanceof FormData) {
-        config.data.append('request_from', $config.brand_id)
+        config.data.append('request_from', '1')
         config.data.append('origin_from', origin_from)
       } else {
-        config.data.request_from = $config.brand_id
+        config.data.request_from = 1
         config.data.origin_from = origin_from
       }
     }
@@ -120,7 +139,7 @@ instance.interceptors.request.use(
     // Add request_from and origin_from to GET requests
     if (config.method === 'get') {
       config.params = config.params || {}
-      config.params.request_from = $config.brand_id
+      config.params.request_from = 1
       config.params.origin_from = origin_from
     }
 
@@ -171,7 +190,7 @@ instance.interceptors.response.use(
       console.error('Network error:', error.message)
       
       // Don't show error for network issues, just log them
-      if (!error.config?.not_show_error) {
+      if (!(error.config as ExtendedAxiosRequestConfig)?.not_show_error) {
         console.warn('API request failed due to network issues. Please check your connection.')
       }
       
@@ -179,51 +198,92 @@ instance.interceptors.response.use(
     }
 
     // Handle different error status codes
-    if (status === 401 && !error.config?._retry) {
+    if (status === 401 && !(error.config as ExtendedAxiosRequestConfig)?._retry) {
       // Mark this request as retried to prevent infinite loops
-      error.config._retry = true
+      if (error.config) {
+        (error.config as ExtendedAxiosRequestConfig)._retry = true
+      }
       
-      // Unauthorized - try to refresh token or redirect to login
+      // Unauthorized - try to refresh token for seamless experience
       const userStore = useUserStore()
       
-      if (!isRefreshing) {
-        isRefreshing = true
-        
-        try {
-          // Try to refresh token
-          const refreshed = await userStore.refreshAuthToken()
+      // Check if this is a token expiration (not a refresh token request)
+      const isRefreshRequest = error.config?.url?.includes('/auth/refresh')
+      
+      if (!isRefreshRequest && userStore.refreshToken) {
+        if (!isRefreshing) {
+          isRefreshing = true
           
-          if (refreshed && error.config) {
-            // Retry the original request with new token
-            error.config.headers['Authorization'] = 'Bearer ' + userStore.token
+          try {
+            console.log('Token expired, attempting to refresh...')
+            // Try to refresh token
+            const refreshed = await userStore.refreshAuthToken()
+            
+            if (refreshed && error.config) {
+              console.log('Token refreshed successfully, retrying original request...')
+              // Retry the original request with new token
+              error.config.headers['Authorization'] = 'Bearer ' + userStore.token
+              isRefreshing = false
+              return instance.request(error.config)
+            }
+          } catch (refreshError) {
+            console.error('Token refresh failed:', refreshError)
+            // Refresh failed, clear auth
+            userStore.clearAuth()
+          } finally {
             isRefreshing = false
-            return instance.request(error.config)
           }
-        } catch (refreshError) {
-          // Refresh failed, clear auth
-          userStore.clearAuth()
-        } finally {
-          isRefreshing = false
+        } else {
+          // If already refreshing, wait and retry
+          return new Promise((resolve, reject) => {
+            const retryRequest = () => {
+              if (userStore.token && error.config) {
+                error.config.headers['Authorization'] = 'Bearer ' + userStore.token
+                resolve(instance.request(error.config))
+              } else {
+                reject(error)
+              }
+            }
+            
+            // Wait for refresh to complete
+            const checkInterval = setInterval(() => {
+              if (!isRefreshing) {
+                clearInterval(checkInterval)
+                retryRequest()
+              }
+            }, 100)
+            
+            // Timeout after 5 seconds
+            setTimeout(() => {
+              clearInterval(checkInterval)
+              reject(error)
+            }, 5000)
+          })
         }
       }
       
-      // Clear auth and redirect to login
-      userStore.clearAuth()
-      
-      Swal.fire({
-        icon: 'warning',
-        title: 'Session Expired',
-        text: 'Please login again',
-        confirmButtonText: 'Ok, got it!',
-        customClass: {
-          confirmButton: 'btn btn-primary',
-        },
-        }).then(() => {
-        // Redirect to login page
-        if (typeof window !== 'undefined') {
-          navigateTo('/auth/login')
+      // If refresh failed or no refresh token, clear auth and show login prompt
+      if (!userStore.refreshToken || isRefreshRequest) {
+        userStore.clearAuth()
+        
+        // Only show login prompt for non-refresh requests
+        if (!isRefreshRequest) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Session Expired',
+            text: 'Please login again',
+            confirmButtonText: 'Ok, got it!',
+            customClass: {
+              confirmButton: 'btn btn-primary',
+            },
+          }).then(() => {
+            // Redirect to login page
+            if (typeof window !== 'undefined') {
+              navigateTo('/')
+            }
+          })
         }
-      })
+      }
       
       return Promise.reject(error)
     } else if (status === 601) {
@@ -289,12 +349,14 @@ const g_http = <T = any>(config: ExtendedAxiosRequestConfig): Promise<T> => {
         })
         .catch((err) => {
           // Retry logic for network errors
-          if (retryCount < API_CONFIG.RETRY_ATTEMPTS && 
+          const RETRY_ATTEMPTS = 3
+          const RETRY_DELAY = 1000
+          if (retryCount < RETRY_ATTEMPTS && 
               (err.code === 'ECONNABORTED' || err.code === 'ECONNREFUSED' || !err.response)) {
-            console.warn(`Request failed, retrying... (${retryCount + 1}/${API_CONFIG.RETRY_ATTEMPTS})`)
+            console.warn(`Request failed, retrying... (${retryCount + 1}/${RETRY_ATTEMPTS})`)
             setTimeout(() => {
               makeRequest(retryCount + 1)
-            }, API_CONFIG.RETRY_DELAY * (retryCount + 1))
+            }, RETRY_DELAY * (retryCount + 1))
           } else {
             reject(err)
           }

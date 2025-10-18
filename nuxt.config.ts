@@ -1,6 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import tsconfigPaths from 'vite-tsconfig-paths'
-import { fileURLToPath } from 'url'
 
 export default defineNuxtConfig({
   devtools: { enabled: true },
@@ -20,12 +19,7 @@ export default defineNuxtConfig({
   vite: {
     plugins: [
       tsconfigPaths()
-    ],
-    resolve: {
-      alias: {
-        '@': fileURLToPath(new URL('.', import.meta.url))
-      }
-    }
+    ]
   },
   
   // Element Plus configuration
