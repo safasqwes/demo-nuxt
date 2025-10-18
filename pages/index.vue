@@ -109,7 +109,7 @@ const testApi = async () => {
   novels.value = []
   
   try {
-    const { http } = await import('~/shared/utils/http')
+    const { http } = await import('~/utils/http')
     const response = await http.get('/api/novels')
     
     if (response.success) {

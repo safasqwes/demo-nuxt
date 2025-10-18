@@ -33,6 +33,9 @@ const instance = axios.create({
   baseURL: API_CONFIG.BASE_URL,
   timeout: API_CONFIG.TIMEOUT,
   withCredentials: $config.brand_id === 2,
+  // Add connection timeout and retry configuration
+  maxRedirects: 5,
+  validateStatus: (status) => status < 500, // Don't throw for 4xx errors
 })
 
 /**
@@ -160,6 +163,20 @@ instance.interceptors.response.use(
   },
   async (error: AxiosError) => {
     const status = error.response?.status
+    const isNetworkError = !error.response && error.code === 'ECONNABORTED'
+    const isConnectionError = error.code === 'ECONNREFUSED' || error.code === 'ENOTFOUND'
+
+    // Handle network and connection errors
+    if (isNetworkError || isConnectionError) {
+      console.error('Network error:', error.message)
+      
+      // Don't show error for network issues, just log them
+      if (!error.config?.not_show_error) {
+        console.warn('API request failed due to network issues. Please check your connection.')
+      }
+      
+      return Promise.reject(error)
+    }
 
     // Handle different error status codes
     if (status === 401 && !error.config?._retry) {
@@ -261,17 +278,30 @@ instance.interceptors.response.use(
 )
 
 /**
- * Generic HTTP request function
+ * Generic HTTP request function with retry logic
  */
 const g_http = <T = any>(config: ExtendedAxiosRequestConfig): Promise<T> => {
   return new Promise((resolve, reject) => {
-    instance(config)
-      .then((res: AxiosResponse<T>) => {
-        resolve(res.data)
-      })
-      .catch((err) => {
-        reject(err)
-      })
+    const makeRequest = (retryCount = 0) => {
+      instance(config)
+        .then((res: AxiosResponse<T>) => {
+          resolve(res.data)
+        })
+        .catch((err) => {
+          // Retry logic for network errors
+          if (retryCount < API_CONFIG.RETRY_ATTEMPTS && 
+              (err.code === 'ECONNABORTED' || err.code === 'ECONNREFUSED' || !err.response)) {
+            console.warn(`Request failed, retrying... (${retryCount + 1}/${API_CONFIG.RETRY_ATTEMPTS})`)
+            setTimeout(() => {
+              makeRequest(retryCount + 1)
+            }, API_CONFIG.RETRY_DELAY * (retryCount + 1))
+          } else {
+            reject(err)
+          }
+        })
+    }
+    
+    makeRequest()
   })
 }
 

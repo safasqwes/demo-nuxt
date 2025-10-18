@@ -19,9 +19,6 @@ import { onMounted } from 'vue'
 </script>
 
 <style>
-/* Import theme variables */
-@import '~/assets/css/theme.css';
-@import '~/assets/css/main.css';
 
 /* Global styles for the NovelHub application */
 #app {
