@@ -8,6 +8,8 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted } from 'vue'
+
 // Initialize theme system - disabled for now
 // const { initTheme } = useTheme()
 

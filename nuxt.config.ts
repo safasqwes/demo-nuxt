@@ -1,8 +1,8 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import tsconfigPaths from 'vite-tsconfig-paths'
+import { fileURLToPath } from 'node:url'
+
 export default defineNuxtConfig({
-  // Source directory for application code
-  srcDir: 'app/',
-  
   devtools: { enabled: true },
   compatibilityDate: '2024-11-01',
   future: {
@@ -15,6 +15,18 @@ export default defineNuxtConfig({
     '@element-plus/nuxt',
     '@nuxtjs/tailwindcss',
   ],
+
+  // Vite configuration
+  vite: {
+    plugins: [
+      tsconfigPaths()
+    ],
+    resolve: {
+      alias: {
+        '@': fileURLToPath(new URL('.', import.meta.url))
+      }
+    }
+  },
   
   // Element Plus configuration
   elementPlus: {
@@ -39,7 +51,6 @@ export default defineNuxtConfig({
     },
   },
   
-  css: ['~/assets/css/main.css'],
   
   // SEO Configuration
   app: {
