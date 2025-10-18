@@ -60,7 +60,7 @@
 </template>
 
 <script setup lang="ts">
-import { http } from '~/shared/utils/http'
+import { http } from '~/utils/http'
 
 // SEO metadata
 useHead({

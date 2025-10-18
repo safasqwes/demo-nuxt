@@ -1,64 +1,377 @@
 <template>
-  <div class="home-page">
-    <div class="container mx-auto px-4 py-8">
-      <h1 class="text-4xl font-bold text-center mb-8">欢迎来到 NovelHub</h1>
-      <p class="text-xl text-center text-gray-600 mb-12">您的小说阅读平台</p>
-      
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-        <div class="text-center">
-          <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <el-icon class="text-blue-600 text-2xl"><Reading /></el-icon>
-          </div>
-          <h3 class="text-xl font-semibold mb-2">阅读小说</h3>
-          <p class="text-gray-600 mb-4">发现和阅读精彩的小说内容</p>
-          <el-button type="primary" @click="$router.push('/novels')">
-            开始阅读
-          </el-button>
-        </div>
-        
-        <div class="text-center">
-          <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <el-icon class="text-green-600 text-2xl"><Wallet /></el-icon>
-          </div>
-          <h3 class="text-xl font-semibold mb-2">积分充值</h3>
-          <p class="text-gray-600 mb-4">购买积分解锁更多功能</p>
-          <el-button type="success" @click="$router.push('/pricing')">
-            查看套餐
-          </el-button>
-        </div>
-        
-        <div class="text-center">
-          <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <el-icon class="text-purple-600 text-2xl"><Setting /></el-icon>
-          </div>
-          <h3 class="text-xl font-semibold mb-2">管理后台</h3>
-          <p class="text-gray-600 mb-4">管理员专用后台系统</p>
-          <el-button type="warning" @click="$router.push('/admin/login')">
-            管理后台
-          </el-button>
-        </div>
-      </div>
+  <div class="home">
+    <!-- Banner Carousel -->
+    <BannerCarousel />
+    
+    <!-- Search Bar -->
+    <SearchBar />
+    
+    <!-- Rankings Section -->
+    <div class="rankings-section">
+      <RankingList
+        title="📊 Monthly Reading Ranking"
+        icon="🔥"
+        :novels="novelStore.monthlyRanking"
+        type="monthly"
+      />
+      <RankingList
+        title="💖 Bookmark Ranking"
+        icon="⭐"
+        :novels="novelStore.bookmarkRanking"
+        type="bookmark"
+      />
     </div>
+    
   </div>
 </template>
 
 <script setup lang="ts">
-import { Reading, Wallet, Setting } from '@element-plus/icons-vue'
+// Import stores
+import { useNovelStore } from '~/stores/user/novel'
 
-// SEO
+// Import components
+import BannerCarousel from '~/components/BannerCarousel.vue'
+import SearchBar from '~/components/SearchBar.vue'
+import RankingList from '~/components/RankingList.vue'
+
+// Page SEO metadata
 useHead({
-  title: 'NovelHub - 小说阅读平台',
+  title: 'Home - NovelHub | Read Web Novels & Light Novels',
   meta: [
-    { name: 'description', content: 'NovelHub是您的小说阅读平台，提供丰富的小说内容和便捷的阅读体验' }
-  ]
+    {
+      name: 'description',
+      content: 'Welcome to NovelHub! Discover thousands of web novels across fantasy, cultivation, sci-fi, romance, and more. Lightning-fast reading experience with responsive design.',
+    },
+    {
+      name: 'keywords',
+      content: 'web novels home, light novels, online reading, fantasy novels, cultivation stories, novel library',
+    },
+    // Open Graph
+    {
+      property: 'og:title',
+      content: 'Home - NovelHub | Read Web Novels Online',
+    },
+    {
+      property: 'og:description',
+      content: 'Discover thousands of web novels across various genres. Fast, beautiful, and user-friendly reading experience.',
+    },
+    {
+      property: 'og:url',
+      content: 'https://novelhub.example.com/',
+    },
+    // Twitter
+    {
+      name: 'twitter:title',
+      content: 'Home - NovelHub | Read Web Novels Online',
+    },
+    {
+      name: 'twitter:description',
+      content: 'Discover thousands of web novels across various genres.',
+    },
+  ],
+  link: [
+    {
+      rel: 'canonical',
+      href: 'https://novelhub.example.com/',
+    },
+  ],
 })
+
+// Stores
+const novelStore = useNovelStore()
+
+// Component state
+const nuxtVersion = '4.1.3'
+const count = ref(1)
+const loading = ref(false)
+const novels = ref<any[]>([])
+const apiError = ref('')
+
+// Event handlers for reading progress demo
+const increment = () => {
+  count.value++
+}
+
+const decrement = () => {
+  if (count.value > 1) {
+    count.value--
+  }
+}
+
+const reset = () => {
+  count.value = 1
+}
+
+// API demo - fetch novels with fingerprint protection
+const testApi = async () => {
+  loading.value = true
+  apiError.value = ''
+  novels.value = []
+  
+  try {
+    const { http } = await import('~/shared/utils/http')
+    const response = await http.get('/api/novels')
+    
+    if (response.success) {
+      novels.value = response.data.novels
+      console.log('✅ API Response:', response)
+      console.log('🔒 Fingerprints validated on server')
+    }
+  } catch (error: any) {
+    apiError.value = error.message || 'Request failed'
+    console.error('❌ API Error:', error)
+  } finally {
+    loading.value = false
+  }
+}
 </script>
 
 <style scoped>
-.home-page {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+.home {
+  width: 100%;
+}
+
+/* Rankings Section */
+.rankings-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+.welcome-card {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
+}
+
+h2 {
+  font-size: 36px;
+  margin: 0 0 10px 0;
+  color: var(--text-primary);
+  text-align: center;
+}
+
+.version {
+  text-align: center;
+  color: var(--color-primary);
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 40px;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.feature-card {
+  background: var(--gradient-secondary);
+  padding: 30px;
+  border-radius: 10px;
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+  border: 1px solid var(--border-color);
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.icon {
+  font-size: 48px;
+  margin-bottom: 15px;
+}
+
+.feature-card h3 {
+  margin: 0 0 10px 0;
+  color: var(--text-primary);
+  font-size: 20px;
+}
+
+.feature-card p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.counter-demo {
+  background: var(--gradient-primary);
+  padding: 30px;
+  border-radius: 10px;
+  text-align: center;
+  color: var(--text-inverse);
+}
+
+.counter-demo h3 {
+  margin: 0 0 20px 0;
+  font-size: 24px;
+}
+
+.count {
+  font-size: 72px;
+  font-weight: bold;
+  margin: 20px 0;
+  text-shadow: 2px 2px 4px var(--overlay-dark);
+}
+
+.buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+button {
+  padding: 12px 30px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  background: var(--text-inverse);
+  color: var(--color-primary);
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: var(--shadow-sm);
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+.api-demo {
+  margin-top: 30px;
+  padding: 30px;
+  background: var(--gradient-primary);
+  border-radius: 10px;
+  color: var(--text-inverse);
+}
+
+.api-demo h3 {
+  margin: 0 0 10px 0;
+  font-size: 24px;
+}
+
+.demo-desc {
+  margin-bottom: 20px;
+  opacity: 0.9;
+}
+
+.test-btn {
+  background: var(--text-inverse);
+  color: var(--color-primary);
+  border: none;
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: var(--shadow-sm);
+}
+
+.test-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.test-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.novels-list {
+  margin-top: 25px;
+  background: var(--bg-card);
+  padding: 20px;
+  border-radius: 8px;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.novels-list h4 {
+  margin: 0 0 15px 0;
+  color: var(--color-primary);
+}
+
+.novel-card {
+  padding: 15px;
+  margin-bottom: 10px;
+  background: var(--bg-secondary);
+  border-radius: 6px;
+  border-left: 3px solid var(--color-primary);
+}
+
+.novel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.novel-header strong {
+  color: var(--text-primary);
+  font-size: 16px;
+}
+
+.rating {
+  color: var(--color-accent);
+  font-size: 14px;
+}
+
+.author {
+  margin: 5px 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.chapters {
+  margin: 5px 0;
+  color: var(--text-tertiary);
+  font-size: 13px;
+}
+
+.fingerprint-info {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 2px solid var(--border-color);
+}
+
+.fingerprint-info p {
+  margin: 5px 0;
+  color: var(--color-success);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.api-error {
+  margin-top: 20px;
+  padding: 15px;
+  background: var(--overlay-light);
+  border-radius: 6px;
+  border-left: 3px solid var(--color-error);
+}
+
+.api-error p {
+  margin: 0;
+  color: var(--text-inverse);
+}
+
+@media (max-width: 768px) {
+  .rankings-section {
+    grid-template-columns: 1fr;
+  }
 }
 </style>
 

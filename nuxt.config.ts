@@ -105,8 +105,8 @@ export default defineNuxtConfig({
     // Public keys (exposed to client-side)
     public: {
       apiBase: '/api',
-      googleClientId: process.env.GOOGLE_CLIENT_ID || '819627263362-ov95e4dfdafddtrfuq837gh6q4jgo7tn.apps.googleusercontent.com',
-      stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY || '',
+      googleClientId: process.env.NUXT_PUBLIC_GOOGLE_CLIENT_ID || '819627263362-ov95e4dfdafddtrfuq837gh6q4jgo7tn.apps.googleusercontent.com',
+      stripePublishableKey: process.env.NUXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '',
       baseUrl: process.env.BASE_URL || 'http://localhost:3000'
     }
   },

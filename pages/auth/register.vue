@@ -118,8 +118,8 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from '~/shared/stores/user'
-import { useNotification } from '~/shared/composables/useNotification'
+import { useUserStore } from '~/stores/user'
+// useNotification is auto-imported by Nuxt
 
 // SEO metadata
 useHead({

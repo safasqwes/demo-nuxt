@@ -6,12 +6,9 @@
 export default defineNuxtPlugin(async () => {
   // Only run on client side
   if (process.client) {
-    // Wait for stores to be available
-    await nextTick()
-    
     try {
       // Import the store dynamically to ensure it's available
-      const { useUserStore } = await import('~/shared/stores/user')
+      const { useUserStore } = await import('~/stores/user')
       const userStore = useUserStore()
       
       // Initialize user store from localStorage
@@ -33,4 +30,3 @@ export default defineNuxtPlugin(async () => {
     }
   }
 })
-

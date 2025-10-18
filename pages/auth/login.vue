@@ -79,8 +79,8 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from '~/shared/stores/user'
-import { useNotification } from '~/shared/composables/useNotification'
+import { useUserStore } from '~/stores/user'
+// useNotification is auto-imported by Nuxt
 
 // SEO metadata
 useHead({
@@ -189,14 +189,19 @@ onMounted(async () => {
     return
   }
 
-  // Initialize Google Sign-In
-  try {
-    const { $googleAuth } = useNuxtApp()
-    await $googleAuth.initialize()
-    $googleAuth.renderButton('google-signin-button')
-  } catch (error) {
-    console.error('Failed to initialize Google Sign-In:', error)
-  }
+  // Initialize Google Sign-In with delay to ensure DOM is ready
+  setTimeout(async () => {
+    try {
+      const { $googleAuth } = useNuxtApp()
+      console.log('Initializing Google Sign-In...')
+      await $googleAuth.initialize()
+      console.log('Rendering Google button...')
+      $googleAuth.renderButton('google-signin-button')
+      console.log('Google Sign-In initialized successfully')
+    } catch (error) {
+      console.error('Failed to initialize Google Sign-In:', error)
+    }
+  }, 1000) // 1 second delay
 })
 </script>
 

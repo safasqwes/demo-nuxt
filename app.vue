@@ -10,19 +10,18 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 
-// Initialize theme system - disabled for now
+// Theme system is disabled for now
+// Uncomment the following lines to enable theme switching:
 // const { initTheme } = useTheme()
-
-// Apply theme on mount
-onMounted(() => {
-  // initTheme()
-})
+// onMounted(() => {
+//   initTheme()
+// })
 </script>
 
 <style>
 /* Import theme variables */
-@import '@/assets/css/theme.css';
-@import '@/assets/css/main.css';
+@import '~/assets/css/theme.css';
+@import '~/assets/css/main.css';
 
 /* Global styles for the NovelHub application */
 #app {

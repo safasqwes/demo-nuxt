@@ -23,12 +23,13 @@ export default defineNuxtPlugin(() => {
       await loadGoogleScript()
       
       const config = useRuntimeConfig()
-      const clientId = config.public.googleClientId
+      const clientId = config.public.googleClientId || process.env.NUXT_PUBLIC_GOOGLE_CLIENT_ID
       
       console.log('Google Client ID:', clientId) // Debug log
       
       if (!clientId) {
         console.error('Google Client ID is not configured!')
+        console.error('Available config:', config.public)
         return
       }
       
@@ -54,7 +55,7 @@ export default defineNuxtPlugin(() => {
       console.log('Sending credential to backend for verification...')
       
       // 直接发送credential到后端，让后端使用client-secret验证
-      const { http } = await import('~/shared/utils/http')
+      const { http } = await import('~/utils/http')
       const result = await http.post('/api/auth/google/login', {
         credential: response.credential
       })
@@ -73,7 +74,7 @@ export default defineNuxtPlugin(() => {
         
         // Also update the user store
         try {
-          const { useUserStore } = await import('~/shared/stores/user')
+          const { useUserStore } = await import('~/stores/user')
           const userStore = useUserStore()
           userStore.setToken(result.data.token, result.data.refreshToken)
           userStore.setUserInfo(result.data.user)

@@ -53,8 +53,8 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from '~/shared/stores/user'
-import { useNotification } from '~/shared/composables/useNotification'
+import { useUserStore } from '~/stores/user'
+import { useNotification } from '~/composables/useNotification'
 
 const userStore = useUserStore()
 const { notify } = useNotification()
