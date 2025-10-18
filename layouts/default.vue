@@ -27,11 +27,6 @@
             </div>
           </div>
           
-          <!-- Auth Buttons -->
-          <div v-else class="auth-buttons">
-            <NuxtLink to="/auth/login" class="btn-login">Login</NuxtLink>
-            <NuxtLink to="/auth/register" class="btn-register">Sign Up</NuxtLink>
-          </div>
         </nav>
       </div>
     </header>

@@ -8,8 +8,6 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
-
 // Theme system is disabled for now
 // Uncomment the following lines to enable theme switching:
 // const { initTheme } = useTheme()
