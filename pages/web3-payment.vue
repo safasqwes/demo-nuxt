@@ -223,7 +223,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useNotification } from '~/composables/useNotification'
+import { useNotification } from '~/utils/useNotification'
 import { web3PaymentService, type PaymentRequest } from '~/utils/web3Payment'
 import { paymentService } from '~/utils/paymentService'
 import type { PaymentOrder } from '~/types/payment'
@@ -405,7 +405,7 @@ const checkOrderStatus = async () => {
     const result = await paymentService.getOrderStatus(currentOrder.value.orderId)
     if (result.success && result.order) {
       currentOrder.value = result.order
-      if (result.order.status === 'paid') {
+      if (result.order.status === 1) { // 1 = 已支付
         notify.success('Order Confirmed', 'Your order has been confirmed!')
         router.push('/payment-success')
       }
@@ -484,7 +484,7 @@ const initializeOrder = async () => {
         currency: currency as string,
         fiatAmount: parseFloat(fiatAmount as string),
         description: description as string,
-        productType: 'chapter', // 根据productId判断
+        productType: 'points', // 积分购买
         productId: productId as string
       })
 

@@ -62,9 +62,9 @@
 </template>
 
 <script setup lang="ts">
-import { useWeb3 } from '~/composables/useWeb3'
+import { useWeb3 } from '~/utils/useWeb3'
 import { useUserStore } from '~/stores/user'
-import { useNotification } from '~/composables/useNotification'
+import { useNotification } from '~/utils/useNotification'
 
 const { 
   isConnected, 

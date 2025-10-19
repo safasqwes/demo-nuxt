@@ -187,7 +187,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useUserStore } from '~/stores/user'
-import { useNotification } from '~/composables/useNotification'
+import { useNotification } from '~/utils/useNotification'
 import { CurrencyDollarIcon } from '@heroicons/vue/24/outline'
 import { 
   handleGoogleLoginFallback

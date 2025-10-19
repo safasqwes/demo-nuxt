@@ -107,7 +107,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { useUserStore } from '~/stores/user'
-import { useNotification } from '~/composables/useNotification'
+import { useNotification } from '~/utils/useNotification'
 import { http } from '~/utils/http'
 
 // Props

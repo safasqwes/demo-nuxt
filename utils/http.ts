@@ -26,9 +26,7 @@ if (typeof window !== 'undefined') {
 
 // Get runtime config
 const getConfig = () => {
-  if (typeof window !== 'undefined') {
-    return useRuntimeConfig()
-  }
+  // 使用默认配置，避免在模块顶层调用 useRuntimeConfig
   return {
     public: {
       apiBase: '/api',

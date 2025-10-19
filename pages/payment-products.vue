@@ -130,7 +130,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useNotification } from '~/composables/useNotification'
+import { useNotification } from '~/utils/useNotification'
 import { paymentService } from '~/utils/paymentService'
 import type { PaymentProduct, TokenConfig } from '~/types/payment'
 
@@ -155,31 +155,65 @@ const selectedProduct = ref<PaymentProduct | null>(null)
 const selectedCurrency = ref('')
 const priceInfo = ref<any>(null)
 
-// Sample products (in real app, this would come from API)
-const initializeProducts = () => {
-  subscriptionProducts.value = [
-    {
-      id: 'sub-monthly',
-      type: 'subscription',
-      name: 'Monthly Premium',
-      description: 'Access to all premium content and features',
-      fiatPrice: 9.99,
-      currency: 'USD',
-      tokenAmount: '0',
-      priceTTL: 0
-    },
-    {
-      id: 'sub-yearly',
-      type: 'subscription',
-      name: 'Yearly Premium',
-      description: 'Best value - 12 months of premium access',
-      fiatPrice: 99.99,
-      currency: 'USD',
-      tokenAmount: '0',
-      priceTTL: 0
+// 从后端 API 获取套餐列表
+const initializeProducts = async () => {
+  try {
+    const response = await paymentService.getProducts()
+    if (response.success && response.products) {
+      // 转换为前端需要的格式
+      subscriptionProducts.value = response.products.map(plan => ({
+        id: plan.planId,
+        type: 'subscription',
+        name: plan.name,
+        description: plan.description,
+        fiatPrice: plan.price / 100, // 转换为美元
+        currency: 'USD',
+        tokenAmount: '0',
+        priceTTL: 0,
+        points: plan.points
+      }))
     }
-  ]
+  } catch (error) {
+    console.error('Failed to load payment plans:', error)
+    // 使用默认数据作为后备
+    subscriptionProducts.value = [
+      {
+        id: 'plan_basic',
+        type: 'subscription',
+        name: '基础套餐',
+        description: '适合偶尔阅读的用户',
+        fiatPrice: 9.9,
+        currency: 'USD',
+        tokenAmount: '0',
+        priceTTL: 0,
+        points: 1000
+      },
+      {
+        id: 'plan_premium',
+        type: 'subscription',
+        name: '高级套餐',
+        description: '最受欢迎的选择',
+        fiatPrice: 19.9,
+        currency: 'USD',
+        tokenAmount: '0',
+        priceTTL: 0,
+        points: 2600
+      },
+      {
+        id: 'plan_ultimate',
+        type: 'subscription',
+        name: '终极套餐',
+        description: '最超值选择',
+        fiatPrice: 39.9,
+        currency: 'USD',
+        tokenAmount: '0',
+        priceTTL: 0,
+        points: 5999
+      }
+    ]
+  }
 
+  // 内容产品保持不变
   contentProducts.value = [
     {
       id: 'chapter-001',
@@ -268,8 +302,8 @@ const formatTimeRemaining = (ttl: number) => {
 }
 
 // Initialize
-onMounted(() => {
-  initializeProducts()
+onMounted(async () => {
+  await initializeProducts()
   supportedTokens.value = paymentService.getSupportedTokens()
 })
 </script>
