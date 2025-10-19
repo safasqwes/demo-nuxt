@@ -12,7 +12,7 @@
           </div>
         </div>
       </div>
-      <div v-else-if="!walletStatus.isUnlocked" class="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-6">
+      <div v-if="!walletStatus.isInstalled && !walletStatus.isUnlocked" class="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-6">
         <div class="flex items-center">
           <div class="text-orange-600 mr-3">🔒</div>
           <div>
@@ -172,7 +172,7 @@ let provider: any = undefined
 let signer: any = undefined
 
 const checkWalletStatus = async () => {
-  if (!window.ethereum) {
+  if (process.server || !window.ethereum) {
     return { isInstalled: false, isUnlocked: false, accounts: [] }
   }
   
@@ -192,8 +192,10 @@ const checkWalletStatus = async () => {
 }
 
 onMounted(async () => {
-  walletStatus.value = await checkWalletStatus()
-  console.log('钱包状态:', walletStatus.value)
+  if (process.client) {
+    walletStatus.value = await checkWalletStatus()
+    console.log('钱包状态:', walletStatus.value)
+  }
 })
 
 const connectWallet = async () => {

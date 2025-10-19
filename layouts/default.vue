@@ -38,7 +38,7 @@
                 class="w-6 h-6 md:w-8 md:h-8 rounded-full object-cover border-2 border-gray-300"
               />
               <span 
-                v-else 
+                v-if="!(userStore && userStore.isAuthenticated)"
                 class="w-6 h-6 md:w-8 md:h-8 rounded-full bg-white text-blue-600 flex items-center justify-center font-bold text-xs md:text-sm"
               >
                 {{ userInitials }}
@@ -58,8 +58,8 @@
                 class="flex items-center gap-2 w-full px-4 py-3 bg-none border-0 text-gray-700 no-underline cursor-pointer transition-colors text-left hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span v-if="userStore.claimLoading">⏳</span>
-                <span v-else-if="userStore.hasClaimedToday">✅</span>
-                <span v-else">🎁</span>
+                <span v-if="userStore.hasClaimedToday">✅</span>
+                <span v-if="!userStore.hasClaimedToday"">🎁</span>
                 <span>{{ userStore.hasClaimedToday ? '今日已签到' : '每日签到' }}</span>
                 <span v-if="!userStore.hasClaimedToday && userStore.claimInfo" class="text-xs text-green-600 ml-auto">
                   +{{ userStore.claimInfo.todayPoints }}
@@ -81,7 +81,7 @@
           </div>
           
           <!-- Auth Buttons (when not logged in) -->
-          <div v-else class="flex gap-2">
+          <div v-if="!(userStore && userStore.isAuthenticated)" class="flex gap-2">
             <button 
               id="google-login-btn" 
               class="flex items-center gap-0 md:gap-2 px-2 py-2 md:px-4 md:py-2.5 bg-white border border-gray-300 rounded-lg text-gray-700 text-xs md:text-sm font-medium cursor-pointer transition-all shadow-sm hover:bg-gray-50 hover:border-gray-400 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:shadow-sm disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none"
@@ -152,20 +152,30 @@
           </div>
 
           <!-- Points List -->
-          <div v-else-if="pointsHistory.length > 0" class="space-y-1">
+          <div v-if="!pointsLoading && pointsHistory.length > 0" class="space-y-1">
             <div 
               v-for="(point, index) in pointsHistory" 
               :key="index"
-              class="grid grid-cols-3 gap-4 px-3 py-2 bg-gray-50 rounded hover:bg-gray-100 transition-colors items-center"
+              class="grid grid-cols-4 gap-4 px-3 py-2 bg-gray-50 rounded hover:bg-gray-100 transition-colors items-center"
             >
-              <!-- Description (Left) -->
-              <div class="text-left">
+              <!-- Icon & Description (Left) -->
+              <div class="text-left flex items-center gap-2">
+                <div class="text-lg">
+                  {{ getPointsIcon(point.pointsType) }}
+                </div>
                 <p class="text-sm font-medium text-gray-900 truncate">
                   {{ point.description || '积分变动' }}
                 </p>
               </div>
               
-              <!-- Points (Center) -->
+              <!-- Points Type (Center-Left) -->
+              <div class="text-left">
+                <span class="text-xs text-gray-500">
+                  {{ getPointsTypeName(point.pointsType) }}
+                </span>
+              </div>
+              
+              <!-- Points (Center-Right) -->
               <div class="text-left">
                 <span 
                   :class="point.points > 0 ? 'text-green-600' : 'text-red-600'"
@@ -185,7 +195,7 @@
           </div>
 
           <!-- Empty State -->
-          <div v-else class="text-center py-8">
+          <div v-if="!pointsLoading && pointsHistory.length == 0" class="text-center py-8">
             <div class="text-gray-400 text-4xl mb-2">💰</div>
             <p class="text-gray-500">暂无积分历史记录</p>
           </div>
@@ -245,6 +255,7 @@ const showPointsModal = ref(false)
 const pointsHistory = ref<Array<{
   id: number
   points: number
+  pointsType: number
   description: string
   createdAt: string
 }>>([])
@@ -363,6 +374,7 @@ const loadPointsHistory = async () => {
       pointsHistory.value = response.data.data.map(item => ({
         id: item.id,
         points: item.points,
+        pointsType: item.pointsType,
         description: item.extraData || getPointsDescription(item.type, item.funcType, item.pointsType),
         createdAt: item.createdAt
       }))
@@ -475,6 +487,34 @@ const getPointsDescription = (type: number, funcType: number, pointsType: number
       default:
         return '积分消费'
     }
+  }
+}
+
+// 根据积分类型获取图标
+const getPointsIcon = (pointsType: number): string => {
+  switch (pointsType) {
+    case 0: // 免费积分（银币）
+      return '🥈'
+    case 1: // 固定积分（金币）
+      return '💰'
+    case 2: // 订阅积分
+      return '💎'
+    default:
+      return '🪙'
+  }
+}
+
+// 根据积分类型获取名称
+const getPointsTypeName = (pointsType: number): string => {
+  switch (pointsType) {
+    case 0: // 免费积分（银币）
+      return '银币'
+    case 1: // 固定积分（金币）
+      return '金币'
+    case 2: // 订阅积分
+      return '钻石'
+    default:
+      return '积分'
   }
 }
 
