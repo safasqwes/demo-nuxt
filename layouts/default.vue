@@ -1,12 +1,34 @@
 <template>
-  <div class="min-h-screen flex flex-col bg-gray-50">
+  <div class="min-h-screen flex flex-col bg-gradient-to-br from-green-900 to-gray-50">
     <!-- Site Header with Navigation -->
-    <header class="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-5 shadow-lg" role="banner">
+    <header class="bg-gradient-to-r from-green-800 to-green-900 text-white py-5 shadow-lg" role="banner">
       <div class="max-w-6xl mx-auto px-5 flex flex-row justify-between items-center gap-2">
         <!-- Logo with link to home -->
-        <NuxtLink to="/" class="text-2xl md:text-3xl font-bold text-white no-underline transition-opacity hover:opacity-90">
-          📚 NovelHub
+        <NuxtLink to="/" class="flex items-center gap-3 text-white no-underline transition-opacity hover:opacity-90">
+          <!-- SVG Logo -->
+          <img src="/logo.svg" alt="NovelHub Logo" class="w-10 h-10 md:w-12 md:h-12" />
+          <!-- Website name - hidden on mobile, visible on desktop -->
+          <span class="text-2xl md:text-3xl font-bold hidden md:block">NovelHub</span>
         </NuxtLink>
+        
+        <!-- Navigation Links - Desktop -->
+        <nav class="hidden md:flex items-center space-x-6">
+          <NuxtLink to="/" class="text-white hover:text-green-200 transition-colors">Home</NuxtLink>
+          <NuxtLink to="/pricing" class="text-white hover:text-green-200 transition-colors">Pricing</NuxtLink>
+          <NuxtLink to="/payment-products" class="text-white hover:text-green-200 transition-colors">Buy Content</NuxtLink>
+          <NuxtLink to="/web3-payment" class="text-white hover:text-green-200 transition-colors">Web3 Pay</NuxtLink>
+        </nav>
+        
+        <!-- Mobile Menu Button -->
+        <button 
+          class="md:hidden flex items-center justify-center w-10 h-10 text-white hover:bg-white hover:bg-opacity-20 rounded-md transition-colors"
+          @click="toggleMobileMenu"
+          aria-label="Toggle mobile menu"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
         
         <!-- User Menu / Auth Buttons (aligned to the right) -->
         <div class="flex items-center gap-2">
@@ -14,13 +36,13 @@
           <div v-if="userStore && userStore.isAuthenticated" class="flex items-center gap-3 mr-2">
             <!-- Gold Coins -->
             <div class="flex items-center gap-1 bg-yellow-100 bg-opacity-20 px-2 py-1 rounded-md">
-              <CurrencyDollarIcon class="w-4 h-4 text-yellow-400" />
+              <CurrencyDollarIcon class="w-4 h-4 text-yellow-500" />
               <span class="font-semibold text-sm">{{ userStore.goldCoins }}</span>
             </div>
             
             <!-- Silver Coins -->
-            <div class="flex items-center gap-1 bg-gray-100 bg-opacity-20 px-2 py-1 rounded-md">
-              <CurrencyDollarIcon class="w-4 h-4 text-gray-200" />
+            <div class="flex items-center gap-1 bg-secondary-100 bg-opacity-20 px-2 py-1 rounded-md">
+              <CurrencyDollarIcon class="w-4 h-4 text-secondary-200" />
               <span class="font-semibold text-sm">{{ userStore.silverCoins }}</span>
             </div>
           </div>
@@ -28,7 +50,7 @@
           <!-- User Menu (when logged in) -->
           <div v-if="userStore && userStore.isAuthenticated" class="relative user-menu">
             <button 
-              class="flex items-center gap-1 md:gap-2 px-2 py-2 md:px-4 md:py-2 bg-white bg-opacity-20 border-0 rounded-md text-white cursor-pointer transition-all hover:bg-opacity-30"
+              class="flex items-center gap-1 md:gap-2 px-2 py-2 md:px-4 md:py-2 bg-white bg-opacity-20 border-0 rounded-md text-white cursor-pointer transition-all hover:bg-opacity-30 hover:shadow-primary"
               @click="toggleUserMenu"
             >
               <img 
@@ -50,218 +72,137 @@
             </button>
             <div 
               v-if="showUserMenu" 
-              class="absolute top-full right-0 mt-2 bg-white rounded-lg shadow-xl border border-gray-200 min-w-48 z-[9999] overflow-hidden"
+              class="absolute top-full right-0 mt-2 bg-white rounded-lg shadow-primary-lg border border-primary-200 min-w-48 z-[9999] overflow-hidden"
             >
               <button 
                 @click="handleDailyClaim"
                 :disabled="userStore.claimLoading || userStore.hasClaimedToday"
-                class="flex items-center gap-2 w-full px-4 py-3 bg-none border-0 text-gray-700 no-underline cursor-pointer transition-colors text-left hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                class="flex items-center gap-2 w-full px-4 py-3 bg-none border-0 text-gray-700 no-underline cursor-pointer transition-colors text-left hover:bg-primary-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span v-if="userStore.claimLoading">⏳</span>
                 <span v-if="userStore.hasClaimedToday">✅</span>
-                <span v-if="!userStore.hasClaimedToday"">🎁</span>
-                <span>{{ userStore.hasClaimedToday ? '今日已签到' : '每日签到' }}</span>
-                <span v-if="!userStore.hasClaimedToday && userStore.claimInfo" class="text-xs text-green-600 ml-auto">
+                <span v-if="!userStore.hasClaimedToday">🎁</span>
+                <span>{{ userStore.hasClaimedToday ? 'Claimed Today' : 'Daily Claim' }}</span>
+                <span v-if="!userStore.hasClaimedToday && userStore.claimInfo" class="text-xs text-success-600 ml-auto">
                   +{{ userStore.claimInfo.todayPoints }}
                 </span>
               </button>
               <button 
                 @click="handleShowPointsHistory"
-                class="flex items-center gap-2 w-full px-4 py-3 bg-none border-0 text-gray-700 no-underline cursor-pointer transition-colors text-left hover:bg-gray-100"
+                class="flex items-center gap-2 w-full px-4 py-3 bg-none border-0 text-gray-700 no-underline cursor-pointer transition-colors text-left hover:bg-primary-50"
               >
-                💰 积分历史
+                💰 Points History
               </button>
               <button 
                 @click="handleLogout"
-                class="flex items-center gap-2 w-full px-4 py-3 bg-none border-0 text-gray-700 no-underline cursor-pointer transition-colors text-left hover:bg-gray-100"
+                class="flex items-center gap-2 w-full px-4 py-3 bg-none border-0 text-gray-700 no-underline cursor-pointer transition-colors text-left hover:bg-primary-50"
               >
-                🚪 登出
+                🚪 Logout
               </button>
             </div>
           </div>
           
           <!-- Auth Buttons (when not logged in) -->
           <div v-if="!(userStore && userStore.isAuthenticated)" class="flex gap-2">
-            <button 
-              id="google-login-btn" 
-              class="flex items-center gap-0 md:gap-2 px-2 py-2 md:px-4 md:py-2.5 bg-white border border-gray-300 rounded-lg text-gray-700 text-xs md:text-sm font-medium cursor-pointer transition-all shadow-sm hover:bg-gray-50 hover:border-gray-400 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 active:shadow-sm disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none"
-              :disabled="userStore.loading"
-              @click="handleGoogleLogin"
-            >
-              <svg class="flex-shrink-0" viewBox="0 0 24 24" width="18" height="18">
-                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-              </svg>
-              <span class="hidden md:inline">
-                {{ userStore.loading ? 'Signing in...' : 'Login with Google' }}
-              </span>
-            </button>
+            <!-- Google 登录按钮容器 -->
+            <div id="google-signin-button" class="flex items-center gap-0 md:gap-2">
+              <!-- 当插件未加载时显示备用按钮 -->
+              <button 
+                v-if="!googleAuthReady"
+                class="flex items-center gap-0 md:gap-2 px-2 py-2 md:px-4 md:py-2.5 bg-white border border-primary-300 rounded-lg text-gray-700 text-xs md:text-sm font-medium cursor-pointer transition-all shadow-sm hover:bg-primary-50 hover:border-primary-400 hover:shadow-primary hover:-translate-y-0.5 active:translate-y-0 active:shadow-sm disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none"
+                :disabled="userStore.loading"
+                @click="() => handleGoogleLoginFallback(useRuntimeConfig().public.googleClientId, (response) => console.log('Fallback login:', response), notify)"
+              >
+                <svg class="flex-shrink-0" viewBox="0 0 24 24" width="18" height="18">
+                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                  <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                  <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                  <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                <span class="hidden md:inline">
+                  {{ userStore.loading ? 'Signing in...' : 'Login with Google' }}
+                </span>
+              </button>
+            </div>
             
             <!-- Web3登录组件 -->
-            <Web3Login @login-success="handleWeb3LoginSuccess" />
+            <!-- <Web3Login @login-success="handleWeb3LoginSuccess" /> -->
           </div>
+        </div>
+      </div>
+      
+      <!-- Mobile Menu -->
+      <div v-if="showMobileMenu" class="md:hidden bg-green-800 border-t border-green-700">
+        <div class="px-5 py-4 space-y-3">
+          <NuxtLink 
+            to="/" 
+            class="block text-white hover:text-green-200 transition-colors py-2"
+            @click="closeMobileMenu"
+          >
+            Home
+          </NuxtLink>
+          <NuxtLink 
+            to="/pricing" 
+            class="block text-white hover:text-green-200 transition-colors py-2"
+            @click="closeMobileMenu"
+          >
+            Pricing
+          </NuxtLink>
+          <NuxtLink 
+            to="/payment-products" 
+            class="block text-white hover:text-green-200 transition-colors py-2"
+            @click="closeMobileMenu"
+          >
+            Buy Content
+          </NuxtLink>
+          <NuxtLink 
+            to="/web3-payment" 
+            class="block text-white hover:text-green-200 transition-colors py-2"
+            @click="closeMobileMenu"
+          >
+            Web3 Pay
+          </NuxtLink>
         </div>
       </div>
     </header>
     
     <!-- Main Content Area -->
-    <main class="flex-1 py-10 bg-gray-50" role="main" id="main-content">
+    <main class="flex-1 py-10 bg-gradient-to-br from-green-50 to-gray-50" role="main" id="main-content">
       <div class="max-w-6xl mx-auto px-5">
         <slot />
       </div>
     </main>
     
     <!-- Site Footer -->
-    <footer class="bg-gray-800 text-gray-300 py-5 text-center border-t border-gray-700" role="contentinfo">
-      <div class="max-w-6xl mx-auto px-5">
-        <p class="m-0">© 2025 NovelHub - Your Gateway to Amazing Web Novels</p>
-      </div>
-    </footer>
+    <AppFooter />
 
     <!-- Points History Modal -->
-    <div 
-      v-if="showPointsModal" 
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
-      @click="handleClosePointsModal"
-    >
-      <div 
-        class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col"
-        @click.stop
-      >
-        <!-- Modal Header -->
-        <div class="flex items-center justify-between p-6 border-b border-gray-200">
-          <h3 class="text-xl font-semibold text-gray-900">积分历史</h3>
-          <button 
-            @click="handleClosePointsModal"
-            class="text-gray-400 hover:text-gray-600 transition-colors"
-          >
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-          </button>
-        </div>
-
-        <!-- Modal Content -->
-        <div class="p-6 flex-1 overflow-y-auto">
-          <!-- Loading State -->
-          <div v-if="pointsLoading" class="flex items-center justify-center py-8">
-            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-            <span class="ml-2 text-gray-600">加载中...</span>
-          </div>
-
-          <!-- Points List -->
-          <div v-if="!pointsLoading && pointsHistory.length > 0" class="space-y-1">
-            <div 
-              v-for="(point, index) in pointsHistory" 
-              :key="index"
-              class="grid grid-cols-4 gap-4 px-3 py-2 bg-gray-50 rounded hover:bg-gray-100 transition-colors items-center"
-            >
-              <!-- Icon & Description (Left) -->
-              <div class="text-left flex items-center gap-2">
-                <div class="text-lg">
-                  {{ getPointsIcon(point.pointsType) }}
-                </div>
-                <p class="text-sm font-medium text-gray-900 truncate">
-                  {{ point.description || '积分变动' }}
-                </p>
-              </div>
-              
-              <!-- Points Type (Center-Left) -->
-              <div class="text-left">
-                <span class="text-xs text-gray-500">
-                  {{ getPointsTypeName(point.pointsType) }}
-                </span>
-              </div>
-              
-              <!-- Points (Center-Right) -->
-              <div class="text-left">
-                <span 
-                  :class="point.points > 0 ? 'text-green-600' : 'text-red-600'"
-                  class="text-sm font-semibold"
-                >
-                  {{ point.points > 0 ? '+' : '' }}{{ point.points }}
-                </span>
-              </div>
-              
-              <!-- Created At (Right) -->
-              <div class="text-right">
-                <p class="text-xs text-gray-500">
-                  {{ formatDate(point.createdAt) }}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Empty State -->
-          <div v-if="!pointsLoading && pointsHistory.length == 0" class="text-center py-8">
-            <div class="text-gray-400 text-4xl mb-2">💰</div>
-            <p class="text-gray-500">暂无积分历史记录</p>
-          </div>
-
-          <!-- Pagination -->
-          <div v-if="pointsHistory.length > 0" class="flex items-center justify-between mt-6 pt-4 border-t border-gray-200">
-            <button 
-              @click="loadPreviousPage"
-              :disabled="currentPage === 1 || pointsLoading"
-              class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              上一页
-            </button>
-            <span class="text-sm text-gray-700">
-              第 {{ currentPage }} 页
-            </span>
-            <button 
-              @click="loadNextPage"
-              :disabled="!hasNextPage || pointsLoading"
-              class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              下一页
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <PointsHistoryModal 
+      :show="showPointsModal" 
+      @close="handleClosePointsModal" 
+    />
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import { useUserStore } from '~/stores/user'
 import { useNotification } from '~/composables/useNotification'
-import { http } from '~/utils/http'
 import { CurrencyDollarIcon } from '@heroicons/vue/24/outline'
+import { 
+  handleGoogleLoginFallback
+} from '~/utils/googleAuth'
 
-// Google Identity Services types
-declare global {
-  interface Window {
-    google: {
-      accounts: {
-        id: {
-          initialize: (config: any) => void
-          prompt: () => void
-        }
-      }
-    }
-  }
-}
 
 const userStore = useUserStore()
 const { notify } = useNotification()
 const router = useRouter()
+const { $googleAuth } = useNuxtApp()
 
 const showUserMenu = ref(false)
+const googleAuthReady = ref(false)
 const showPointsModal = ref(false)
-const pointsHistory = ref<Array<{
-  id: number
-  points: number
-  pointsType: number
-  description: string
-  createdAt: string
-}>>([])
-const pointsLoading = ref(false)
-const currentPage = ref(1)
-const hasNextPage = ref(false)
+const showMobileMenu = ref(false)
 
 // Initialize user store from localStorage
 onMounted(() => {
@@ -278,13 +219,14 @@ const toggleUserMenu = () => {
   showUserMenu.value = !showUserMenu.value
 }
 
-const handleLogout = async () => {
-  if (userStore) {
-    await userStore.logout()
-    showUserMenu.value = false
-    notify.info('Goodbye', 'You have been logged out')
-    router.push('/')
-  }
+// Toggle mobile menu
+const toggleMobileMenu = () => {
+  showMobileMenu.value = !showMobileMenu.value
+}
+
+// Close mobile menu
+const closeMobileMenu = () => {
+  showMobileMenu.value = false
 }
 
 // Daily claim handler
@@ -296,19 +238,61 @@ const handleDailyClaim = async () => {
     
     if (result.success) {
       const data = result.data
-      notify.success('签到成功！', `获得 ${data.points} 银币，连续签到 ${data.streakDays} 天`)
+      notify.success('Claim Successful!', `Earned ${data.points} silver coins, ${data.streakDays} days streak`)
       showUserMenu.value = false
     } else {
       // 检查是否是已领取状态
       if (result.alreadyClaimed) {
-        notify.info('今日已签到', result.message || '今天已经领取过银币了')
+        notify.info('Already Claimed Today', result.message || 'You have already claimed silver coins today')
       } else {
-        notify.error('签到失败', result.message || '签到失败，请稍后重试')
+        notify.error('Claim Failed', result.message || 'Claim failed, please try again later')
       }
     }
   } catch (error) {
     console.error('Daily claim error:', error)
-    notify.error('签到失败', '网络错误，请稍后重试')
+    notify.error('Claim Failed', 'Network error, please try again later')
+  }
+}
+
+// Points History Methods
+const handleShowPointsHistory = async () => {
+  showUserMenu.value = false
+  showPointsModal.value = true
+}
+
+const handleLogout = async () => {
+  if (!userStore) return
+  
+  try {
+    // 关闭用户菜单
+    showUserMenu.value = false
+    
+    // 清理积分历史相关状态
+    showPointsModal.value = false
+    
+    // 清理 Google 登录状态
+    $googleAuth.signOut()
+    
+    // 调用用户 store 的 logout 方法
+    await userStore.logout()
+    
+    // 显示登出成功消息
+    notify.info('Goodbye', 'You have been logged out')
+    
+    // 跳转到首页
+    await router.push('/')
+    
+    // 清理浏览器历史记录（可选）
+    // window.history.replaceState({}, '', '/')
+    
+  } catch (error) {
+    console.error('Logout error:', error)
+    // 即使出错也要清理本地状态
+    if (userStore) {
+      userStore.clearAuth()
+    }
+    notify.error('Logout Error', 'An error occurred during logout')
+    await router.push('/')
   }
 }
 
@@ -319,264 +303,36 @@ const handleWeb3LoginSuccess = () => {
   // 可以在这里添加其他登录成功后的逻辑
 }
 
-// Points History Methods
-const handleShowPointsHistory = async () => {
-  showUserMenu.value = false
-  showPointsModal.value = true
-  currentPage.value = 1
-  await loadPointsHistory()
-}
-
 const handleClosePointsModal = () => {
   showPointsModal.value = false
-  pointsHistory.value = []
-}
-
-const loadPointsHistory = async () => {
-  if (!userStore.isAuthenticated) return
-  
-  pointsLoading.value = true
-  try {
-    // 使用http工具调用积分历史API（自动处理指纹校验、token等）
-    const response = await http.get<{
-      code: number
-      msg: string
-      data: {
-        data: Array<{
-          id: number
-          userId: number
-          points: number
-          type: number
-          funcType: number
-          pointsType: number
-          taskId: string
-          isApi: number
-          extraData: string
-          createdAt: string
-          updatedAt: string
-        }>
-        currentPage: number
-        pageSize: number
-        totalPages: number
-        totalRecords: number
-        hasNext: boolean
-        hasPrevious: boolean
-        goldCoins: number
-        silverCoins: number
-      }
-    }>('/api/auth/points/history', {
-      page: currentPage.value,
-      size: 10
-    })
-    
-    if (response.code === 200 && response.data) {
-      // 转换数据格式以匹配前端显示
-      pointsHistory.value = response.data.data.map(item => ({
-        id: item.id,
-        points: item.points,
-        pointsType: item.pointsType,
-        description: item.extraData || getPointsDescription(item.type, item.funcType, item.pointsType),
-        createdAt: item.createdAt
-      }))
-      
-      // 同步更新金币银币数量
-      if (response.data.goldCoins !== undefined && response.data.silverCoins !== undefined) {
-        userStore.setUserInfo({
-          ...userStore.userInfo,
-          goldCoins: response.data.goldCoins,
-          silverCoins: response.data.silverCoins
-        })
-      }
-      
-      hasNextPage.value = response.data.hasNext
-    } else {
-      throw new Error(response.msg || 'Failed to load points history')
-    }
-  } catch (error) {
-    console.error('Failed to load points history:', error)
-    // 如果API调用失败，显示空数据
-    pointsHistory.value = []
-    hasNextPage.value = false
-    notify.error('加载失败', '无法加载积分历史，请稍后重试')
-  } finally {
-    pointsLoading.value = false
-  }
-}
-
-const loadNextPage = async () => {
-  if (hasNextPage.value && !pointsLoading.value) {
-    currentPage.value++
-    await loadPointsHistory()
-  }
-}
-
-const loadPreviousPage = async () => {
-  if (currentPage.value > 1 && !pointsLoading.value) {
-    currentPage.value--
-    await loadPointsHistory()
-  }
-}
-
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString)
-  const now = new Date()
-  const diffTime = now.getTime() - date.getTime()
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
-  
-  // 如果是今天，只显示时间
-  if (diffDays === 0) {
-    return date.toLocaleTimeString('zh-CN', {
-      hour: '2-digit',
-      minute: '2-digit'
-    })
-  }
-  
-  // 如果超过1天，显示完整年月日时分
-  if (diffDays >= 1) {
-    return date.toLocaleString('zh-CN', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit'
-    })
-  }
-  
-  // 其他情况显示月日
-  return date.toLocaleDateString('zh-CN', {
-    month: '2-digit',
-    day: '2-digit'
-  })
-}
-
-// 根据积分类型生成描述
-const getPointsDescription = (type: number, funcType: number, pointsType: number): string => {
-  // type: 0=消费, 1=增加
-  // funcType: 0=支付, 1=任务等
-  // pointsType: 0=免费, 1=固定, 2=订阅
-  
-  if (type === 1) { // 增加积分
-    switch (funcType) {
-      case 0: // 支付
-        return '购买积分'
-      case 1: // 任务
-        return '任务奖励'
-      case 2: // 签到
-        return '每日签到'
-      case 3: // 分享
-        return '分享奖励'
-      case 4: // 评论
-        return '评论奖励'
-      case 5: // 邀请
-        return '邀请好友'
-      case 6: // 系统
-        return '系统奖励'
-      default:
-        return '积分增加'
-    }
-  } else { // 消费积分
-    switch (funcType) {
-      case 0: // 阅读
-        return '阅读小说'
-      case 1: // 下载
-        return '下载内容'
-      case 2: // 购买
-        return '购买服务'
-      case 3: // 兑换
-        return '积分兑换'
-      default:
-        return '积分消费'
-    }
-  }
-}
-
-// 根据积分类型获取图标
-const getPointsIcon = (pointsType: number): string => {
-  switch (pointsType) {
-    case 0: // 免费积分（银币）
-      return '🥈'
-    case 1: // 固定积分（金币）
-      return '💰'
-    case 2: // 订阅积分
-      return '💎'
-    default:
-      return '🪙'
-  }
-}
-
-// 根据积分类型获取名称
-const getPointsTypeName = (pointsType: number): string => {
-  switch (pointsType) {
-    case 0: // 免费积分（银币）
-      return '银币'
-    case 1: // 固定积分（金币）
-      return '金币'
-    case 2: // 订阅积分
-      return '钻石'
-    default:
-      return '积分'
-  }
-}
-
-// Google Login handler
-const handleGoogleLogin = async () => {
-  try {
-    // Load Google Identity Services
-    await loadGoogleIdentityServices()
-    
-    // Initialize Google Sign-In
-    if (window.google) {
-      window.google.accounts.id.initialize({
-        client_id: useRuntimeConfig().public.googleClientId,
-        callback: handleGoogleCallback
-      })
-      
-      // Trigger the Google Sign-In popup
-      window.google.accounts.id.prompt()
-    }
-  } catch (error) {
-    console.error('Google login error:', error)
-    notify.error('Login Failed', 'Failed to initialize Google login')
-  }
-}
-
-// Google callback handler
-const handleGoogleCallback = async (response: any) => {
-  try {
-    const result = await userStore.googleLogin(response.credential)
-    
-    if (result.success) {
-      notify.success('Welcome!', 'Successfully logged in with Google')
-      showUserMenu.value = false
-    } else {
-      notify.error('Login Failed', result.message || 'Google login failed')
-    }
-  } catch (error) {
-    console.error('Google login callback error:', error)
-    notify.error('Login Failed', 'An error occurred during login')
-  }
-}
-
-// Load Google Identity Services script
-const loadGoogleIdentityServices = () => {
-  return new Promise((resolve, reject) => {
-    if (window.google) {
-      resolve(true)
-      return
-    }
-    
-    const script = document.createElement('script')
-    script.src = 'https://accounts.google.com/gsi/client'
-    script.async = true
-    script.defer = true
-    script.onload = () => resolve(true)
-    script.onerror = () => reject(new Error('Failed to load Google Identity Services'))
-    document.head.appendChild(script)
-  })
 }
 
 // Close dropdown when clicking outside
-onMounted(() => {
+onMounted(async () => {
+  // 初始化 Google 登录插件
+  try {
+    await $googleAuth.initialize()
+    googleAuthReady.value = true
+    
+    // 渲染 Google 登录按钮
+    nextTick(async () => {
+      const success = await $googleAuth.renderButtonWithRetry('google-signin-button', {
+        theme: 'outline',
+        size: 'large',
+        text: 'signin_with',
+        shape: 'rectangular',
+        logo_alignment: 'left'
+      }, 3, 100)
+      
+      if (!success) {
+        console.error('Failed to render Google button after all retries')
+      }
+    })
+  } catch (error) {
+    console.error('Failed to initialize Google Auth:', error)
+    googleAuthReady.value = false
+  }
+  
   document.addEventListener('click', (e) => {
     const target = e.target as HTMLElement
     if (!target.closest('.user-menu')) {

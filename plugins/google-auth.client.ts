@@ -104,26 +104,57 @@ export default defineNuxtPlugin(() => {
     const element = document.getElementById(elementId)
     if (!element) {
       console.error('Element not found:', elementId)
-      return
+      return false
     }
     
-    if (window.google) {
-      console.log('Rendering Google button...')
-      window.google.accounts.id.renderButton(
-        element,
-        {
-          theme: 'outline',
-          size: 'large',
-          text: 'signin_with',
-          shape: 'rectangular',
-          logo_alignment: 'left',
-          ...options
-        }
-      )
-      console.log('Google button rendered successfully')
+    if (window.google && window.google.accounts && window.google.accounts.id) {
+      try {
+        console.log('Rendering Google button...')
+        window.google.accounts.id.renderButton(
+          element,
+          {
+            theme: 'outline',
+            size: 'large',
+            text: 'signin_with',
+            shape: 'rectangular',
+            logo_alignment: 'left',
+            ...options
+          }
+        )
+        console.log('Google button rendered successfully')
+        return true
+      } catch (error) {
+        console.error('Error rendering Google button:', error)
+        return false
+      }
     } else {
       console.error('Google API not loaded')
+      return false
     }
+  }
+
+  // Smart render function with retry mechanism
+  const renderGoogleButtonWithRetry = (elementId: string, options: any = {}, maxRetries: number = 3, retryDelay: number = 100) => {
+    const attemptRender = (attempt: number = 1): Promise<boolean> => {
+      return new Promise((resolve) => {
+        const success = renderGoogleSignInButton(elementId, options)
+        
+        if (success) {
+          console.log(`Google button rendered successfully on attempt ${attempt}`)
+          resolve(true)
+        } else if (attempt < maxRetries) {
+          console.warn(`Failed to render Google button on attempt ${attempt}, retrying in ${retryDelay}ms...`)
+          setTimeout(() => {
+            attemptRender(attempt + 1).then(resolve)
+          }, retryDelay)
+        } else {
+          console.error(`Failed to render Google button after ${maxRetries} attempts`)
+          resolve(false)
+        }
+      })
+    }
+
+    return attemptRender()
   }
 
   // Sign out
@@ -151,6 +182,7 @@ export default defineNuxtPlugin(() => {
       googleAuth: {
         initialize: initializeGoogleSignIn,
         renderButton: renderGoogleSignInButton,
+        renderButtonWithRetry: renderGoogleButtonWithRetry,
         signOut
       }
     }
