@@ -98,6 +98,9 @@
                 {{ userStore.loading ? 'Signing in...' : 'Login with Google' }}
               </span>
             </button>
+            
+            <!-- Web3登录组件 -->
+            <Web3Login @login-success="handleWeb3LoginSuccess" />
           </div>
         </div>
       </div>
@@ -296,6 +299,13 @@ const handleDailyClaim = async () => {
     console.error('Daily claim error:', error)
     notify.error('签到失败', '网络错误，请稍后重试')
   }
+}
+
+// Web3登录成功处理
+const handleWeb3LoginSuccess = () => {
+  // Web3登录成功后的处理逻辑
+  console.log('Web3登录成功')
+  // 可以在这里添加其他登录成功后的逻辑
 }
 
 // Points History Methods

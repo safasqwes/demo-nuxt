@@ -33,6 +33,13 @@ logs
 *.sln
 *.sw?
 
+# IDE - IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
 *.tsbuildinfo
 auto-imports.d.ts
 components.d.ts

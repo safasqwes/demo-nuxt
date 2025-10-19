@@ -14,6 +14,8 @@ interface UserInfo {
   created_at?: string
   goldCoins?: number
   silverCoins?: number
+  walletAddress?: string
+  walletType?: string
   [key: string]: any
 }
 
@@ -627,6 +629,65 @@ export const useUserStore = defineStore('user', {
         return { success: false, message }
       } finally {
         this.claimLoading = false
+      }
+    },
+
+    /**
+     * Web3登录
+     * @param address 钱包地址
+     * @param signature 签名
+     * @param message 原始消息
+     */
+    async web3Login(address: string, signature: string, message: string) {
+      this.loading = true
+      try {
+        const { http } = await import('~/utils/http')
+        const response = await http.post('/api/auth/web3/login', {
+          address,
+          signature,
+          message
+        })
+        
+        if (response.code === 200) {
+          const data = response.data
+          this.setToken(data.token, data.refreshToken)
+          this.setUserInfo(data.user)
+          this.updateActivity()
+          
+          // 更新签到信息
+          if (data.claimInfo) {
+            this.setClaimInfo(data.claimInfo)
+          }
+          
+          return { success: true, data: response.data }
+        }
+        
+        return { success: false, message: response.msg || 'Web3 login failed' }
+      } catch (error: any) {
+        const message = error.response?.data?.msg || error.response?.data?.message || error.message || 'Web3 login failed'
+        return { success: false, message }
+      } finally {
+        this.loading = false
+      }
+    },
+
+    /**
+     * 获取Web3登录消息
+     * @param address 钱包地址
+     */
+    async getWeb3Message(address: string) {
+      try {
+        const { http } = await import('~/utils/http')
+        const response = await http.get('/api/auth/web3/message', { address })
+        
+        if (response.code === 200) {
+          return { success: true, message: response.data.message }
+        }
+        
+        return { success: false, message: response.msg || 'Failed to get message' }
+      } catch (error: any) {
+        const message = error.response?.data?.msg || error.response?.data?.message || error.message || 'Failed to get message'
+        return { success: false, message }
       }
     },
   },
