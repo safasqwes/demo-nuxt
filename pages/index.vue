@@ -66,6 +66,8 @@ useHead({
 })
 
 // Stores
+const { useUserStore } = await import('~/stores/user')
+const userStore = useUserStore()
 
 // Component state
 const nuxtVersion = '4.1.3'
@@ -111,5 +113,49 @@ const testApi = async () => {
     loading.value = false
   }
 }
+
+// Google auth: auto attempt on mount, render plugin button fallback
+onMounted(async () => {
+  // Initialize from storage
+  userStore.initFromStorage()
+
+  const { notify } = (await import('~/utils/useNotification')).useNotification()
+  const runtimeConfig = useRuntimeConfig()
+  const clientId = runtimeConfig.public.googleClientId || (import.meta as any).env?.NUXT_PUBLIC_GOOGLE_CLIENT_ID
+
+  // Utilities-based login attempt (FedCM aware)
+  if (!userStore.isAuthenticated && clientId) {
+    const {
+      checkFedcmSupport,
+      checkFedcmDisabled,
+      handleGoogleLogin,
+      handleGoogleCallback,
+    } = await import('~/utils/googleAuth')
+
+    checkFedcmSupport()
+    checkFedcmDisabled(notify)
+
+    const callback = (response: any) =>
+      handleGoogleCallback(response, userStore.googleLogin.bind(userStore), notify, () => {})
+
+    try {
+      await handleGoogleLogin(clientId, callback, notify)
+    } catch (e) {
+      // fall through to plugin button render
+      console.warn('Auto Google login failed, will render button:', e)
+    }
+  }
+
+  // Render plugin-driven Google button for manual login
+  if (!userStore.isAuthenticated) {
+    const { $googleAuth } = useNuxtApp()
+    try {
+      await $googleAuth.initialize()
+      await $googleAuth.renderButtonWithRetry('google-signin-btn', { size: 'large' })
+    } catch (e) {
+      console.error('Failed to initialize/render Google button:', e)
+    }
+  }
+})
 </script>
 

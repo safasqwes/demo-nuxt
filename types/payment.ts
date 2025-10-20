@@ -1,7 +1,7 @@
 // 支付相关类型定义
 
 export interface PaymentOrder {
-  orderId: string
+  orderId: number
   recipientAddress: string
   currency: string
   fiatAmount: number
@@ -29,7 +29,7 @@ export interface CreateOrderResponse {
 }
 
 export interface VerifyPaymentRequest {
-  orderId: string
+  orderId: number
   txHash: string
   fromAddress: string
 }

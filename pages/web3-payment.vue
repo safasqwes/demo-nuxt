@@ -41,8 +41,37 @@
                 </button>
               </div>
               <p class="text-green-700 text-sm mt-1 break-all">{{ walletAddress }}</p>
+              
+              <!-- 网络状态 -->
+              <div class="mt-2 text-sm">
+                <div v-if="currentNetwork" class="flex items-center justify-between">
+                  <span class="text-gray-600">
+                    Network: {{ currentNetwork.name }} ({{ currentNetwork.chainId }})
+                  </span>
+                  <button 
+                    v-if="currentNetwork.chainId !== POLYGON_MUMBAI_CHAIN_ID"
+                    @click="switchToPolygonMumbai"
+                    class="text-blue-600 hover:text-blue-800 text-xs font-medium"
+                  >
+                    Switch to Mumbai
+                  </button>
+                </div>
+                <div v-if="currentNetwork?.chainId === POLYGON_MUMBAI_CHAIN_ID" class="text-green-600 text-xs">
+                  ✓ Connected to Polygon Mumbai Testnet
+                </div>
+              </div>
+              
               <div v-if="walletBalance !== '0'" class="mt-2 text-sm">
                 <span class="text-green-600">Balance: {{ walletBalance }} {{ selectedCurrency }}</span>
+              </div>
+              
+              <!-- 测试网络水龙头提示 -->
+              <div v-if="currentNetwork?.chainId === POLYGON_MUMBAI_CHAIN_ID && walletBalance === '0'" class="mt-2 p-2 bg-blue-50 border border-blue-200 rounded text-xs">
+                <div class="text-blue-800 font-medium mb-1">Need test tokens?</div>
+                <div class="text-blue-700">
+                  Get free MATIC from: 
+                  <a href="https://faucet.polygon.technology/" target="_blank" class="underline hover:text-blue-900">Polygon Faucet</a>
+                </div>
               </div>
             </div>
           </div>
@@ -241,6 +270,13 @@ const route = useRoute()
 const router = useRouter()
 const { notify } = useNotification()
 
+// 硬编码的收款地址，确保一致性 (使用正确的校验和格式)
+const HARDCODED_RECIPIENT_ADDRESS = '0x742d35Cc6634C0532925A3B8D4C9dB96C4B4d8B6'
+
+// 网络配置
+const POLYGON_MUMBAI_CHAIN_ID = 80001
+const currentNetwork = ref<{ chainId: number; name: string } | null>(null)
+
 // Reactive data
 const currentOrder = ref<PaymentOrder | null>(null)
 const isOrderMode = ref(false)
@@ -291,6 +327,10 @@ const connectWallet = async () => {
     if (result.success && result.address) {
       walletAddress.value = result.address
       isWalletConnected.value = true
+      
+      // 检查网络
+      await checkNetwork()
+      
       notify.success('Wallet Connected', `Connected to ${result.address.substring(0, 6)}...${result.address.substring(38)}`)
     } else {
       notify.error('Connection Failed', result.error || 'Failed to connect wallet. Please try again.')
@@ -303,13 +343,57 @@ const connectWallet = async () => {
   }
 }
 
+// 检查网络
+const checkNetwork = async () => {
+  try {
+    const networkInfo = await web3PaymentService.getNetworkInfo()
+    currentNetwork.value = networkInfo
+    
+    if (networkInfo.chainId !== POLYGON_MUMBAI_CHAIN_ID) {
+      notify.warning('Wrong Network', 'Please switch to Polygon Mumbai Testnet for testing')
+    }
+  } catch (error) {
+    console.error('Network check error:', error)
+  }
+}
+
+// 切换到Polygon Mumbai测试网络
+const switchToPolygonMumbai = async () => {
+  try {
+    const result = await web3PaymentService.switchToPolygonMumbai()
+    if (result.success) {
+      notify.success('Network Switched', 'Successfully switched to Polygon Mumbai Testnet')
+      await checkNetwork()
+    } else {
+      notify.error('Network Switch Failed', result.error || 'Failed to switch network')
+    }
+  } catch (error) {
+    console.error('Network switch error:', error)
+    notify.error('Network Switch Failed', 'Failed to switch network')
+  }
+}
+
 // Payment processing
 const initiatePayment = async () => {
   if (!isWalletConnected.value || !paymentAmount.value) return
 
+  console.log('Initiating payment...', {
+    isWalletConnected: isWalletConnected.value,
+    paymentAmount: paymentAmount.value,
+    currentOrder: currentOrder.value,
+    isOrderMode: isOrderMode.value
+  })
+
   isProcessing.value = true
 
   try {
+    // 在支付前检查余额
+    const balanceCheck = await web3PaymentService.checkBalance(selectedCurrency.value, paymentAmount.value)
+    if (!balanceCheck.sufficient) {
+      notify.error('Insufficient Balance', 
+        `You have ${balanceCheck.balance} ${selectedCurrency.value}, but need ${paymentAmount.value} ${selectedCurrency.value} plus gas fees. Please add more funds to your wallet.`)
+      return
+    }
     let paymentRequest: PaymentRequest
 
     if (isOrderMode.value && currentOrder.value) {
@@ -321,12 +405,13 @@ const initiatePayment = async () => {
         description: currentOrder.value.description,
         orderId: currentOrder.value.orderId
       }
+      console.log('Order mode payment request:', paymentRequest)
     } else {
       // 自由支付模式
       paymentRequest = {
         amount: paymentAmount.value,
         currency: selectedCurrency.value,
-        recipientAddress: '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6', // 示例收款地址
+        recipientAddress: HARDCODED_RECIPIENT_ADDRESS, // 使用硬编码收款地址
         description: paymentDescription.value
       }
     }
@@ -344,7 +429,7 @@ const initiatePayment = async () => {
           id: Date.now(),
           amount: paymentRequest.amount,
           currency: paymentRequest.currency,
-          description: paymentRequest.description,
+          description: paymentRequest.description || 'Web3 Payment',
           timestamp: new Date(),
           transactionHash: result.transactionHash
         }
@@ -357,11 +442,20 @@ const initiatePayment = async () => {
         paymentDescription.value = 'Payment for NovelHub Premium Subscription'
       }
     } else {
-      notify.error('Payment Failed', result.error || 'Payment could not be processed. Please try again.')
+      // 根据错误类型显示不同的提示
+      if (result.error && result.error.includes('Insufficient')) {
+        notify.error('Insufficient Funds', result.error)
+      } else if (result.error && result.error.includes('rejected')) {
+        notify.warning('Transaction Rejected', 'You cancelled the transaction.')
+      } else if (result.error && result.error.includes('gas')) {
+        notify.error('Gas Estimation Failed', result.error)
+      } else {
+        notify.error('Payment Failed', result.error || 'Payment could not be processed. Please try again.')
+      }
     }
   } catch (error) {
     console.error('Payment error:', error)
-    notify.error('Payment Failed', 'Payment could not be processed. Please try again.')
+    notify.error('Payment Failed', 'An unexpected error occurred. Please try again.')
   } finally {
     isProcessing.value = false
   }
@@ -489,10 +583,32 @@ const initializeOrder = async () => {
       })
 
       if (result.success && result.order) {
-        currentOrder.value = result.order
+        console.log('Order created successfully:', result.order)
+        console.log('Recipient address from backend:', result.order.recipientAddress)
+        console.log('Recipient address type:', typeof result.order.recipientAddress)
+        console.log('Recipient address length:', result.order.recipientAddress?.length)
+        
+        // Convert backend response to frontend PaymentOrder format
+        // 使用硬编码的收款地址，确保一致性
+        currentOrder.value = {
+          orderId: result.order.orderId,
+          recipientAddress: HARDCODED_RECIPIENT_ADDRESS, // 使用硬编码地址
+          currency: result.order.currency,
+          fiatAmount: result.order.fiatAmount,
+          tokenAmount: result.order.tokenAmount,
+          priceTTL: result.order.priceTTL,
+          status: 'pending',
+          createdAt: new Date().toISOString(),
+          expiresAt: new Date(result.order.priceTTL * 1000).toISOString(),
+          description: result.order.description || 'Web3 Payment'
+        }
+        
+        console.log('Using hardcoded recipientAddress:', currentOrder.value.recipientAddress)
+        console.log('Hardcoded address matches expected:', currentOrder.value.recipientAddress === HARDCODED_RECIPIENT_ADDRESS)
+        
         selectedCurrency.value = result.order.currency
         paymentAmount.value = result.order.tokenAmount
-        paymentDescription.value = result.order.description
+        paymentDescription.value = result.order.description || 'Web3 Payment'
       } else {
         notify.error('Order Creation Failed', result.error || 'Failed to create order')
         router.push('/payment-products')
