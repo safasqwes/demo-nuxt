@@ -2,24 +2,52 @@
 
 export interface PaymentOrder {
   orderId: number
-  recipientAddress: string
+  orderNumber: string
+  userId: number
+  planId: number
+  planName: string
+  amount: number // 金额（分）
   currency: string
-  fiatAmount: number
-  tokenAmount: string
-  priceTTL: number // 价格锁定时间戳
-  status: 'pending' | 'paid' | 'expired' | 'cancelled'
+  points: number // 积分
+  status: number // 0-待支付 1-已支付 2-已取消 3-已过期 4-已退款
+  orderType: number // 1-订阅 2-一次性购买
   createdAt: string
-  expiresAt: string
-  description: string
-  userId?: string
+  updatedAt: string
+  payments?: PaymentDTO[]
+}
+
+export interface PaymentDTO {
+  paymentId: number
+  orderId: number
+  userId: number
+  paymentNumber: string
+  paymentMethod: string
+  amount: number
+  currency: string
+  status: number
+  expiresAt?: string
+  paidAt?: string
+  createdAt: string
+  // Stripe 相关字段
+  stripeSessionId?: string
+  stripeCustomerId?: string
+  stripeSubscriptionId?: string
+  stripePaymentIntentId?: string
+  // Web3 相关字段
+  txHash?: string
+  fromAddress?: string
+  toAddress?: string
+  tokenAmount?: string
+  tokenCurrency?: string
+  chainId?: number
+  blockNumber?: number
+  confirmations?: number
+  priceTtl?: number
 }
 
 export interface CreateOrderRequest {
-  currency: string
-  fiatAmount: number
+  planId: number
   description: string
-  productType: 'chapter' | 'subscription' | 'coins'
-  productId?: string
 }
 
 export interface CreateOrderResponse {
@@ -29,7 +57,7 @@ export interface CreateOrderResponse {
 }
 
 export interface VerifyPaymentRequest {
-  orderId: number
+  paymentId: number
   txHash: string
   fromAddress: string
 }

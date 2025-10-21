@@ -98,7 +98,7 @@ export class PaymentService {
   }
 
   // 获取订单状态
-  async getOrderStatus(orderId: string): Promise<{ success: boolean; order?: PaymentOrder; error?: string }> {
+  async getOrderStatus(orderId: number): Promise<{ success: boolean; order?: PaymentOrder; error?: string }> {
     try {
       const response = await http.get(`${this.baseUrl}/orders/${orderId}`)
       return { success: true, order: response.data.order }

@@ -14,7 +14,6 @@
         <!-- Navigation Links - Desktop -->
         <nav class="hidden md:flex items-center space-x-6">
           <NuxtLink to="/" class="text-white hover:text-green-200 transition-colors">Home</NuxtLink>
-          <NuxtLink to="/pricing" class="text-white hover:text-green-200 transition-colors">Pricing</NuxtLink>
           <NuxtLink to="/payment-products" class="text-white hover:text-green-200 transition-colors">Buy Content</NuxtLink>
           <NuxtLink to="/web3-payment" class="text-white hover:text-green-200 transition-colors">Web3 Pay</NuxtLink>
         </nav>

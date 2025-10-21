@@ -399,10 +399,10 @@ const initiatePayment = async () => {
     if (isOrderMode.value && currentOrder.value) {
       // 订单模式支付
       paymentRequest = {
-        amount: currentOrder.value.tokenAmount,
+        amount: currentOrder.value.amount.toString(),
         currency: currentOrder.value.currency,
-        recipientAddress: currentOrder.value.recipientAddress,
-        description: currentOrder.value.description,
+        recipientAddress: HARDCODED_RECIPIENT_ADDRESS, // 使用硬编码收款地址
+        description: currentOrder.value.planName,
         orderId: currentOrder.value.orderId
       }
       console.log('Order mode payment request:', paymentRequest)
@@ -467,7 +467,7 @@ const verifyOrderPayment = async (txHash: string) => {
 
   try {
     const result = await paymentService.verifyPayment({
-      orderId: currentOrder.value.orderId,
+      paymentId: currentOrder.value.payments?.[0]?.paymentId || 0, // 从支付记录中获取 paymentId
       txHash: txHash,
       fromAddress: walletAddress.value
     })
@@ -575,40 +575,38 @@ const initializeOrder = async () => {
     // 创建订单
     try {
       const result = await paymentService.createOrder({
-        currency: currency as string,
-        fiatAmount: parseFloat(fiatAmount as string),
-        description: description as string,
-        productType: 'points', // 积分购买
-        productId: productId as string
+        planId: parseInt(productId as string),
+        description: description as string
       })
 
       if (result.success && result.order) {
         console.log('Order created successfully:', result.order)
-        console.log('Recipient address from backend:', result.order.recipientAddress)
-        console.log('Recipient address type:', typeof result.order.recipientAddress)
-        console.log('Recipient address length:', result.order.recipientAddress?.length)
-        
-        // Convert backend response to frontend PaymentOrder format
-        // 使用硬编码的收款地址，确保一致性
+        console.log('Order created successfully:', result.order)
+        console.log('Order ID:', result.order.orderId)
+        console.log('Order Number:', result.order.orderNumber)
+        // 直接使用后端返回的订单数据
         currentOrder.value = {
           orderId: result.order.orderId,
-          recipientAddress: HARDCODED_RECIPIENT_ADDRESS, // 使用硬编码地址
+          orderNumber: result.order.orderNumber,
+          userId: result.order.userId,
+          planId: result.order.planId,
+          planName: result.order.planName,
+          amount: result.order.amount,
           currency: result.order.currency,
-          fiatAmount: result.order.fiatAmount,
-          tokenAmount: result.order.tokenAmount,
-          priceTTL: result.order.priceTTL,
-          status: 'pending',
-          createdAt: new Date().toISOString(),
-          expiresAt: new Date(result.order.priceTTL * 1000).toISOString(),
-          description: result.order.description || 'Web3 Payment'
+          points: result.order.points,
+          status: result.order.status,
+          orderType: result.order.orderType,
+          createdAt: result.order.createdAt,
+          updatedAt: result.order.updatedAt,
+          payments: result.order.payments || []
         }
         
-        console.log('Using hardcoded recipientAddress:', currentOrder.value.recipientAddress)
-        console.log('Hardcoded address matches expected:', currentOrder.value.recipientAddress === HARDCODED_RECIPIENT_ADDRESS)
+        console.log('Order created with ID:', currentOrder.value.orderId)
+        console.log('Order Number:', currentOrder.value.orderNumber)
         
         selectedCurrency.value = result.order.currency
-        paymentAmount.value = result.order.tokenAmount
-        paymentDescription.value = result.order.description || 'Web3 Payment'
+        paymentAmount.value = result.order.amount.toString() // 使用 amount 字段
+        paymentDescription.value = result.order.planName || 'Web3 Payment'
       } else {
         notify.error('Order Creation Failed', result.error || 'Failed to create order')
         router.push('/payment-products')
