@@ -113,7 +113,7 @@ onMounted(() => {
     // 模拟订单详情
     orderDetails.value = {
       orderId: orderId,
-      recipientAddress: '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6',
+      recipientAddress: '0xFBE3a95Caf0d8c9f862Ce16D8eCEf9f1F667aF17',
       currency: 'MATIC',
       fiatAmount: 9.99,
       tokenAmount: '5.234',

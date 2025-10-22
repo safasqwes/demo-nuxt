@@ -1,12 +1,40 @@
 import { ethers } from 'ethers'
 import type { TokenConfig } from '~/types/payment'
 
-// 支持的代币合约地址 (Polygon Mumbai Testnet)
+// 网络配置
+const NETWORKS = {
+  SEPOLIA: {
+    chainId: 11155111,
+    name: 'Ethereum Sepolia Testnet',
+    nativeCurrency: { name: 'Ethereum', symbol: 'ETH', decimals: 18 },
+    rpcUrls: ['https://sepolia.infura.io/v3/'],
+    blockExplorerUrls: ['https://sepolia.etherscan.io'],
+    faucetUrl: 'https://sepoliafaucet.com/'
+  },
+  POLYGON_AMOY: {
+    chainId: 80002,
+    name: 'Polygon Amoy Testnet',
+    nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
+    rpcUrls: ['https://rpc-amoy.polygon.technology/'],
+    blockExplorerUrls: ['https://amoy.polygonscan.com/'],
+    faucetUrl: 'https://faucet.polygon.technology/'
+  }
+}
+
+// 支持的代币合约地址配置
 const TOKEN_ADDRESSES = {
-  MATIC: '0x0000000000000000000000000000000000000000', // MATIC 使用零地址
-  USDT: '0xBD21A10F619BE90d6066c941b04e340BbF10D416', // Mumbai USDT
-  USDC: '0x0FA8781a83E46826621b3BC0EaA8B9B3875C2eB0', // Mumbai USDC
-  DAI: '0x001B3B4d0F3714Ca98ba10F6042DaEbF0B1B7b6F'   // Mumbai DAI
+  [NETWORKS.SEPOLIA.chainId]: {
+    ETH: '0x0000000000000000000000000000000000000000', // ETH 使用零地址
+    USDT: '0x7169D38820dfd117C3FA1f22a697dba58d90BA06', // Sepolia USDT
+    USDC: '0x94a9D9AC8a22534E3FaCa9F4e7F2E2cf85d5E4C8', // Sepolia USDC
+    DAI: '0xFF34B3d4Aee8ddCd6F9AFFFB6Fe49bD371b8a357'   // Sepolia DAI
+  },
+  [NETWORKS.POLYGON_AMOY.chainId]: {
+    MATIC: '0x0000000000000000000000000000000000000000', // MATIC 使用零地址
+    USDT: '0xBD21A10F619BE90d6066c941b04e340BbF10D416', // Amoy USDT
+    USDC: '0x0FA8781a83E46826621b3BC0EaA8B9B3875C2eB0', // Amoy USDC
+    DAI: '0x001B3B4d0F3714Ca98ba10F6042DaEbF0B1B7b6F'   // Amoy DAI
+  }
 }
 
 // ERC20 ABI (简化版，只包含转账功能)
@@ -51,9 +79,20 @@ export interface PaymentResult {
   error?: string
 }
 
+export interface TransactionStatus {
+  hash: string
+  status: 'pending' | 'confirmed' | 'failed'
+  confirmations: number
+  blockNumber?: number
+  gasUsed?: string
+  gasPrice?: string
+}
+
 export class Web3PaymentService {
   private provider: ethers.BrowserProvider | null = null
   private signer: ethers.JsonRpcSigner | null = null
+  private currentNetwork: number | null = null
+  private transactionListeners: Map<string, (status: TransactionStatus) => void> = new Map()
 
   // 连接钱包
   async connectWallet(): Promise<{ success: boolean; address?: string; error?: string }> {
@@ -73,12 +112,9 @@ export class Web3PaymentService {
       this.provider = new ethers.BrowserProvider(window.ethereum)
       this.signer = await this.provider.getSigner()
 
-      // 自动切换到Polygon Mumbai测试网络
-      const networkSwitch = await this.switchToPolygonMumbai()
-      if (!networkSwitch.success) {
-        console.warn('Failed to switch to Polygon Mumbai:', networkSwitch.error)
-        // 不阻止连接，只是警告
-      }
+      // 获取当前网络信息
+      const network = await this.provider.getNetwork()
+      this.currentNetwork = Number(network.chainId)
 
       return { 
         success: true, 
@@ -107,6 +143,9 @@ export class Web3PaymentService {
           this.provider = new ethers.BrowserProvider(window.ethereum)
           this.signer = await this.provider.getSigner()
         }
+        // 获取当前网络信息
+        const network = await this.provider.getNetwork()
+        this.currentNetwork = Number(network.chainId)
         return { connected: true, address: accounts[0] }
       }
 
@@ -120,17 +159,24 @@ export class Web3PaymentService {
   // 获取代币余额
   async getTokenBalance(currency: string, address: string): Promise<{ balance: string; error?: string }> {
     try {
-      if (!this.provider) {
+      if (!this.provider || !this.currentNetwork) {
         return { balance: '0', error: 'Wallet not connected' }
       }
 
-      if (currency === 'MATIC' || currency === 'ETH') {
+      const networkTokens = TOKEN_ADDRESSES[this.currentNetwork as keyof typeof TOKEN_ADDRESSES]
+      if (!networkTokens) {
+        return { balance: '0', error: 'Unsupported network' }
+      }
+
+      // 检查是否为原生代币
+      const isNativeToken = currency === 'ETH' || currency === 'MATIC'
+      if (isNativeToken) {
         const balance = await this.provider.getBalance(address)
         return { balance: ethers.formatEther(balance) }
       } else {
-        const tokenAddress = TOKEN_ADDRESSES[currency as keyof typeof TOKEN_ADDRESSES]
-        if (!tokenAddress) {
-          return { balance: '0', error: 'Unsupported currency' }
+        const tokenAddress = networkTokens[currency as keyof typeof networkTokens]
+        if (!tokenAddress || tokenAddress === '0x0000000000000000000000000000000000000000') {
+          return { balance: '0', error: 'Unsupported currency for current network' }
         }
 
         const contract = new ethers.Contract(tokenAddress, ERC20_ABI, this.provider)
@@ -148,7 +194,7 @@ export class Web3PaymentService {
   // 处理支付
   async processPayment(payment: PaymentRequest): Promise<PaymentResult> {
     try {
-      console.log('Processing payment:', payment)
+      // console.log('Processing payment:', payment)
       
       if (!this.signer) {
         console.error('Wallet not connected - no signer available')
@@ -158,15 +204,21 @@ export class Web3PaymentService {
       const recipientAddress = payment.recipientAddress
       const amount = payment.amount
       
-      // 使用ethers.js正确格式化地址，确保校验和正确
-      const formattedAddress = ethers.getAddress(recipientAddress)
+      // 安全地格式化地址，处理校验和问题
+      let formattedAddress: string
+      try {
+        formattedAddress = ethers.getAddress(recipientAddress)
+      } catch (error) {
+        // 如果校验和失败，使用 toLowerCase 格式
+        formattedAddress = recipientAddress.toLowerCase()
+      }
       
-      console.log('Payment details:', { 
-        originalAddress: recipientAddress, 
-        formattedAddress, 
-        amount, 
-        currency: payment.currency 
-      })
+      // console.log('Payment details:', { 
+      //   originalAddress: recipientAddress, 
+      //   formattedAddress, 
+      //   amount, 
+      //   currency: payment.currency 
+      // })
 
       // 检查余额是否足够
       const balanceCheck = await this.checkBalance(payment.currency, amount)
@@ -177,12 +229,19 @@ export class Web3PaymentService {
         }
       }
 
-      if (payment.currency === 'MATIC' || payment.currency === 'ETH') {
+      const networkTokens = TOKEN_ADDRESSES[this.currentNetwork as keyof typeof TOKEN_ADDRESSES]
+      if (!networkTokens) {
+        return { success: false, error: 'Unsupported network' }
+      }
+
+      // 检查是否为原生代币
+      const isNativeToken = payment.currency === 'ETH' || payment.currency === 'MATIC'
+      if (isNativeToken) {
         // Native token 支付
         console.log('Sending native token transaction...')
         const tx = await this.signer.sendTransaction({
           to: formattedAddress,
-          value: ethers.parseEther(amount)
+          value: ethers.parseEther(amount.toString())
         })
         console.log('Transaction sent:', tx.hash)
 
@@ -192,16 +251,16 @@ export class Web3PaymentService {
         }
       } else {
         // ERC20 代币支付
-        const tokenAddress = TOKEN_ADDRESSES[payment.currency as keyof typeof TOKEN_ADDRESSES]
-        if (!tokenAddress) {
-          return { success: false, error: 'Unsupported currency' }
+        const tokenAddress = networkTokens[payment.currency as keyof typeof networkTokens]
+        if (!tokenAddress || tokenAddress === '0x0000000000000000000000000000000000000000') {
+          return { success: false, error: 'Unsupported currency for current network' }
         }
 
         const contract = new ethers.Contract(tokenAddress, ERC20_ABI, this.signer)
         
         // 获取代币精度
         const decimals = await (contract as any).decimals()
-        const amountWei = ethers.parseUnits(amount, decimals)
+        const amountWei = ethers.parseUnits(amount.toString(), decimals)
 
         // 执行转账
         const tx = await (contract as any).transfer(formattedAddress, amountWei)
@@ -251,14 +310,21 @@ export class Web3PaymentService {
         return { balance: '0', error: 'Provider not available' }
       }
 
-      if (currency === 'MATIC' || currency === 'ETH') {
+      const networkTokens = TOKEN_ADDRESSES[this.currentNetwork as keyof typeof TOKEN_ADDRESSES]
+      if (!networkTokens) {
+        return { balance: '0', error: 'Unsupported network' }
+      }
+
+      // 检查是否为原生代币
+      const isNativeToken = currency === 'ETH' || currency === 'MATIC'
+      if (isNativeToken) {
         const balance = await this.provider.getBalance(address)
         return { balance: ethers.formatEther(balance) }
       } else {
         // ERC20 代币余额
-        const tokenAddress = TOKEN_ADDRESSES[currency as keyof typeof TOKEN_ADDRESSES]
-        if (!tokenAddress) {
-          return { balance: '0', error: 'Unsupported currency' }
+        const tokenAddress = networkTokens[currency as keyof typeof networkTokens]
+        if (!tokenAddress || tokenAddress === '0x0000000000000000000000000000000000000000') {
+          return { balance: '0', error: 'Unsupported currency for current network' }
         }
 
         const contract = new ethers.Contract(tokenAddress, ERC20_ABI, this.provider)
@@ -291,7 +357,8 @@ export class Web3PaymentService {
       const requiredAmount = parseFloat(amount)
       
       // 对于native token，需要额外考虑gas费用
-      if (currency === 'MATIC' || currency === 'ETH') {
+      const isNativeToken = currency === 'ETH' || currency === 'MATIC'
+      if (isNativeToken) {
         // 估算gas费用
         const gasEstimate = await this.estimateGasFee(currency, amount, address)
         const gasFee = parseFloat(gasEstimate.gasFee || '0')
@@ -321,13 +388,25 @@ export class Web3PaymentService {
         return { gasFee: '0', error: 'Wallet not connected' }
       }
 
-      // 使用ethers.js正确格式化地址，确保校验和正确
-      const formattedAddress = ethers.getAddress(recipientAddress)
+      // 安全地格式化地址，处理校验和问题
+      let formattedAddress: string
+      try {
+        formattedAddress = ethers.getAddress(recipientAddress)
+      } catch (error) {
+        // 如果校验和失败，使用 toLowerCase 格式
+        formattedAddress = recipientAddress.toLowerCase()
+      }
 
-      if (currency === 'MATIC' || currency === 'ETH') {
+      const networkTokens = TOKEN_ADDRESSES[this.currentNetwork as keyof typeof TOKEN_ADDRESSES]
+      if (!networkTokens) {
+        return { gasFee: '0', error: 'Unsupported network' }
+      }
+
+      const isNativeToken = currency === 'ETH' || currency === 'MATIC'
+      if (isNativeToken) {
         const gasEstimate = await this.provider.estimateGas({
           to: formattedAddress,
-          value: ethers.parseEther(amount)
+          value: ethers.parseEther(amount.toString())
         })
         
         const gasPrice = await this.provider.getFeeData()
@@ -336,14 +415,14 @@ export class Web3PaymentService {
         return { gasFee: ethers.formatEther(gasFee) }
       } else {
         // ERC20 代币的Gas估算
-        const tokenAddress = TOKEN_ADDRESSES[currency as keyof typeof TOKEN_ADDRESSES]
-        if (!tokenAddress) {
-          return { gasFee: '0', error: 'Unsupported currency' }
+        const tokenAddress = networkTokens[currency as keyof typeof networkTokens]
+        if (!tokenAddress || tokenAddress === '0x0000000000000000000000000000000000000000') {
+          return { gasFee: '0', error: 'Unsupported currency for current network' }
         }
 
         const contract = new ethers.Contract(tokenAddress, ERC20_ABI, this.signer)
         const decimals = await (contract as any).decimals()
-        const amountWei = ethers.parseUnits(amount, decimals)
+        const amountWei = ethers.parseUnits(amount.toString(), decimals)
 
         const gasEstimate = await (contract as any).transfer.estimateGas(formattedAddress, amountWei)
         const gasPrice = await this.provider.getFeeData()
@@ -375,18 +454,24 @@ export class Web3PaymentService {
     }
   }
 
-  // 切换到Polygon Mumbai测试网络
-  async switchToPolygonMumbai(): Promise<{ success: boolean; error?: string }> {
+  // 切换到指定网络
+  async switchToNetwork(networkKey: keyof typeof NETWORKS): Promise<{ success: boolean; error?: string }> {
     try {
       if (typeof window.ethereum === 'undefined') {
         return { success: false, error: 'MetaMask not found' }
       }
 
-      // 尝试切换到Polygon Mumbai测试网络
+      const network = NETWORKS[networkKey]
+      const chainId = `0x${network.chainId.toString(16)}`
+
+      // 尝试切换到指定网络
       await window.ethereum.request({
         method: 'wallet_switchEthereumChain',
-        params: [{ chainId: '0x13881' }] // Polygon Mumbai Testnet
+        params: [{ chainId }]
       })
+
+      // 更新当前网络
+      this.currentNetwork = network.chainId
 
       return { success: true }
     } catch (error: any) {
@@ -394,7 +479,7 @@ export class Web3PaymentService {
       
       // 如果网络不存在，添加网络
       if (error.code === 4902) {
-        return await this.addPolygonMumbaiNetwork()
+        return await this.addNetwork(networkKey)
       }
       
       return { 
@@ -404,27 +489,39 @@ export class Web3PaymentService {
     }
   }
 
-  // 添加Polygon Mumbai测试网络
-  async addPolygonMumbaiNetwork(): Promise<{ success: boolean; error?: string }> {
+  // 切换到Ethereum Sepolia测试网络
+  async switchToSepolia(): Promise<{ success: boolean; error?: string }> {
+    return await this.switchToNetwork('SEPOLIA')
+  }
+
+  // 切换到Polygon Amoy测试网络
+  async switchToPolygonAmoy(): Promise<{ success: boolean; error?: string }> {
+    return await this.switchToNetwork('POLYGON_AMOY')
+  }
+
+  // 添加指定网络
+  async addNetwork(networkKey: keyof typeof NETWORKS): Promise<{ success: boolean; error?: string }> {
     try {
       if (typeof window.ethereum === 'undefined') {
         return { success: false, error: 'MetaMask not found' }
       }
       
+      const network = NETWORKS[networkKey]
+      const chainId = `0x${network.chainId.toString(16)}`
+      
       await window.ethereum.request({
         method: 'wallet_addEthereumChain',
         params: [{
-          chainId: '0x13881',
-          chainName: 'Polygon Mumbai Testnet',
-          nativeCurrency: {
-            name: 'MATIC',
-            symbol: 'MATIC',
-            decimals: 18
-          },
-          rpcUrls: ['https://rpc-mumbai.maticvigil.com'],
-          blockExplorerUrls: ['https://mumbai.polygonscan.com']
+          chainId,
+          chainName: network.name,
+          nativeCurrency: network.nativeCurrency,
+          rpcUrls: network.rpcUrls,
+          blockExplorerUrls: network.blockExplorerUrls
         }]
       })
+
+      // 更新当前网络
+      this.currentNetwork = network.chainId
 
       return { success: true }
     } catch (error: any) {
@@ -432,6 +529,139 @@ export class Web3PaymentService {
       return { 
         success: false, 
         error: error.message || 'Failed to add network' 
+      }
+    }
+  }
+
+  // 添加Ethereum Sepolia测试网络
+  async addSepoliaNetwork(): Promise<{ success: boolean; error?: string }> {
+    return await this.addNetwork('SEPOLIA')
+  }
+
+  // 添加Polygon Amoy测试网络
+  async addPolygonAmoyNetwork(): Promise<{ success: boolean; error?: string }> {
+    return await this.addNetwork('POLYGON_AMOY')
+  }
+
+  // 获取支持的网络列表
+  getSupportedNetworks() {
+    return Object.entries(NETWORKS).map(([key, network]) => ({
+      key: key as keyof typeof NETWORKS,
+      ...network
+    }))
+  }
+
+  // 获取当前网络支持代币
+  getSupportedTokens() {
+    if (!this.currentNetwork) return []
+    
+    const networkTokens = TOKEN_ADDRESSES[this.currentNetwork as keyof typeof TOKEN_ADDRESSES]
+    if (!networkTokens) return []
+    
+    return Object.keys(networkTokens).map(symbol => ({
+      symbol,
+      name: symbol === 'ETH' ? 'Ethereum' : 
+            symbol === 'MATIC' ? 'Polygon' :
+            symbol === 'USDT' ? 'Tether USD' :
+            symbol === 'USDC' ? 'USD Coin' :
+            symbol === 'DAI' ? 'Dai Stablecoin' : symbol
+    }))
+  }
+
+  // 监听交易状态
+  async watchTransaction(txHash: string, onStatusUpdate: (status: TransactionStatus) => void): Promise<void> {
+    if (!this.provider) {
+      throw new Error('Provider not available')
+    }
+
+    // 存储监听器
+    this.transactionListeners.set(txHash, onStatusUpdate)
+
+    try {
+      // 等待交易被挖矿
+      const receipt = await this.provider.waitForTransaction(txHash, 1, 60000) // 等待1个确认，最多60秒
+
+      if (receipt) {
+        if (receipt.status === 1) {
+          // 交易成功
+          onStatusUpdate({
+            hash: txHash,
+            status: 'confirmed',
+            confirmations: Number(receipt.confirmations) || 1,
+            blockNumber: receipt.blockNumber,
+            gasUsed: receipt.gasUsed?.toString(),
+            gasPrice: receipt.gasPrice?.toString()
+          })
+        } else {
+          // 交易失败
+          onStatusUpdate({
+            hash: txHash,
+            status: 'failed',
+            confirmations: Number(receipt.confirmations) || 0,
+            blockNumber: receipt.blockNumber
+          })
+        }
+      } else {
+        // 交易超时
+        onStatusUpdate({
+          hash: txHash,
+          status: 'failed',
+          confirmations: 0
+        })
+      }
+    } catch (error) {
+      console.error('Transaction watch error:', error)
+      onStatusUpdate({
+        hash: txHash,
+        status: 'failed',
+        confirmations: 0
+      })
+    } finally {
+      // 清理监听器
+      this.transactionListeners.delete(txHash)
+    }
+  }
+
+  // 获取交易状态
+  async getTransactionStatus(txHash: string): Promise<TransactionStatus> {
+    if (!this.provider) {
+      throw new Error('Provider not available')
+    }
+
+    try {
+      const tx = await this.provider.getTransaction(txHash)
+      const receipt = await this.provider.getTransactionReceipt(txHash)
+
+      if (!tx) {
+        return {
+          hash: txHash,
+          status: 'failed',
+          confirmations: 0
+        }
+      }
+
+      if (receipt) {
+        return {
+          hash: txHash,
+          status: receipt.status === 1 ? 'confirmed' : 'failed',
+          confirmations: Number(receipt.confirmations) || 0,
+          blockNumber: receipt.blockNumber,
+          gasUsed: receipt.gasUsed?.toString(),
+          gasPrice: receipt.gasPrice?.toString()
+        }
+      } else {
+        return {
+          hash: txHash,
+          status: 'pending',
+          confirmations: 0
+        }
+      }
+    } catch (error) {
+      console.error('Get transaction status error:', error)
+      return {
+        hash: txHash,
+        status: 'failed',
+        confirmations: 0
       }
     }
   }

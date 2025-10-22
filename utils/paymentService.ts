@@ -5,7 +5,8 @@ import type {
   VerifyPaymentResponse,
   PaymentOrder,
   PriceInfo,
-  TokenConfig
+  TokenConfig,
+  PlanResponse
 } from '~/types/payment'
 import { http } from './http'
 
@@ -45,7 +46,7 @@ export class PaymentService {
   }
 
   // 获取支持的产品列表
-  async getProducts(): Promise<{ success: boolean; products?: any[]; error?: string }> {
+  async getProducts(): Promise<{ success: boolean; products?: PlanResponse[]; error?: string }> {
     try {
       const response = await http.get(`${this.baseUrl}/plans`)
       return { success: true, products: response.data }
@@ -72,7 +73,7 @@ export class PaymentService {
   // 创建支付订单
   async createOrder(request: CreateOrderRequest): Promise<CreateOrderResponse> {
     try {
-      const response = await http.post(`${this.baseUrl}/orders`, request)
+      const response = await http.post('/api/orders', request)
       return { success: true, order: response.data.order }
     } catch (error: any) {
       console.error('Create order error:', error)
@@ -100,7 +101,7 @@ export class PaymentService {
   // 获取订单状态
   async getOrderStatus(orderId: number): Promise<{ success: boolean; order?: PaymentOrder; error?: string }> {
     try {
-      const response = await http.get(`${this.baseUrl}/orders/${orderId}`)
+      const response = await http.get(`/api/orders/${orderId}`)
       return { success: true, order: response.data.order }
     } catch (error: any) {
       console.error('Get order status error:', error)
@@ -108,10 +109,21 @@ export class PaymentService {
     }
   }
 
+  // 根据订单号获取订单信息
+  async getOrderByOrderNo(orderNo: string): Promise<{ success: boolean; order?: PaymentOrder; error?: string }> {
+    try {
+      const response = await http.get(`/api/orders/by-order-no/${orderNo}`)
+      return { success: true, order: response.data.order }
+    } catch (error: any) {
+      console.error('Get order by order number error:', error)
+      return { success: false, error: error.message || 'Failed to get order by order number' }
+    }
+  }
+
   // 获取用户订单历史
   async getOrderHistory(): Promise<{ success: boolean; orders?: PaymentOrder[]; error?: string }> {
     try {
-      const response = await http.get(`${this.baseUrl}/orders`)
+      const response = await http.get('/api/orders')
       return { success: true, orders: response.data }
     } catch (error: any) {
       console.error('Get order history error:', error)

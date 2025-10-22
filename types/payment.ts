@@ -79,6 +79,16 @@ export interface PaymentProduct {
   currency: string
   tokenAmount: string
   priceTTL: number
+  points: number
+}
+
+// Backend plan response type
+export interface PlanResponse {
+  planId: number
+  name: string
+  description: string
+  price: number
+  points: number
 }
 
 // 支持的代币配置

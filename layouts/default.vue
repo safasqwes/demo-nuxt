@@ -191,6 +191,7 @@ import { CurrencyDollarIcon } from '@heroicons/vue/24/outline'
 import { 
   handleGoogleLoginFallback
 } from '~/utils/googleAuth'
+import Swal from 'sweetalert2'
 
 
 const userStore = useUserStore()
@@ -237,19 +238,46 @@ const handleDailyClaim = async () => {
     
     if (result.success) {
       const data = result.data
-      notify.success('Claim Successful!', `Earned ${data.points} silver coins, ${data.streakDays} days streak`)
+      // 使用 SweetAlert2 显示成功提示
+      await Swal.fire({
+        title: '领取成功！',
+        text: `获得 ${data.points} 银币，连续 ${data.streakDays} 天`,
+        icon: 'success',
+        confirmButtonText: '确定',
+        confirmButtonColor: '#10b981',
+        timer: 3000,
+        timerProgressBar: true
+      })
       showUserMenu.value = false
     } else {
       // 检查是否是已领取状态
       if (result.alreadyClaimed) {
-        notify.info('Already Claimed Today', result.message || 'You have already claimed silver coins today')
+        await Swal.fire({
+          title: '今日已领取',
+          text: result.message || '您今天已经领取过银币了',
+          icon: 'info',
+          confirmButtonText: '确定',
+          confirmButtonColor: '#3b82f6'
+        })
       } else {
-        notify.error('Claim Failed', result.message || 'Claim failed, please try again later')
+        await Swal.fire({
+          title: '领取失败',
+          text: result.message || '领取失败，请稍后重试',
+          icon: 'error',
+          confirmButtonText: '确定',
+          confirmButtonColor: '#ef4444'
+        })
       }
     }
   } catch (error) {
     console.error('Daily claim error:', error)
-    notify.error('Claim Failed', 'Network error, please try again later')
+    await Swal.fire({
+      title: '领取失败',
+      text: '网络错误，请稍后重试',
+      icon: 'error',
+      confirmButtonText: '确定',
+      confirmButtonColor: '#ef4444'
+    })
   }
 }
 

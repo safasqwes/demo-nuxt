@@ -254,7 +254,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useNotification } from '~/utils/useNotification'
 import { paymentService } from '~/utils/paymentService'
-import type { PaymentProduct, TokenConfig } from '~/types/payment'
+import type { PaymentProduct, TokenConfig, PlanResponse } from '~/types/payment'
 
 // Meta tags for SEO
 useHead({
@@ -340,7 +340,7 @@ const initializeProducts = async () => {
     const response = await paymentService.getProducts()
     if (response.success && response.products) {
       // 转换为前端需要的格式
-      subscriptionProducts.value = response.products.map(plan => ({
+      subscriptionProducts.value = response.products.map((plan: PlanResponse) => ({
         id: plan.planId,
         type: 'subscription',
         name: plan.name,
