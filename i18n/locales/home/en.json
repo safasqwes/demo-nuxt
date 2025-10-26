@@ -1,0 +1,45 @@
+{
+  "home": {
+    "hero": {
+      "title": "Welcome to NovelHub",
+      "subtitle": "The ultimate platform for AI-powered content creation",
+      "getStarted": "Get Started",
+      "learnMore": "Learn More"
+    },
+    "features": {
+      "title": "Powerful Features",
+      "subtitle": "Everything you need to create amazing content",
+      "faceSwap": "Face Swap",
+      "faceSwapDesc": "Swap faces between images with AI",
+      "videoSwap": "Video Face Swap", 
+      "videoSwapDesc": "Transform videos with face swapping",
+      "imageProcessing": "Image Processing",
+      "imageProcessingDesc": "Enhance and transform your images",
+      "effects": "Visual Effects",
+      "effectsDesc": "Add stunning effects to your content"
+    },
+    "cta": {
+      "title": "Ready to get started?",
+      "subtitle": "Join thousands of creators using NovelHub",
+      "signUp": "Sign Up Now",
+      "contactUs": "Contact Us"
+    },
+    "search": {
+      "placeholder": "Search for novels...",
+      "button": "Search"
+    },
+    "featured": {
+      "title": "Featured Novels",
+      "comingSoon": "Coming soon..."
+    },
+    "seo": {
+      "title": "Home - NovelHub | Read Web Novels & Light Novels",
+      "description": "Welcome to NovelHub! Discover thousands of web novels across fantasy, cultivation, sci-fi, romance, and more. Lightning-fast reading experience with responsive design.",
+      "keywords": "web novels home, light novels, online reading, fantasy novels, cultivation stories, novel library",
+      "ogTitle": "Home - NovelHub | Read Web Novels Online",
+      "ogDescription": "Discover thousands of web novels across various genres. Fast, beautiful, and user-friendly reading experience.",
+      "twitterTitle": "Home - NovelHub | Read Web Novels Online",
+      "twitterDescription": "Discover thousands of web novels across various genres."
+    }
+  }
+}

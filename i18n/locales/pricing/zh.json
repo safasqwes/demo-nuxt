@@ -1,0 +1,33 @@
+{
+  "pricing": {
+    "title": "选择您的方案",
+    "subtitle": "选择带有加密货币支付的购买方案",
+    "oneTimePayment": "一次性付款",
+    "selectPlan": "选择方案",
+    "readyToStart": "准备开始您的创作之旅？",
+    "startFreeTrial": "开始免费试用",
+    "contactUs": "联系我们",
+    "completePurchase": "完成购买",
+    "selectPaymentCurrency": "选择支付货币",
+    "youWillPay": "您将支付：",
+    "rate": "汇率：1 {currency} = ${rate} USD",
+    "cancel": "取消",
+    "proceedToPayment": "继续支付",
+    "creatingPayment": "创建支付中...",
+    "pleaseLogin": "请登录以选择方案",
+    "userLoggedIn": "用户登录成功",
+    "userCancelledLogin": "用户取消登录",
+    "failedToLoadProducts": "加载产品失败",
+    "priceError": "价格错误",
+    "failedToGetTokenPrice": "获取代币价格失败",
+    "orderError": "订单错误",
+    "failedToCreateOrder": "创建订单失败",
+    "paymentError": "支付错误",
+    "failedToCreatePayment": "创建支付失败",
+    "seo": {
+      "title": "产品方案 - NovelHub",
+      "description": "在 NovelHub 上选择您的方案，通过加密货币支付解锁高级功能。",
+      "keywords": "产品, 定价, 方案, 加密货币支付, NovelHub"
+    }
+  }
+}

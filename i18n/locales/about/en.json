@@ -1,0 +1,37 @@
+{
+  "about": {
+    "title": "About NovelHub",
+    "whatIsNovelHub": "🎯 What is NovelHub?",
+    "description": "NovelHub is a modern web novel platform built with cutting-edge technology. We provide readers with access to thousands of web novels, light novels, and serialized fiction from around the world. Our mission is to connect readers with amazing stories through a fast, beautiful, and user-friendly reading experience.",
+    "platformFeatures": "✨ Platform Features",
+    "features": {
+      "library": "📚 Extensive library of web novels and light novels",
+      "multilang": "🌍 Multi-language support and translations",
+      "performance": "⚡ Lightning-fast page loads with SSG technology",
+      "responsive": "📱 Responsive design for all devices",
+      "bookmark": "🔖 Bookmark and reading progress tracking",
+      "customizable": "🎨 Customizable reading experience"
+    },
+    "popularGenres": "📚 Popular Genres",
+    "genres": {
+      "fantasy": "⚔️ Fantasy",
+      "cultivation": "🔮 Cultivation",
+      "contemporary": "💼 Contemporary",
+      "scifi": "🚀 Sci-Fi",
+      "romance": "💕 Romance",
+      "gameworld": "🎮 Game World"
+    },
+    "techStack": "🛠️ Technology Stack",
+    "seo": {
+      "title": "About Us - NovelHub | Web Novel Reading Platform",
+      "description": "Learn about NovelHub, a modern web novel platform built with cutting-edge technology. Discover our mission to connect readers with amazing stories from around the world.",
+      "keywords": "about novelhub, web novel platform, light novel site, online reading platform, novel genres, fantasy, cultivation, sci-fi, romance",
+      "ogTitle": "About Us - NovelHub | Web Novel Platform",
+      "ogDescription": "Modern web novel platform connecting readers with amazing stories worldwide. Fast, beautiful, and user-friendly.",
+      "ogUrl": "https://novelhub.example.com/about",
+      "twitterTitle": "About Us - NovelHub",
+      "twitterDescription": "Learn about NovelHub, your gateway to web novels and light novels.",
+      "canonical": "https://novelhub.example.com/about"
+    }
+  }
+}

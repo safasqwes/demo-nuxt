@@ -1,0 +1,28 @@
+{
+  "faceswap": {
+    "title": "Face Swap",
+    "description": "Swap faces between images with AI-powered technology",
+    "sourceImage": "Source Image",
+    "targetImage": "Target Image",
+    "uploadSource": "Upload source image",
+    "uploadTarget": "Upload target image",
+    "dragDrop": "Drag and drop or click to browse",
+    "supportedFormats": "JPG, PNG up to 10MB",
+    "processingOptions": "Processing Options",
+    "quality": "Quality",
+    "faceDetection": "Face Detection",
+    "blendMode": "Blend Mode",
+    "startFaceSwap": "Start Face Swap",
+    "processing": "Processing...",
+    "result": "Result",
+    "downloadImage": "Download Image",
+    "processAnother": "Process Another",
+    "whyChoose": "Why Choose Our Face Swap?",
+    "instantResults": "Instant Results",
+    "instantResultsDesc": "Get face swap results in seconds with our advanced AI",
+    "realisticOutput": "Realistic Output",
+    "realisticOutputDesc": "Natural-looking face swaps with seamless blending",
+    "privacyFirst": "Privacy First",
+    "privacyFirstDesc": "Your images are processed securely and never stored"
+  }
+}

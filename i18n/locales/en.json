@@ -1,0 +1,92 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close",
+    "upload": "Upload",
+    "download": "Download",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "refresh": "Refresh"
+  },
+  "navigation": {
+    "home": "Home",
+    "about": "About",
+    "contact": "Contact",
+    "products": "Products",
+    "pricing": "Pricing",
+    "blog": "Blog",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "profile": "Profile",
+    "settings": "Settings",
+    "videoswap": "Video Face Swap"
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "forgotPassword": "Forgot Password?",
+    "rememberMe": "Remember Me",
+    "loginWithGoogle": "Login with Google",
+    "loginWithWeb3": "Login with Web3",
+    "welcome": "Welcome",
+    "loginSuccess": "Successfully logged in",
+    "loginFailed": "Login failed",
+    "logoutSuccess": "Successfully logged out"
+  },
+  "payment": {
+    "title": "Payment",
+    "amount": "Amount",
+    "currency": "Currency",
+    "description": "Description",
+    "payNow": "Pay Now",
+    "processing": "Processing payment...",
+    "success": "Payment successful",
+    "failed": "Payment failed",
+    "cancelled": "Payment cancelled"
+  },
+  "footer": {
+    "brand": {
+      "title": "📚 NovelHub",
+      "subtitle": "Creative stories, built for readers.",
+      "description": "Our mission is to empower readers worldwide to discover amazing stories."
+    },
+    "sections": {
+      "products": "Products",
+      "company": "Company",
+      "resources": "Resources"
+    },
+    "links": {
+      "webNovels": "Web Novels",
+      "lightNovels": "Light Novels",
+      "audioBooks": "Audio Books",
+      "aboutUs": "About Us",
+      "useCases": "Use Cases",
+      "pricing": "Pricing",
+      "contactUs": "Contact Us",
+      "blog": "Blog",
+      "community": "Community"
+    },
+    "copyright": "© 2025 NovelHub - Your Gateway to Amazing Web Novels",
+    "legal": {
+      "termsOfService": "Terms of Service",
+      "privacyPolicy": "Privacy Policy",
+      "cookiePolicy": "Cookie Policy"
+    }
+  }
+}

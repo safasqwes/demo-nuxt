@@ -13,10 +13,16 @@
         
         <!-- Navigation Links - Desktop -->
         <nav class="hidden md:flex items-center space-x-6">
-          <NuxtLink to="/" class="text-white hover:text-green-200 transition-colors">Home</NuxtLink>
-          <NuxtLink to="/payment-products" class="text-white hover:text-green-200 transition-colors">Buy Content</NuxtLink>
-          <NuxtLink to="/web3-payment" class="text-white hover:text-green-200 transition-colors">Web3 Pay</NuxtLink>
+          <NuxtLink to="/" class="text-white hover:text-green-200 transition-colors">{{ $t('navigation.home') }}</NuxtLink>
+          <NuxtLink to="/feature/videoswap" class="text-white hover:text-green-200 transition-colors">{{ $t('navigation.videoswap') }}</NuxtLink>
+          <NuxtLink to="/pricing" class="text-white hover:text-green-200 transition-colors">{{ $t('navigation.pricing') }}</NuxtLink>
+          <!-- <NuxtLink to="/web3-payment" class="text-white hover:text-green-200 transition-colors">Web3 Pay</NuxtLink> -->
         </nav>
+        
+        <!-- Language Switcher -->
+        <div class="hidden md:block">
+          <LanguageSwitcher />
+        </div>
         
         <!-- Mobile Menu Button -->
         <button 
@@ -110,7 +116,7 @@
                 v-if="!googleAuthReady"
                 class="flex items-center gap-0 md:gap-2 px-2 py-2 md:px-4 md:py-2.5 bg-white border border-primary-300 rounded-lg text-gray-700 text-xs md:text-sm font-medium cursor-pointer transition-all shadow-sm hover:bg-primary-50 hover:border-primary-400 hover:shadow-primary hover:-translate-y-0.5 active:translate-y-0 active:shadow-sm disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none"
                 :disabled="userStore.loading"
-                @click="() => handleGoogleLoginFallback(useRuntimeConfig().public.googleClientId, (response) => console.log('Fallback login:', response), notify)"
+                @click="() => $googleAuth.handleGoogleLoginFallback(useRuntimeConfig().public.googleClientId, (response) => console.log('Fallback login:', response), notify)"
               >
                 <svg class="flex-shrink-0" viewBox="0 0 24 24" width="18" height="18">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -141,25 +147,32 @@
             Home
           </NuxtLink>
           <NuxtLink 
+            to="/about" 
+            class="block text-white hover:text-green-200 transition-colors py-2"
+            @click="closeMobileMenu"
+          >
+            About
+          </NuxtLink>
+          <NuxtLink 
+            to="/use-cases" 
+            class="block text-white hover:text-green-200 transition-colors py-2"
+            @click="closeMobileMenu"
+          >
+            Use Cases
+          </NuxtLink>
+          <NuxtLink 
+            to="/blog" 
+            class="block text-white hover:text-green-200 transition-colors py-2"
+            @click="closeMobileMenu"
+          >
+            Blog
+          </NuxtLink>
+          <NuxtLink 
             to="/pricing" 
             class="block text-white hover:text-green-200 transition-colors py-2"
             @click="closeMobileMenu"
           >
             Pricing
-          </NuxtLink>
-          <NuxtLink 
-            to="/payment-products" 
-            class="block text-white hover:text-green-200 transition-colors py-2"
-            @click="closeMobileMenu"
-          >
-            Buy Content
-          </NuxtLink>
-          <NuxtLink 
-            to="/web3-payment" 
-            class="block text-white hover:text-green-200 transition-colors py-2"
-            @click="closeMobileMenu"
-          >
-            Web3 Pay
           </NuxtLink>
         </div>
       </div>
@@ -188,9 +201,7 @@ import { ref, onMounted } from 'vue'
 import { useUserStore } from '~/stores/user'
 import { useNotification } from '~/utils/useNotification'
 import { CurrencyDollarIcon } from '@heroicons/vue/24/outline'
-import { 
-  handleGoogleLoginFallback
-} from '~/utils/googleAuth'
+// Google Auth functions are now available via $googleAuth plugin
 import Swal from 'sweetalert2'
 
 

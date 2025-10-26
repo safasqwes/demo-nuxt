@@ -1,0 +1,148 @@
+{
+  "terms": {
+    "title": "服务条款",
+    "lastUpdated": "最后更新：{date}",
+    "sections": {
+      "acceptance": {
+        "title": "1. 条款接受",
+        "content": "通过访问和使用 NovelHub（\"服务\"），您接受并同意受本协议的条款和规定约束。如果您不同意遵守上述条款，请不要使用此服务。"
+      },
+      "description": {
+        "title": "2. 服务描述",
+        "content": "NovelHub 是一个网络小说平台，为用户提供数字内容的访问，包括网络小说、轻小说和相关阅读材料。我们的服务包括：",
+        "features": [
+          "访问网络小说和轻小说库",
+          "用户账户管理和身份验证",
+          "阅读进度跟踪和书签",
+          "高级内容的支付处理",
+          "社区功能和用户互动"
+        ]
+      },
+      "userAccounts": {
+        "title": "3. 用户账户",
+        "accountCreation": {
+          "title": "3.1 账户创建",
+          "content": "要访问我们服务的某些功能，您必须创建一个账户。您同意：",
+          "requirements": [
+            "提供准确、最新和完整的信息",
+            "维护和更新您的账户信息",
+            "保持密码安全和机密",
+            "接受您账户下所有活动的责任"
+          ]
+        },
+        "accountTermination": {
+          "title": "3.2 账户终止",
+          "content": "我们保留随时因违反这些条款或出于我们自行决定的任何其他原因而终止或暂停您账户的权利。"
+        }
+      },
+      "acceptableUse": {
+        "title": "4. 可接受的使用",
+        "permittedUses": {
+          "title": "4.1 允许的使用",
+          "content": "您可以使用我们的服务来：",
+          "uses": [
+            "为个人、非商业用途阅读和访问内容",
+            "创建书签和跟踪阅读进度",
+            "参与社区讨论",
+            "通过合法渠道购买高级内容"
+          ]
+        },
+        "prohibitedUses": {
+          "title": "4.2 禁止的使用",
+          "content": "您同意不：",
+          "prohibitions": [
+            "违反任何适用的法律法规",
+            "侵犯知识产权",
+            "试图未经授权访问我们的系统",
+            "使用自动化工具抓取或下载内容",
+            "分发、修改或创建我们内容的衍生作品",
+            "从事任何干扰或影响我们服务的活动",
+            "将我们的服务用于任何非法或未经授权的目的"
+          ]
+        }
+      },
+      "intellectualProperty": {
+        "title": "5. 知识产权",
+        "ourContent": {
+          "title": "5.1 我们的内容",
+          "content": "服务及其原始内容、功能和特性归 NovelHub 所有，并受国际版权、商标、专利、商业秘密和其他知识产权法律保护。"
+        },
+        "userContent": {
+          "title": "5.2 用户生成内容",
+          "content": "您保留在我们平台上创建和分享内容的所有权。通过发布内容，您授予我们非独占、免版税的许可，以使用、显示和分发您的内容，以连接我们的服务。"
+        }
+      },
+      "paymentTerms": {
+        "title": "6. 支付条款",
+        "pricingBilling": {
+          "title": "6.1 定价和计费",
+          "content": "我们服务的某些功能需要付费。所有价格均以适用的货币显示，并可能在通知后发生变化。付款应在服务交付前到期。"
+        },
+        "refunds": {
+          "title": "6.2 退款",
+          "content": "退款政策因内容类型而异，并受我们自行决定。一般来说，数字内容购买是不可退款的，除非法律要求。"
+        },
+        "paymentMethods": {
+          "title": "6.3 支付方式",
+          "content": "我们接受各种支付方式，包括信用卡、PayPal 和加密货币。所有付款都通过第三方支付处理器安全处理。"
+        }
+      },
+      "privacy": {
+        "title": "7. 隐私和数据保护",
+        "content": "您的隐私对我们很重要。请查看我们的隐私政策，该政策也管理您对服务的使用，以了解我们的做法。"
+      },
+      "disclaimers": {
+        "title": "8. 免责声明和责任限制",
+        "serviceAvailability": {
+          "title": "8.1 服务可用性",
+          "content": "我们努力维护服务可用性，但不能保证不间断的访问。我们可能会暂时暂停服务进行维护或更新。"
+        },
+        "contentAccuracy": {
+          "title": "8.2 内容准确性",
+          "content": "虽然我们努力提供准确和最新的内容，但我们不保证我们平台上任何内容的准确性、完整性或可靠性。"
+        },
+        "limitationLiability": {
+          "title": "8.3 责任限制",
+          "content": "在法律允许的最大范围内，NovelHub 不对因您使用我们的服务而产生的任何间接、偶然、特殊、后果性或惩罚性损害承担责任。"
+        }
+      },
+      "indemnification": {
+        "title": "9. 赔偿",
+        "content": "您同意为 NovelHub 及其关联公司辩护、赔偿并使其免受因您使用服务或违反这些条款而产生的任何索赔、损害或费用。"
+      },
+      "governingLaw": {
+        "title": "10. 适用法律和争议解决",
+        "content": "这些条款应受 NovelHub 运营所在司法管辖区的法律管辖和解释，不考虑法律冲突原则。"
+      },
+      "changesToTerms": {
+        "title": "11. 条款变更",
+        "content": "我们保留随时修改这些条款的权利。我们将通过电子邮件或通过我们的服务通知用户重大变更。继续使用构成对修改条款的接受。"
+      },
+      "severability": {
+        "title": "12. 可分割性",
+        "content": "如果发现这些条款的任何条款不可执行或无效，其余条款将保持完全有效。"
+      },
+      "contactInfo": {
+        "title": "13. 联系信息",
+        "content": "如果您对这些服务条款有任何疑问，请联系我们：",
+        "email": "邮箱：",
+        "address": "地址：",
+        "phone": "电话：",
+        "emailValue": "legal@novelhub.com",
+        "addressValue": "NovelHub 法律部门，网络小说街 123 号，数字城，DC 12345",
+        "phoneValue": "+1 (555) 123-4567"
+      }
+    },
+    "seo": {
+      "title": "服务条款 - NovelHub | 法律条款和条件",
+      "description": "阅读 NovelHub 的服务条款，了解使用我们网络小说平台和服务的规则和指导原则。",
+      "keywords": "服务条款, 条款和条件, 用户协议, 法律条款, novelhub 条款, 网络小说平台条款",
+      "ogTitle": "服务条款 - NovelHub",
+      "ogDescription": "NovelHub 的服务条款和用户协议。",
+      "ogUrl": "https://novelhub.example.com/terms-of-service",
+      "twitterTitle": "服务条款 - NovelHub",
+      "twitterDescription": "阅读我们使用 NovelHub 的服务条款。",
+      "canonical": "https://novelhub.example.com/terms-of-service"
+    }
+  }
+}

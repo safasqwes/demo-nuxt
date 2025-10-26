@@ -1,0 +1,33 @@
+{
+  "pricing": {
+    "title": "Choose Your Plan",
+    "subtitle": "Select a purchase plan with crypto payments",
+    "oneTimePayment": "One-time payment",
+    "selectPlan": "Select Plan",
+    "readyToStart": "Ready to Start Your Creative Journey?",
+    "startFreeTrial": "Start Free Trial",
+    "contactUs": "Contact Us",
+    "completePurchase": "Complete Your Purchase",
+    "selectPaymentCurrency": "Select Payment Currency",
+    "youWillPay": "You will pay:",
+    "rate": "Rate: 1 {currency} = ${rate} USD",
+    "cancel": "Cancel",
+    "proceedToPayment": "Proceed to Payment",
+    "creatingPayment": "Creating Payment...",
+    "pleaseLogin": "Please log in to select a plan",
+    "userLoggedIn": "User logged in successfully",
+    "userCancelledLogin": "User cancelled login",
+    "failedToLoadProducts": "Failed to load products",
+    "priceError": "Price Error",
+    "failedToGetTokenPrice": "Failed to get token price",
+    "orderError": "Order Error",
+    "failedToCreateOrder": "Failed to create order",
+    "paymentError": "Payment Error",
+    "failedToCreatePayment": "Failed to create payment",
+    "seo": {
+      "title": "Products - NovelHub",
+      "description": "Choose your plan and unlock premium features with crypto payments on NovelHub.",
+      "keywords": "products, pricing, plans, crypto payment, NovelHub"
+    }
+  }
+}

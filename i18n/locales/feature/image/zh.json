@@ -1,0 +1,30 @@
+{
+  "image": {
+    "title": "AI图像处理",
+    "description": "使用强大的AI工具转换您的图像",
+    "uploadImage": "上传您的图像",
+    "supportedFormats": "JPG, PNG, WEBP 最大20MB",
+    "preview": "图像预览",
+    "enhancement": "增强",
+    "autoEnhance": "自动增强",
+    "upscale2x": "2倍放大",
+    "removeBackground": "移除背景",
+    "styleTransfer": "风格转换",
+    "animeStyle": "动漫风格",
+    "oilPainting": "油画风格",
+    "sketchStyle": "素描风格",
+    "filters": "滤镜",
+    "vintage": "复古",
+    "blackWhite": "黑白",
+    "sepia": "棕褐色",
+    "processedImage": "处理后的图像",
+    "downloadResult": "下载结果",
+    "resetOriginal": "重置为原始",
+    "processNew": "处理新图像",
+    "powerfulTools": "强大的AI图像工具",
+    "autoEnhanceDesc": "自动改善亮度、对比度和颜色",
+    "upscalingDesc": "使用AI放大技术增加图像分辨率",
+    "styleTransferDesc": "为您的图像应用艺术风格",
+    "smartFiltersDesc": "应用专业级滤镜和效果"
+  }
+}

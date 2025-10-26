@@ -5,51 +5,41 @@
         <!-- Brand Section -->
         <div class="lg:col-span-1">
           <div class="mb-4">
-            <h3 class="text-2xl font-bold text-white mb-2">📚 NovelHub</h3>
-            <p class="text-green-200 text-sm mb-3">Creative stories, built for readers.</p>
+            <h3 class="text-2xl font-bold text-white mb-2">{{ $t('footer.brand.title') }}</h3>
+            <p class="text-green-200 text-sm mb-3">{{ $t('footer.brand.subtitle') }}</p>
             <p class="text-green-300 text-xs leading-relaxed">
-              Our mission is to empower readers worldwide to discover amazing stories. 
-              We bring opportunity to the creative writing industry through professional 
-              digital content, powerful reading tools, and accessible learning resources 
-              to support you in achieving your reading goals.
+              {{ $t('footer.brand.description') }}
             </p>
           </div>
         </div>
 
         <!-- Products Section -->
         <div>
-          <h4 class="text-white font-semibold mb-4">Products</h4>
+          <h4 class="text-white font-semibold mb-4">{{ $t('footer.sections.products') }}</h4>
           <ul class="space-y-2">
-                  <li><a href="#" class="text-green-200 hover:text-white transition-colors text-sm">Web Novels</a></li>
-                  <li><a href="#" class="text-green-200 hover:text-white transition-colors text-sm">Light Novels</a></li>
-                  <li><a href="#" class="text-green-200 hover:text-white transition-colors text-sm">Audio Books</a></li>
-                  <li><a href="#" class="text-green-200 hover:text-white transition-colors text-sm">Reading Tools</a></li>
-                  <li><a href="#" class="text-green-200 hover:text-white transition-colors text-sm">Bookmarks</a></li>
-                  <li><a href="#" class="text-green-200 hover:text-white transition-colors text-sm">Reading History</a></li>
+            <li><a href="#" class="text-green-200 hover:text-white transition-colors text-sm">{{ $t('footer.links.webNovels') }}</a></li>
+            <li><a href="#" class="text-green-200 hover:text-white transition-colors text-sm">{{ $t('footer.links.lightNovels') }}</a></li>
+            <li><a href="#" class="text-green-200 hover:text-white transition-colors text-sm">{{ $t('footer.links.audioBooks') }}</a></li>
           </ul>
         </div>
 
         <!-- Company Section -->
         <div>
-          <h4 class="text-white font-semibold mb-4">Company</h4>
+          <h4 class="text-white font-semibold mb-4">{{ $t('footer.sections.company') }}</h4>
           <ul class="space-y-2">
-                  <li><NuxtLink to="/about" class="text-green-200 hover:text-white transition-colors text-sm">About Us</NuxtLink></li>
-                  <li><a href="#" class="text-green-200 hover:text-white transition-colors text-sm">NovelHub for Business</a></li>
-                  <li><NuxtLink to="/pricing" class="text-green-200 hover:text-white transition-colors text-sm">Pricing</NuxtLink></li>
-                  <li><a href="#" class="text-green-200 hover:text-white transition-colors text-sm">Careers</a></li>
-                  <li><a href="#" class="text-green-200 hover:text-white transition-colors text-sm">Press</a></li>
+            <li><NuxtLink to="/about" class="text-green-200 hover:text-white transition-colors text-sm">{{ $t('footer.links.aboutUs') }}</NuxtLink></li>
+            <li><NuxtLink to="/use-cases" class="text-green-200 hover:text-white transition-colors text-sm">{{ $t('footer.links.useCases') }}</NuxtLink></li>
+            <li><NuxtLink to="/pricing" class="text-green-200 hover:text-white transition-colors text-sm">{{ $t('footer.links.pricing') }}</NuxtLink></li>
           </ul>
         </div>
 
         <!-- Resources Section -->
         <div>
-          <h4 class="text-white font-semibold mb-4">Resources</h4>
+          <h4 class="text-white font-semibold mb-4">{{ $t('footer.sections.resources') }}</h4>
           <ul class="space-y-2">
-                  <li><a href="#" class="text-green-200 hover:text-white transition-colors text-sm">Help Center</a></li>
-                  <li><a href="#" class="text-green-200 hover:text-white transition-colors text-sm">Community</a></li>
-                  <li><a href="#" class="text-green-200 hover:text-white transition-colors text-sm">Blog</a></li>
-                  <li><a href="#" class="text-green-200 hover:text-white transition-colors text-sm">Tutorials</a></li>
-                  <li><a href="#" class="text-green-200 hover:text-white transition-colors text-sm">API Documentation</a></li>
+            <li><NuxtLink to="/contact-us" class="text-green-200 hover:text-white transition-colors text-sm">{{ $t('footer.links.contactUs') }}</NuxtLink></li>
+            <li><NuxtLink to="/blog" class="text-green-200 hover:text-white transition-colors text-sm">{{ $t('footer.links.blog') }}</NuxtLink></li>
+            <li><a href="#" class="text-green-200 hover:text-white transition-colors text-sm">{{ $t('footer.links.community') }}</a></li>
           </ul>
         </div>
       </div>
@@ -58,12 +48,12 @@
       <div class="border-t border-green-700 mt-8 pt-8">
         <div class="flex flex-col md:flex-row justify-between items-center">
           <div class="text-green-300 text-sm mb-4 md:mb-0">
-            © 2025 NovelHub - Your Gateway to Amazing Web Novels
+            {{ $t('footer.copyright') }}
           </div>
           <div class="flex space-x-6">
-            <a href="#" class="text-green-300 hover:text-white transition-colors text-sm">Terms of Use</a>
-            <a href="#" class="text-green-300 hover:text-white transition-colors text-sm">Privacy Policy</a>
-            <a href="#" class="text-green-300 hover:text-white transition-colors text-sm">Cookie Policy</a>
+            <NuxtLink to="/terms-of-service" class="text-green-300 hover:text-white transition-colors text-sm">{{ $t('footer.legal.termsOfService') }}</NuxtLink>
+            <NuxtLink to="/privacy-policy" class="text-green-300 hover:text-white transition-colors text-sm">{{ $t('footer.legal.privacyPolicy') }}</NuxtLink>
+            <a href="#" class="text-green-300 hover:text-white transition-colors text-sm">{{ $t('footer.legal.cookiePolicy') }}</a>
           </div>
         </div>
       </div>

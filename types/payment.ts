@@ -80,6 +80,12 @@ export interface PaymentProduct {
   tokenAmount: string
   priceTTL: number
   points: number
+  planType?: number // 套餐类型 (1=订阅, 0=一次性)
+  status?: number // 套餐状态 (1=可用, 0=不可用)
+  createdAt?: string // 创建时间
+  updatedAt?: string // 更新时间
+  duration?: string // 持续时间
+  features?: string[] // 特色功能列表
 }
 
 // Backend plan response type
@@ -88,7 +94,13 @@ export interface PlanResponse {
   name: string
   description: string
   price: number
-  points: number
+  pointsAmount: number
+  planType?: number // 套餐类型 (1=订阅, 0=一次性)
+  status?: number // 套餐状态 (1=可用, 0=不可用)
+  createdAt?: string // 创建时间
+  updatedAt?: string // 更新时间
+  duration?: string // 持续时间
+  features?: string[] // 特色功能列表
 }
 
 // 支持的代币配置
@@ -118,4 +130,51 @@ export interface PriceInfo {
   tokenAmount: string
   priceTTL: number
   exchangeRate: number
+}
+
+// 创建Web3支付请求
+export interface CreateWeb3PaymentRequest {
+  orderId: number
+  currency: string
+  tokenAmount: string
+  chainId: number
+}
+
+// 创建Web3支付响应
+export interface CreateWeb3PaymentResponse {
+  success: boolean
+  paymentId?: number
+  paymentNumber?: string
+  recipientAddress?: string
+  tokenAmount?: string
+  tokenCurrency?: string
+  expiresAt?: string
+  priceTTL?: number
+  error?: string
+}
+
+// 支付信息
+export interface PaymentInfo {
+  paymentId: number
+  orderId: number
+  orderNumber: string
+  planName: string
+  fiatAmount: number
+  currency: string
+  tokenAmount: string
+  tokenCurrency: string
+  recipientAddress: string
+  chainId: number
+  status: number
+  expiresAt: string
+  priceTTL: number
+}
+
+// 支付状态
+export interface PaymentStatus {
+  paymentId: number
+  status: number
+  txHash?: string
+  confirmations: number
+  requiredConfirmations: number
 }

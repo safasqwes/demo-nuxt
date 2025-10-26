@@ -3,19 +3,19 @@
     <!-- Hero Section -->
     <section class="hero">
       <div class="hero-content">
-        <h1 class="hero-title">Welcome to NovelHub</h1>
-        <p class="hero-subtitle">Discover thousands of amazing web novels and light novels</p>
+        <h1 class="hero-title">{{ $t('home.hero.title') }}</h1>
+        <p class="hero-subtitle">{{ $t('home.hero.subtitle') }}</p>
         <div class="hero-search">
-          <input type="text" placeholder="Search for novels..." class="search-input" />
-          <button class="search-btn">Search</button>
+          <input type="text" :placeholder="$t('home.search.placeholder')" class="search-input" />
+          <button class="search-btn">{{ $t('home.search.button') }}</button>
         </div>
       </div>
     </section>
     
     <!-- Featured Novels Section -->
     <section class="featured">
-      <h2>Featured Novels</h2>
-      <p>Coming soon...</p>
+      <h2>{{ $t('home.featured.title') }}</h2>
+      <p>{{ $t('home.featured.comingSoon') }}</p>
     </section>
   </div>
 </template>
@@ -24,24 +24,24 @@
 
 // Page SEO metadata
 useHead({
-  title: 'Home - NovelHub | Read Web Novels & Light Novels',
+  title: () => $t('home.seo.title'),
   meta: [
     {
       name: 'description',
-      content: 'Welcome to NovelHub! Discover thousands of web novels across fantasy, cultivation, sci-fi, romance, and more. Lightning-fast reading experience with responsive design.',
+      content: () => $t('home.seo.description'),
     },
     {
       name: 'keywords',
-      content: 'web novels home, light novels, online reading, fantasy novels, cultivation stories, novel library',
+      content: () => $t('home.seo.keywords'),
     },
     // Open Graph
     {
       property: 'og:title',
-      content: 'Home - NovelHub | Read Web Novels Online',
+      content: () => $t('home.seo.ogTitle'),
     },
     {
       property: 'og:description',
-      content: 'Discover thousands of web novels across various genres. Fast, beautiful, and user-friendly reading experience.',
+      content: () => $t('home.seo.ogDescription'),
     },
     {
       property: 'og:url',
@@ -50,11 +50,11 @@ useHead({
     // Twitter
     {
       name: 'twitter:title',
-      content: 'Home - NovelHub | Read Web Novels Online',
+      content: () => $t('home.seo.twitterTitle'),
     },
     {
       name: 'twitter:description',
-      content: 'Discover thousands of web novels across various genres.',
+      content: () => $t('home.seo.twitterDescription'),
     },
   ],
   link: [
@@ -114,48 +114,108 @@ const testApi = async () => {
   }
 }
 
-// Google auth: auto attempt on mount, render plugin button fallback
-onMounted(async () => {
-  // Initialize from storage
+// Initialize user store on mount
+onMounted(() => {
   userStore.initFromStorage()
-
-  const { notify } = (await import('~/utils/useNotification')).useNotification()
-  const runtimeConfig = useRuntimeConfig()
-  const clientId = runtimeConfig.public.googleClientId || (import.meta as any).env?.NUXT_PUBLIC_GOOGLE_CLIENT_ID
-
-  // Utilities-based login attempt (FedCM aware)
-  if (!userStore.isAuthenticated && clientId) {
-    const {
-      checkFedcmSupport,
-      checkFedcmDisabled,
-      handleGoogleLogin,
-      handleGoogleCallback,
-    } = await import('~/utils/googleAuth')
-
-    checkFedcmSupport()
-    checkFedcmDisabled(notify)
-
-    const callback = (response: any) =>
-      handleGoogleCallback(response, userStore.googleLogin.bind(userStore), notify, () => {})
-
-    try {
-      await handleGoogleLogin(clientId, callback, notify)
-    } catch (e) {
-      // fall through to plugin button render
-      console.warn('Auto Google login failed, will render button:', e)
-    }
-  }
-
-  // Render plugin-driven Google button for manual login
-  if (!userStore.isAuthenticated) {
-    const { $googleAuth } = useNuxtApp()
-    try {
-      await $googleAuth.initialize()
-      await $googleAuth.renderButtonWithRetry('google-signin-btn', { size: 'large' })
-    } catch (e) {
-      console.error('Failed to initialize/render Google button:', e)
-    }
-  }
 })
 </script>
+
+<style scoped>
+.home {
+  min-height: 100vh;
+}
+
+.hero {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  padding: 4rem 0;
+  text-align: center;
+}
+
+.hero-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.hero-title {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+.hero-search {
+  display: flex;
+  gap: 1rem;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.search-input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+}
+
+.search-btn {
+  padding: 0.75rem 2rem;
+  background: white;
+  color: #10b981;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.search-btn:hover {
+  background: #f3f4f6;
+  transform: translateY(-1px);
+}
+
+.featured {
+  padding: 4rem 0;
+  text-align: center;
+  background: #f9fafb;
+}
+
+.featured h2 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.featured p {
+  font-size: 1.125rem;
+  color: #6b7280;
+}
+
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+  
+  .hero-search {
+    flex-direction: column;
+  }
+  
+  .featured h2 {
+    font-size: 2rem;
+  }
+}
+</style>
 

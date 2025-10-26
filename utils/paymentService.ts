@@ -6,7 +6,11 @@ import type {
   PaymentOrder,
   PriceInfo,
   TokenConfig,
-  PlanResponse
+  PlanResponse,
+  CreateWeb3PaymentRequest,
+  CreateWeb3PaymentResponse,
+  PaymentInfo,
+  PaymentStatus
 } from '~/types/payment'
 import { http } from './http'
 
@@ -53,6 +57,17 @@ export class PaymentService {
     } catch (error: any) {
       console.error('Get products error:', error)
       return { success: false, error: error.message || 'Failed to fetch products' }
+    }
+  }
+
+  // 获取套餐列表 (别名方法，为了向后兼容)
+  async getPlans(): Promise<{ success: boolean; plans?: PlanResponse[]; error?: string }> {
+    try {
+      const response = await http.get(`${this.baseUrl}/plans`)
+      return { success: true, plans: response.data }
+    } catch (error: any) {
+      console.error('Get plans error:', error)
+      return { success: false, error: error.message || 'Failed to fetch plans' }
     }
   }
 
@@ -139,6 +154,39 @@ export class PaymentService {
   // 根据代币符号获取配置
   getTokenConfig(symbol: string): TokenConfig | undefined {
     return SUPPORTED_TOKENS.find(token => token.symbol === symbol)
+  }
+
+  // 创建Web3支付记录
+  async createWeb3Payment(request: CreateWeb3PaymentRequest): Promise<CreateWeb3PaymentResponse> {
+    try {
+      const response = await http.post(`${this.baseUrl}/create`, request)
+      return { success: true, ...response.data }
+    } catch (error: any) {
+      console.error('Create Web3 payment error:', error)
+      return { success: false, error: error.message || 'Failed to create Web3 payment' }
+    }
+  }
+
+  // 获取支付信息
+  async getPaymentInfo(paymentId: number): Promise<{ success: boolean; paymentInfo?: PaymentInfo; error?: string }> {
+    try {
+      const response = await http.get(`${this.baseUrl}/payment-info/${paymentId}`)
+      return { success: true, paymentInfo: response.data.paymentInfo }
+    } catch (error: any) {
+      console.error('Get payment info error:', error)
+      return { success: false, error: error.message || 'Failed to get payment info' }
+    }
+  }
+
+  // 获取支付状态（用于轮询）
+  async getPaymentStatus(paymentId: number): Promise<{ success: boolean; paymentStatus?: PaymentStatus; error?: string }> {
+    try {
+      const response = await http.get(`${this.baseUrl}/status/${paymentId}`)
+      return { success: true, paymentStatus: response.data.paymentStatus }
+    } catch (error: any) {
+      console.error('Get payment status error:', error)
+      return { success: false, error: error.message || 'Failed to get payment status' }
+    }
   }
 }
 

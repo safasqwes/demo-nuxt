@@ -1,0 +1,115 @@
+{
+  "privacy": {
+    "title": "隐私政策",
+    "lastUpdated": "最后更新：{date}",
+    "sections": {
+      "introduction": {
+        "title": "1. 介绍",
+        "content": "欢迎来到 NovelHub（\"我们\"、\"我们的\"或\"我们\"）。本隐私政策解释了当您访问我们的网站和使用我们的服务时，我们如何收集、使用、披露和保护您的信息。请仔细阅读本隐私政策。如果您不同意本隐私政策的条款，请不要访问该网站。"
+      },
+      "informationCollection": {
+        "title": "2. 我们收集的信息",
+        "personalInfo": {
+          "title": "2.1 个人信息",
+          "content": "当您进行以下活动时，我们可能会收集您自愿提供给我们的个人信息：",
+          "activities": [
+            "注册账户",
+            "使用我们的身份验证服务（Google、Web3）",
+            "进行购买或交易",
+            "联系我们寻求支持",
+            "参与调查或促销活动"
+          ]
+        },
+        "autoCollected": {
+          "title": "2.2 自动收集的信息",
+          "content": "当您访问我们的网站时，我们会自动收集某些信息：",
+          "data": [
+            "设备信息（IP 地址、浏览器类型、操作系统）",
+            "使用数据（访问的页面、花费的时间、点击模式）",
+            "Cookie 和类似的跟踪技术",
+            "用于安全目的的设备指纹数据"
+          ]
+        }
+      },
+      "informationUse": {
+        "title": "3. 我们如何使用您的信息",
+        "content": "我们使用收集的信息来：",
+        "purposes": [
+          "提供、运营和维护我们的服务",
+          "处理交易并发送相关信息",
+          "向您发送技术通知和支持消息",
+          "回复您的评论和问题",
+          "改进我们的网站和服务",
+          "检测、预防和解决技术问题和安全威胁",
+          "遵守法律义务"
+        ]
+      },
+      "informationSharing": {
+        "title": "4. 信息共享和披露",
+        "content": "我们不会出售、交易或以其他方式将您的个人信息转移给第三方，除非：",
+        "exceptions": [
+          "获得您的明确同意",
+          "遵守法律义务",
+          "保护我们的权利并防止欺诈",
+          "与协助我们运营网站的服务提供商",
+          "与业务转让或收购相关"
+        ]
+      },
+      "dataSecurity": {
+        "title": "5. 数据安全",
+        "content": "我们实施适当的技术和组织安全措施，以保护您的个人信息免受未经授权的访问、更改、披露或破坏。但是，通过互联网传输的方法都不是 100% 安全的。"
+      },
+      "cookies": {
+        "title": "6. Cookie 和跟踪技术",
+        "content": "我们使用 Cookie 和类似的跟踪技术来增强您在网站上的体验。您可以通过浏览器首选项控制 Cookie 设置，但禁用 Cookie 可能会影响我们服务的功能。"
+      },
+      "thirdParty": {
+        "title": "7. 第三方服务",
+        "content": "我们的网站可能包含指向第三方网站的链接或与第三方服务集成（如 Google 身份验证、支付处理器）。我们不对这些第三方的隐私做法负责。"
+      },
+      "yourRights": {
+        "title": "8. 您的权利",
+        "content": "根据您的位置，您可能拥有以下权利：",
+        "rights": [
+          "访问您的个人信息",
+          "更正不准确的信息",
+          "删除您的个人信息",
+          "限制处理",
+          "数据可移植性",
+          "反对处理"
+        ]
+      },
+      "dataRetention": {
+        "title": "9. 数据保留",
+        "content": "我们仅在履行本隐私政策中概述的目的所需的时间内保留您的个人信息，除非法律要求更长的保留期。"
+      },
+      "childrenPrivacy": {
+        "title": "10. 儿童隐私",
+        "content": "我们的服务不适用于 13 岁以下的儿童。我们不会故意收集 13 岁以下儿童的个人信息。"
+      },
+      "policyChanges": {
+        "title": "11. 本隐私政策的变更",
+        "content": "我们可能会不时更新本隐私政策。我们将通过在此页面上发布新的隐私政策并更新\"最后更新\"日期来通知您任何变更。"
+      },
+      "contactUs": {
+        "title": "12. 联系我们",
+        "content": "如果您对本隐私政策或我们的隐私做法有任何疑问，请联系我们：",
+        "email": "邮箱：",
+        "address": "地址：",
+        "emailValue": "privacy@novelhub.com",
+        "addressValue": "NovelHub 隐私团队，网络小说街 123 号，数字城，DC 12345"
+      }
+    },
+    "seo": {
+      "title": "隐私政策 - NovelHub | 数据保护和隐私",
+      "description": "阅读 NovelHub 的隐私政策，了解我们如何收集、使用和保护您在使用我们网络小说平台时的个人信息。",
+      "keywords": "隐私政策, 数据保护, 个人信息, cookie, GDPR, CCPA, novelhub 隐私",
+      "ogTitle": "隐私政策 - NovelHub",
+      "ogDescription": "了解 NovelHub 如何保护您的隐私和处理您的个人信息。",
+      "ogUrl": "https://novelhub.example.com/privacy-policy",
+      "twitterTitle": "隐私政策 - NovelHub",
+      "twitterDescription": "NovelHub 的隐私政策和数据保护做法。",
+      "canonical": "https://novelhub.example.com/privacy-policy"
+    }
+  }
+}

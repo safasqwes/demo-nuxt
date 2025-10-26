@@ -1,0 +1,148 @@
+{
+  "terms": {
+    "title": "Terms of Service",
+    "lastUpdated": "Last updated: {date}",
+    "sections": {
+      "acceptance": {
+        "title": "1. Acceptance of Terms",
+        "content": "By accessing and using NovelHub (\"the Service\"), you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service."
+      },
+      "description": {
+        "title": "2. Description of Service",
+        "content": "NovelHub is a web novel platform that provides users with access to digital content including web novels, light novels, and related reading materials. Our service includes:",
+        "features": [
+          "Access to a library of web novels and light novels",
+          "User account management and authentication",
+          "Reading progress tracking and bookmarks",
+          "Payment processing for premium content",
+          "Community features and user interactions"
+        ]
+      },
+      "userAccounts": {
+        "title": "3. User Accounts",
+        "accountCreation": {
+          "title": "3.1 Account Creation",
+          "content": "To access certain features of our service, you must create an account. You agree to:",
+          "requirements": [
+            "Provide accurate, current, and complete information",
+            "Maintain and update your account information",
+            "Keep your password secure and confidential",
+            "Accept responsibility for all activities under your account"
+          ]
+        },
+        "accountTermination": {
+          "title": "3.2 Account Termination",
+          "content": "We reserve the right to terminate or suspend your account at any time for violations of these terms or for any other reason at our sole discretion."
+        }
+      },
+      "acceptableUse": {
+        "title": "4. Acceptable Use",
+        "permittedUses": {
+          "title": "4.1 Permitted Uses",
+          "content": "You may use our service to:",
+          "uses": [
+            "Read and access content for personal, non-commercial use",
+            "Create bookmarks and track reading progress",
+            "Participate in community discussions",
+            "Purchase premium content through legitimate channels"
+          ]
+        },
+        "prohibitedUses": {
+          "title": "4.2 Prohibited Uses",
+          "content": "You agree not to:",
+          "prohibitions": [
+            "Violate any applicable laws or regulations",
+            "Infringe on intellectual property rights",
+            "Attempt to gain unauthorized access to our systems",
+            "Use automated tools to scrape or download content",
+            "Distribute, modify, or create derivative works of our content",
+            "Engage in any activity that disrupts or interferes with our service",
+            "Use our service for any illegal or unauthorized purpose"
+          ]
+        }
+      },
+      "intellectualProperty": {
+        "title": "5. Intellectual Property Rights",
+        "ourContent": {
+          "title": "5.1 Our Content",
+          "content": "The service and its original content, features, and functionality are owned by NovelHub and are protected by international copyright, trademark, patent, trade secret, and other intellectual property laws."
+        },
+        "userContent": {
+          "title": "5.2 User-Generated Content",
+          "content": "You retain ownership of content you create and share on our platform. By posting content, you grant us a non-exclusive, royalty-free license to use, display, and distribute your content in connection with our service."
+        }
+      },
+      "paymentTerms": {
+        "title": "6. Payment Terms",
+        "pricingBilling": {
+          "title": "6.1 Pricing and Billing",
+          "content": "Some features of our service require payment. All prices are displayed in the applicable currency and are subject to change with notice. Payment is due in advance of service delivery."
+        },
+        "refunds": {
+          "title": "6.2 Refunds",
+          "content": "Refund policies vary by content type and are subject to our discretion. Generally, digital content purchases are non-refundable unless required by law."
+        },
+        "paymentMethods": {
+          "title": "6.3 Payment Methods",
+          "content": "We accept various payment methods including credit cards, PayPal, and cryptocurrency. All payments are processed securely through third-party payment processors."
+        }
+      },
+      "privacy": {
+        "title": "7. Privacy and Data Protection",
+        "content": "Your privacy is important to us. Please review our Privacy Policy, which also governs your use of the service, to understand our practices."
+      },
+      "disclaimers": {
+        "title": "8. Disclaimers and Limitations of Liability",
+        "serviceAvailability": {
+          "title": "8.1 Service Availability",
+          "content": "We strive to maintain service availability but cannot guarantee uninterrupted access. We may temporarily suspend service for maintenance or updates."
+        },
+        "contentAccuracy": {
+          "title": "8.2 Content Accuracy",
+          "content": "While we strive to provide accurate and up-to-date content, we make no warranties regarding the accuracy, completeness, or reliability of any content on our platform."
+        },
+        "limitationLiability": {
+          "title": "8.3 Limitation of Liability",
+          "content": "To the maximum extent permitted by law, NovelHub shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use of our service."
+        }
+      },
+      "indemnification": {
+        "title": "9. Indemnification",
+        "content": "You agree to defend, indemnify, and hold harmless NovelHub and its affiliates from any claims, damages, or expenses arising from your use of the service or violation of these terms."
+      },
+      "governingLaw": {
+        "title": "10. Governing Law and Dispute Resolution",
+        "content": "These terms shall be governed by and construed in accordance with the laws of the jurisdiction in which NovelHub operates, without regard to conflict of law principles."
+      },
+      "changesToTerms": {
+        "title": "11. Changes to Terms",
+        "content": "We reserve the right to modify these terms at any time. We will notify users of significant changes via email or through our service. Continued use constitutes acceptance of the modified terms."
+      },
+      "severability": {
+        "title": "12. Severability",
+        "content": "If any provision of these terms is found to be unenforceable or invalid, the remaining provisions will remain in full force and effect."
+      },
+      "contactInfo": {
+        "title": "13. Contact Information",
+        "content": "If you have any questions about these Terms of Service, please contact us at:",
+        "email": "Email:",
+        "address": "Address:",
+        "phone": "Phone:",
+        "emailValue": "legal@novelhub.com",
+        "addressValue": "NovelHub Legal Department, 123 Web Novel Street, Digital City, DC 12345",
+        "phoneValue": "+1 (555) 123-4567"
+      }
+    },
+    "seo": {
+      "title": "Terms of Service - NovelHub | Legal Terms & Conditions",
+      "description": "Read NovelHub's terms of service to understand the rules and guidelines for using our web novel platform and services.",
+      "keywords": "terms of service, terms and conditions, user agreement, legal terms, novelhub terms, web novel platform terms",
+      "ogTitle": "Terms of Service - NovelHub",
+      "ogDescription": "NovelHub's terms of service and user agreement.",
+      "ogUrl": "https://novelhub.example.com/terms-of-service",
+      "twitterTitle": "Terms of Service - NovelHub",
+      "twitterDescription": "Read our terms of service for using NovelHub.",
+      "canonical": "https://novelhub.example.com/terms-of-service"
+    }
+  }
+}

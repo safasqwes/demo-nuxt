@@ -1,0 +1,92 @@
+{
+  "common": {
+    "loading": "加载中...",
+    "error": "错误",
+    "success": "成功",
+    "cancel": "取消",
+    "confirm": "确认",
+    "save": "保存",
+    "delete": "删除",
+    "edit": "编辑",
+    "back": "返回",
+    "next": "下一步",
+    "previous": "上一步",
+    "close": "关闭",
+    "upload": "上传",
+    "download": "下载",
+    "search": "搜索",
+    "filter": "筛选",
+    "sort": "排序",
+    "refresh": "刷新"
+  },
+  "navigation": {
+    "home": "首页",
+    "about": "关于",
+    "contact": "联系我们",
+    "products": "产品",
+    "pricing": "价格",
+    "blog": "博客",
+    "login": "登录",
+    "register": "注册",
+    "logout": "退出",
+    "profile": "个人资料",
+    "settings": "设置",
+    "videoswap": "视频人脸交换"
+  },
+  "auth": {
+    "login": "登录",
+    "logout": "退出",
+    "register": "注册",
+    "email": "邮箱",
+    "password": "密码",
+    "confirmPassword": "确认密码",
+    "forgotPassword": "忘记密码？",
+    "rememberMe": "记住我",
+    "loginWithGoogle": "使用Google登录",
+    "loginWithWeb3": "使用Web3登录",
+    "welcome": "欢迎",
+    "loginSuccess": "登录成功",
+    "loginFailed": "登录失败",
+    "logoutSuccess": "退出成功"
+  },
+  "payment": {
+    "title": "支付",
+    "amount": "金额",
+    "currency": "货币",
+    "description": "描述",
+    "payNow": "立即支付",
+    "processing": "处理支付中...",
+    "success": "支付成功",
+    "failed": "支付失败",
+    "cancelled": "支付已取消"
+  },
+  "footer": {
+    "brand": {
+      "title": "📚 NovelHub",
+      "subtitle": "创意故事，为读者而生。",
+      "description": "我们的使命是让全世界的读者都能发现精彩的故事。"
+    },
+    "sections": {
+      "products": "产品",
+      "company": "公司",
+      "resources": "资源"
+    },
+    "links": {
+      "webNovels": "网络小说",
+      "lightNovels": "轻小说",
+      "audioBooks": "有声书",
+      "aboutUs": "关于我们",
+      "useCases": "使用案例",
+      "pricing": "价格",
+      "contactUs": "联系我们",
+      "blog": "博客",
+      "community": "社区"
+    },
+    "copyright": "© 2025 NovelHub - 您通往精彩网络小说的门户",
+    "legal": {
+      "termsOfService": "服务条款",
+      "privacyPolicy": "隐私政策",
+      "cookiePolicy": "Cookie政策"
+    }
+  }
+}

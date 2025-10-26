@@ -180,6 +180,158 @@
               </div>
             </div>
           </div>
+          
+          <!-- Payment Information -->
+          <div v-if="paymentInfo" class="mb-6 p-4 bg-blue-50 rounded-lg">
+            <h4 class="font-medium text-blue-900 mb-2">Payment Information</h4>
+            <div class="text-sm text-blue-800 space-y-1">
+              <p><span class="font-medium">Order Number:</span> {{ paymentInfo.orderNumber }}</p>
+              <p><span class="font-medium">Plan:</span> {{ paymentInfo.planName }}</p>
+              <p><span class="font-medium">Amount:</span> ${{ paymentInfo.fiatAmount.toFixed(2) }} {{ paymentInfo.currency }}</p>
+              <p><span class="font-medium">Crypto Amount:</span> {{ paymentInfo.tokenAmount }} {{ paymentInfo.tokenCurrency }}</p>
+              <p><span class="font-medium">Recipient Address:</span> 
+                <span class="font-mono text-xs">{{ paymentInfo.recipientAddress }}</span>
+              </p>
+              <p><span class="font-medium">Chain ID:</span> {{ paymentInfo.chainId }}</p>
+            </div>
+          </div>
+          
+          <!-- Plan Details -->
+          <div v-if="planDetails" class="mb-6 p-4 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg border border-purple-200">
+            <div class="flex items-center mb-3">
+              <svg class="w-5 h-5 text-purple-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+              </svg>
+              <h4 class="font-semibold text-purple-900 text-lg">Package Details</h4>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- 套餐基本信息 -->
+              <div class="space-y-2">
+                <div class="flex justify-between items-center">
+                  <span class="text-sm font-medium text-purple-700">Package Name:</span>
+                  <span class="text-sm text-purple-900 font-semibold">{{ planDetails.planName }}</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-sm font-medium text-purple-700">Package Type:</span>
+                  <span class="text-sm text-purple-900">{{ planDetails.planType === 1 ? 'Subscription' : 'One-time' }}</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-sm font-medium text-purple-700">Price:</span>
+                  <span class="text-sm text-purple-900 font-semibold">${{ (planDetails.price / 100).toFixed(2) }}</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-sm font-medium text-purple-700">Points:</span>
+                  <span class="text-sm text-purple-900 font-semibold">{{ planDetails.pointsAmount?.toLocaleString() || 'N/A' }} points</span>
+                </div>
+              </div>
+              
+              <!-- 套餐特色功能 -->
+              <div class="space-y-2">
+                <div class="flex justify-between items-center">
+                  <span class="text-sm font-medium text-purple-700">Duration:</span>
+                  <span class="text-sm text-purple-900">{{ planDetails.duration || 'N/A' }}</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-sm font-medium text-purple-700">Status:</span>
+                  <span class="text-sm text-purple-900">{{ planDetails.status === 1 ? 'Active' : 'Inactive' }}</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-sm font-medium text-purple-700">Created:</span>
+                  <span class="text-sm text-purple-900">{{ formatDate(new Date(planDetails.createdAt)) }}</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 套餐描述 -->
+            <div v-if="planDetails.description" class="mt-4 p-3 bg-white rounded-lg border border-purple-100">
+              <h5 class="text-sm font-medium text-purple-700 mb-2">Description:</h5>
+              <p class="text-sm text-purple-600">{{ planDetails.description }}</p>
+            </div>
+            
+            <!-- 套餐特色列表 -->
+            <div v-if="planDetails.features && planDetails.features.length > 0" class="mt-4">
+              <h5 class="text-sm font-medium text-purple-700 mb-2">Features:</h5>
+              <ul class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <li v-for="feature in planDetails.features" :key="feature" class="flex items-center text-sm text-purple-600">
+                  <svg class="w-4 h-4 text-purple-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  {{ feature }}
+                </li>
+              </ul>
+            </div>
+            
+            <!-- 积分价值说明 -->
+            <div class="mt-4 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+              <div class="flex items-start">
+                <svg class="w-5 h-5 text-yellow-600 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <div>
+                  <h6 class="text-sm font-medium text-yellow-800">Points Value</h6>
+                  <p class="text-xs text-yellow-700 mt-1">
+                    You will receive <strong>{{ planDetails.pointsAmount?.toLocaleString() || 'N/A' }} points</strong> 
+                    upon successful payment. Points can be used to unlock premium content and features.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Plan Details Loading -->
+          <div v-if="isLoadingPlanDetails" class="mb-6 p-4 bg-gray-50 rounded-lg">
+            <div class="flex items-center justify-center">
+              <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-purple-600 mr-3"></div>
+              <span class="text-sm text-gray-600">Loading package details...</span>
+            </div>
+          </div>
+          
+          <!-- Payment Status -->
+          <div v-if="paymentStatus" class="mb-6 p-4 rounded-lg" 
+               :class="{
+                 'bg-yellow-50': paymentStatus.status === 0,
+                 'bg-green-50': paymentStatus.status === 1,
+                 'bg-red-50': paymentStatus.status === 3
+               }">
+            <h4 class="font-medium mb-2" 
+                :class="{
+                  'text-yellow-900': paymentStatus.status === 0,
+                  'text-green-900': paymentStatus.status === 1,
+                  'text-red-900': paymentStatus.status === 3
+                }">
+              Payment Status
+            </h4>
+            <div class="text-sm space-y-1" 
+                 :class="{
+                   'text-yellow-800': paymentStatus.status === 0,
+                   'text-green-800': paymentStatus.status === 1,
+                   'text-red-800': paymentStatus.status === 3
+                 }">
+              <p><span class="font-medium">Status:</span> 
+                <span v-if="paymentStatus.status === 0">Pending</span>
+                <span v-else-if="paymentStatus.status === 1">Completed</span>
+                <span v-else-if="paymentStatus.status === 2">Processing</span>
+                <span v-else-if="paymentStatus.status === 3">Expired</span>
+                <span v-else-if="paymentStatus.status === 4">Cancelled</span>
+              </p>
+              <p v-if="paymentStatus.txHash"><span class="font-medium">Transaction Hash:</span> 
+                <span class="font-mono text-xs">{{ paymentStatus.txHash }}</span>
+              </p>
+              <p v-if="paymentStatus.confirmations !== undefined">
+                <span class="font-medium">Confirmations:</span> 
+                {{ paymentStatus.confirmations }}/{{ paymentStatus.requiredConfirmations }}
+              </p>
+            </div>
+          </div>
+          
+          <!-- Payment Timeout -->
+          <div v-if="timeRemaining > 0" class="mb-6 p-4 bg-orange-50 rounded-lg">
+            <h4 class="font-medium text-orange-900 mb-2">Payment Timeout</h4>
+            <div class="text-sm text-orange-800">
+              <p><span class="font-medium">Time Remaining:</span> {{ formatTime(timeRemaining) }}</p>
+            </div>
+          </div>
 
           <!-- Payment Amount -->
           <div class="mb-6">
@@ -224,11 +376,11 @@
                 </svg>
                 <div class="text-sm text-blue-800">
                   <div class="font-medium">
-                    {{ currentOrder ? 'Order Payment' : 'External Payment' }}
+                    {{ paymentInfo ? 'Order Payment' : 'External Payment' }}
                   </div>
                   <div class="text-blue-600">
-                    {{ currentOrder 
-                      ? `Order #${currentOrder.orderNumber} - Amount and currency are locked` 
+                    {{ paymentInfo 
+                      ? `Order #${paymentInfo.orderNumber} - Amount and currency are locked` 
                       : 'Amount and currency are locked from external source' 
                     }}
                   </div>
@@ -439,12 +591,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useNotification } from '~/utils/useNotification'
 import { web3PaymentService, type PaymentRequest, type TransactionStatus } from '~/utils/web3Payment'
 import { paymentService } from '~/utils/paymentService'
-import type { PaymentOrder } from '~/types/payment'
+import type { PaymentOrder, PaymentInfo, PaymentStatus } from '~/types/payment'
 import Swal from 'sweetalert2'
 
 // Meta tags for SEO
@@ -471,8 +623,9 @@ const SUPPORTED_NETWORKS = {
 const currentNetwork = ref<{ chainId: number; name: string } | null>(null)
 
 // Reactive data
-const currentOrder = ref<PaymentOrder | null>(null)
-const isOrderMode = ref(false)
+const paymentInfo = ref<PaymentInfo | null>(null)
+const paymentStatus = ref<PaymentStatus | null>(null)
+const planDetails = ref<any>(null) // 套餐详细信息
 const isWalletConnected = ref(false)
 const isConnecting = ref(false)
 const isProcessing = ref(false)
@@ -483,6 +636,8 @@ const selectedCurrency = ref('ETH')
 const walletBalance = ref('0')
 const gasEstimate = ref('0')
 const isLoadingBalance = ref(false)
+const isLoadingPaymentInfo = ref(false)
+const isLoadingPlanDetails = ref(false)
 
 // 交易状态相关
 const currentTransaction = ref<{
@@ -499,6 +654,11 @@ const paymentStartTime = ref<number | null>(null)
 // 外部参数控制
 const isExternalPayment = ref(false)
 const isAmountLocked = ref(false)
+
+// 轮询和超时管理
+const statusPollingInterval = ref<NodeJS.Timeout | null>(null)
+const paymentTimeoutTimer = ref<NodeJS.Timeout | null>(null)
+const timeRemaining = ref(0) // 剩余时间（秒）
 
 // Supported currencies (动态根据网络变化)
 const supportedCurrencies = ref<Array<{ symbol: string; name: string }>>([])
@@ -541,64 +701,155 @@ const connectWallet = async () => {
 
 // 处理 URL 参数
 const handleUrlParams = () => {
-  const amount = route.query.amount as string
-  const currency = route.query.currency as string
-  const orderNo = route.query.orderno as string
+  const paymentId = route.query.paymentId as string
+  const orderNo = route.query.orderNo as string
   
-  if (orderNo) {
-    // 从订单页面跳转，根据订单号查询订单信息
+  if (paymentId) {
+    // 从支付页面跳转，加载支付信息
     isExternalPayment.value = true
     isAmountLocked.value = true
-    loadOrderByOrderNo(orderNo)
-    console.log('Order payment parameters:', { orderNo })
-  } else if (amount && currency) {
-    // 从外部页面跳转，设置支付参数
-    isExternalPayment.value = true
-    isAmountLocked.value = true
-    
-    // 设置支付数量和币种
-    paymentAmount.value = amount
-    selectedCurrency.value = currency.toUpperCase()
-    
-    // 设置支付描述
-    paymentDescription.value = `Payment for NovelHub Service - ${amount} ${currency.toUpperCase()}`
-    
-    console.log('External payment parameters:', { amount, currency })
+    loadPaymentInfo(parseInt(paymentId))
+    console.log('Payment parameters:', { paymentId, orderNo })
+  } else {
+    // 没有支付ID，重定向到产品页面
+    router.push('/products')
   }
 }
 
-// 根据订单号加载订单信息
-const loadOrderByOrderNo = async (orderNo: string) => {
+// 加载支付信息
+const loadPaymentInfo = async (paymentId: number) => {
+  isLoadingPaymentInfo.value = true
   try {
-    console.log('Loading order by order number:', orderNo)
+    console.log('Loading payment info:', paymentId)
     
-    // 调用后端API查询订单信息
-    const result = await paymentService.getOrderByOrderNo(orderNo)
+    const result = await paymentService.getPaymentInfo(paymentId)
     
-    if (result.success && result.order) {
-      console.log('Order loaded successfully:', result.order)
+    if (result.success && result.paymentInfo) {
+      console.log('Payment info loaded successfully:', result.paymentInfo)
       
-      // 设置订单信息
-      currentOrder.value = result.order
-      isOrderMode.value = true
+      // 设置支付信息
+      paymentInfo.value = result.paymentInfo
       
       // 设置支付参数（锁定状态）
-      paymentAmount.value = result.order.amount.toString()
-      selectedCurrency.value = result.order.currency.toUpperCase()
-      paymentDescription.value = `Payment for ${result.order.planName} - Order #${result.order.orderNumber}`
+      paymentAmount.value = result.paymentInfo.tokenAmount
+      selectedCurrency.value = result.paymentInfo.tokenCurrency
+      paymentDescription.value = `Payment for ${result.paymentInfo.planName} - Order #${result.paymentInfo.orderNumber}`
       
-      console.log('Order payment details set:', {
+      // 加载套餐详细信息
+      await loadPlanDetails(result.paymentInfo.planId)
+      
+      // 开始轮询支付状态
+      startStatusPolling(paymentId)
+      
+      // 开始支付超时倒计时
+      startPaymentTimeout(result.paymentInfo.expiresAt)
+      
+      console.log('Payment details set:', {
         amount: paymentAmount.value,
         currency: selectedCurrency.value,
         description: paymentDescription.value
       })
     } else {
-      console.error('Failed to load order:', result.error)
-      showPaymentError('Order Not Found', result.error || 'Order not found or invalid order number')
+      console.error('Failed to load payment info:', result.error)
+      showPaymentError('Payment Not Found', result.error || 'Payment not found or invalid payment ID')
     }
   } catch (error) {
-    console.error('Error loading order:', error)
-    showPaymentError('Order Load Error', 'Failed to load order information. Please try again.')
+    console.error('Error loading payment info:', error)
+    showPaymentError('Payment Load Error', 'Failed to load payment information. Please try again.')
+  } finally {
+    isLoadingPaymentInfo.value = false
+  }
+}
+
+// 加载套餐详细信息
+const loadPlanDetails = async (planId: number) => {
+  isLoadingPlanDetails.value = true
+  try {
+    console.log('Loading plan details:', planId)
+    
+    const result = await paymentService.getPlans()
+    
+    if (result.success && result.plans) {
+      // 查找对应的套餐
+      const plan = result.plans.find((p: any) => p.planId === planId)
+      if (plan) {
+        planDetails.value = plan
+        console.log('Plan details loaded successfully:', plan)
+      } else {
+        console.warn('Plan not found:', planId)
+      }
+    } else {
+      console.error('Failed to load plans:', result.error)
+    }
+  } catch (error) {
+    console.error('Error loading plan details:', error)
+  } finally {
+    isLoadingPlanDetails.value = false
+  }
+}
+
+// 开始状态轮询
+const startStatusPolling = (paymentId: number) => {
+  // 清除现有的轮询
+  if (statusPollingInterval.value) {
+    clearInterval(statusPollingInterval.value)
+  }
+  
+  // 每5秒轮询一次支付状态
+  statusPollingInterval.value = setInterval(async () => {
+    try {
+      const result = await paymentService.getPaymentStatus(paymentId)
+      if (result.success && result.paymentStatus) {
+        paymentStatus.value = result.paymentStatus
+        
+        // 如果支付成功，停止轮询并跳转
+        if (result.paymentStatus.status === 1) {
+          stopStatusPolling()
+          showPaymentSuccess('Payment completed successfully!')
+          setTimeout(() => {
+            router.push('/payment-success')
+          }, 2000)
+        }
+      }
+    } catch (error) {
+      console.error('Status polling error:', error)
+    }
+  }, 5000)
+}
+
+// 停止状态轮询
+const stopStatusPolling = () => {
+  if (statusPollingInterval.value) {
+    clearInterval(statusPollingInterval.value)
+    statusPollingInterval.value = null
+  }
+}
+
+// 开始支付超时倒计时
+const startPaymentTimeout = (expiresAt: string) => {
+  const expireTime = new Date(expiresAt).getTime()
+  const now = Date.now()
+  const remaining = Math.max(0, Math.floor((expireTime - now) / 1000))
+  
+  timeRemaining.value = remaining
+  
+  if (remaining > 0) {
+    paymentTimeoutTimer.value = setInterval(() => {
+      timeRemaining.value--
+      if (timeRemaining.value <= 0) {
+        stopPaymentTimeout()
+        showPaymentError('Payment Timeout', 'Payment has expired. Please create a new payment.')
+        router.push('/products')
+      }
+    }, 1000)
+  }
+}
+
+// 停止支付超时倒计时
+const stopPaymentTimeout = () => {
+  if (paymentTimeoutTimer.value) {
+    clearInterval(paymentTimeoutTimer.value)
+    paymentTimeoutTimer.value = null
   }
 }
 
@@ -610,6 +861,19 @@ const updateSupportedCurrencies = () => {
   // 如果当前选择的代币不在新网络中支持，切换到第一个可用的代币
   if (tokens.length > 0 && !tokens.find(token => token.symbol === selectedCurrency.value)) {
     selectedCurrency.value = tokens[0]?.symbol || 'ETH'
+  }
+}
+
+// 格式化时间显示
+const formatTime = (seconds: number): string => {
+  const hours = Math.floor(seconds / 3600)
+  const minutes = Math.floor((seconds % 3600) / 60)
+  const secs = seconds % 60
+  
+  if (hours > 0) {
+    return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
+  } else {
+    return `${minutes}:${secs.toString().padStart(2, '0')}`
   }
 }
 
@@ -764,7 +1028,7 @@ const watchTransactionStatus = async (txHash: string) => {
         paymentStartTime.value = null
         
         // 如果是订单模式，跳转到成功页面
-        if (isOrderMode.value && currentOrder.value) {
+        if (paymentInfo.value) {
           setTimeout(() => {
             router.push('/payment-success')
           }, 3000)
@@ -793,7 +1057,7 @@ const watchTransactionStatus = async (txHash: string) => {
 
 // Payment processing
 const initiatePayment = async () => {
-  if (!isWalletConnected.value || !paymentAmount.value) return
+  if (!isWalletConnected.value || !paymentAmount.value || !paymentInfo.value) return
 
   // 检查是否正在支付中
   if (isPaymentInProgress.value) {
@@ -804,8 +1068,7 @@ const initiatePayment = async () => {
   console.log('Initiating payment...', {
     isWalletConnected: isWalletConnected.value,
     paymentAmount: paymentAmount.value,
-    currentOrder: currentOrder.value,
-    isOrderMode: isOrderMode.value
+    paymentInfo: paymentInfo.value
   })
 
   // 开始支付状态
@@ -826,27 +1089,18 @@ const initiatePayment = async () => {
       isProcessing.value = false
       return
     }
-    let paymentRequest: PaymentRequest
 
-    if (isOrderMode.value && currentOrder.value) {
-      // 订单模式支付
-      paymentRequest = {
-        amount: currentOrder.value.amount.toString(),
-        currency: currentOrder.value.currency,
-        recipientAddress: HARDCODED_RECIPIENT_ADDRESS, // 使用硬编码收款地址
-        description: currentOrder.value.planName,
-        orderId: currentOrder.value.orderId
-      }
-      console.log('Order mode payment request:', paymentRequest)
-    } else {
-      // 自由支付模式
-      paymentRequest = {
-        amount: paymentAmount.value,
-        currency: selectedCurrency.value,
-        recipientAddress: HARDCODED_RECIPIENT_ADDRESS, // 使用硬编码收款地址
-        description: paymentDescription.value
-      }
+    // 构建支付请求
+    const paymentRequest: PaymentRequest = {
+      amount: paymentAmount.value,
+      currency: selectedCurrency.value,
+      recipientAddress: paymentInfo.value.recipientAddress, // 使用后端返回的收款地址
+      description: paymentDescription.value,
+      orderId: paymentInfo.value.orderId,
+      chainId: paymentInfo.value.chainId
     }
+
+    console.log('Payment request:', paymentRequest)
 
     // 处理支付
     const result = await web3PaymentService.processPayment(paymentRequest)
@@ -855,21 +1109,8 @@ const initiatePayment = async () => {
       // 开始监听交易状态
       await watchTransactionStatus(result.transactionHash)
       
-      if (isOrderMode.value && currentOrder.value) {
-        // 验证订单支付
-        await verifyOrderPayment(result.transactionHash)
-      } else {
-        // 添加支付历史
-        const newPayment = {
-          id: Date.now(),
-          amount: paymentRequest.amount,
-          currency: paymentRequest.currency,
-          description: paymentRequest.description || 'Web3 Payment',
-          timestamp: new Date(),
-          transactionHash: result.transactionHash
-        }
-        paymentHistory.value.unshift(newPayment)
-      }
+      // 验证支付
+      await verifyPayment(result.transactionHash)
     } else {
       // 根据错误类型显示不同的提示
       if (result.error && result.error.includes('Insufficient')) {
@@ -898,26 +1139,30 @@ const initiatePayment = async () => {
   }
 }
 
-// 验证订单支付
-const verifyOrderPayment = async (txHash: string) => {
-  if (!currentOrder.value) return
+// 验证支付
+const verifyPayment = async (txHash: string) => {
+  if (!paymentInfo.value) return
 
   try {
     const result = await paymentService.verifyPayment({
-      paymentId: currentOrder.value.payments?.[0]?.paymentId || 0, // 从支付记录中获取 paymentId
+      paymentId: paymentInfo.value.paymentId,
       txHash: txHash,
       fromAddress: walletAddress.value
     })
 
     if (result.success) {
       if (result.confirmed) {
-        notify.success('Order Paid Successfully', 'Your order has been confirmed and processed!')
-        // 跳转到成功页面或返回产品页面
-        router.push('/payment-success')
+        notify.success('Payment Successful', 'Your payment has been confirmed and processed!')
+        // 停止轮询和超时
+        stopStatusPolling()
+        stopPaymentTimeout()
+        // 跳转到成功页面
+        setTimeout(() => {
+          router.push('/payment-success')
+        }, 2000)
       } else {
         notify.info('Payment Pending', `Transaction submitted. Waiting for ${result.requiredConfirmations - result.confirmations} more confirmations.`)
-        // 可以设置定时器检查状态
-        setTimeout(() => checkOrderStatus(), 30000) // 30秒后检查
+        // 轮询会继续检查状态
       }
     } else {
       notify.error('Payment Verification Failed', result.error || 'Failed to verify payment')
@@ -928,23 +1173,6 @@ const verifyOrderPayment = async (txHash: string) => {
   }
 }
 
-// 检查订单状态
-const checkOrderStatus = async () => {
-  if (!currentOrder.value) return
-
-  try {
-    const result = await paymentService.getOrderStatus(currentOrder.value.orderId)
-    if (result.success && result.order) {
-      currentOrder.value = result.order
-      if (result.order.status === 1) { // 1 = 已支付
-        notify.success('Order Confirmed', 'Your order has been confirmed!')
-        router.push('/payment-success')
-      }
-    }
-  } catch (error) {
-    console.error('Check order status error:', error)
-  }
-}
 
 // Utility functions
 const formatDate = (date: Date) => {
@@ -1009,72 +1237,12 @@ const onCurrencyChange = async () => {
 }
 
 // Initialize order from URL parameters
-const initializeOrder = async () => {
-  const { productId, currency, amount, fiatAmount, description } = route.query
-
-  // 如果是外部支付模式，跳过订单初始化
-  if (isExternalPayment.value) {
-    return
-  }
-
-  if (productId && currency && amount) {
-    isOrderMode.value = true
-    
-    // 创建订单
-    try {
-      const result = await paymentService.createOrder({
-        planId: parseInt(productId as string),
-        description: description as string
-      })
-
-      if (result.success && result.order) {
-        console.log('Order created successfully:', result.order)
-        console.log('Order created successfully:', result.order)
-        console.log('Order ID:', result.order.orderId)
-        console.log('Order Number:', result.order.orderNumber)
-        // 直接使用后端返回的订单数据
-        currentOrder.value = {
-          orderId: result.order.orderId,
-          orderNumber: result.order.orderNumber,
-          userId: result.order.userId,
-          planId: result.order.planId,
-          planName: result.order.planName,
-          amount: result.order.amount,
-          currency: result.order.currency,
-          points: result.order.points,
-          status: result.order.status,
-          orderType: result.order.orderType,
-          createdAt: result.order.createdAt,
-          updatedAt: result.order.updatedAt,
-          payments: result.order.payments || []
-        }
-        
-        console.log('Order created with ID:', currentOrder.value.orderId)
-        console.log('Order Number:', currentOrder.value.orderNumber)
-        
-        selectedCurrency.value = result.order.currency
-        paymentAmount.value = result.order.amount.toString() // 使用 amount 字段
-        paymentDescription.value = result.order.planName || 'Web3 Payment'
-      } else {
-        notify.error('Order Creation Failed', result.error || 'Failed to create order')
-        router.push('/payment-products')
-      }
-    } catch (error) {
-      console.error('Create order error:', error)
-      notify.error('Order Error', 'Failed to create order')
-      router.push('/payment-products')
-    }
-  }
-}
 
 // Check if wallet is already connected
 onMounted(async () => {
   try {
     // 处理 URL 参数
     handleUrlParams()
-
-    // 初始化订单
-    await initializeOrder()
 
     const result = await web3PaymentService.checkConnection()
     if (result.connected && result.address) {
@@ -1093,5 +1261,14 @@ onMounted(async () => {
   } catch (error) {
     console.error('Error checking wallet connection:', error)
   }
+})
+
+// 组件卸载时清理
+onUnmounted(() => {
+  console.log('Web3Payment component unmounted')
+  
+  // 清理轮询和定时器
+  stopStatusPolling()
+  stopPaymentTimeout()
 })
 </script>

@@ -1,0 +1,58 @@
+{
+  "videoswap": {
+    "title": "Video Face Swap",
+    "description": "Transform videos with AI-powered face swapping technology",
+    "sourceVideo": "Upload Source Video",
+    "targetFace": "Upload Target Face",
+    "uploadVideo": "Upload your video",
+    "uploadFace": "Upload face image",
+    "dragDropOrClick": "Drag and drop or click to browse",
+    "supportedVideoFormats": "MP4, MOV, AVI up to 100MB",
+    "supportedImageFormats": "JPG, PNG up to 10MB",
+    "removeVideo": "Remove video",
+    "removeImage": "Remove image",
+    "processingOptions": "Processing Options",
+    "quality": "Quality",
+    "qualityLow": "Low (Fast)",
+    "qualityMedium": "Medium (Balanced)",
+    "qualityHigh": "High (Slow)",
+    "faceDetection": "Face Detection",
+    "faceDetectionAuto": "Auto",
+    "faceDetectionManual": "Manual",
+    "outputFormat": "Output Format",
+    "outputFormatMp4": "MP4",
+    "outputFormatMov": "MOV",
+    "outputFormatAvi": "AVI",
+    "startFaceSwap": "Start Face Swap",
+    "processing": "Processing...",
+    "processingProgress": "Processing Progress",
+    "result": "Result",
+    "downloadVideo": "Download Video",
+    "processAnother": "Process Another",
+    "whyChoose": "Why Choose Our Video Face Swap?",
+    "lightningFast": "Lightning Fast",
+    "lightningFastDesc": "Process videos in minutes with our optimized AI algorithms",
+    "highQuality": "High Quality",
+    "highQualityDesc": "Professional-grade results with realistic face swapping",
+    "securePrivate": "Secure & Private",
+    "securePrivateDesc": "Your videos are processed securely and never stored",
+    "processingSteps": {
+      "initializing": "Initializing...",
+      "analyzing": "Analyzing video...",
+      "detecting": "Detecting faces...",
+      "processing": "Processing face swap...",
+      "rendering": "Rendering output...",
+      "finalizing": "Finalizing..."
+    },
+    "messages": {
+      "uploadBothFiles": "Please upload both video and face image",
+      "processingSuccess": "Video face swap completed successfully!",
+      "processingError": "Failed to process video. Please try again."
+    },
+    "seo": {
+      "title": "Video Face Swap - NovelHub",
+      "description": "Transform videos with AI-powered face swapping technology. Upload your video and target face to create amazing face swap videos.",
+      "keywords": "video face swap, AI face swap, video editing, face replacement, deepfake"
+    }
+  }
+}

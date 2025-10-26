@@ -1,5 +1,6 @@
 import { ethers } from 'ethers'
 import type { TokenConfig } from '~/types/payment'
+import { useWeb3 } from './useWeb3'
 
 // 网络配置
 const NETWORKS = {
@@ -71,6 +72,7 @@ export interface PaymentRequest {
   recipientAddress: string
   description?: string
   orderId?: number
+  chainId?: number
 }
 
 export interface PaymentResult {
@@ -93,66 +95,55 @@ export class Web3PaymentService {
   private signer: ethers.JsonRpcSigner | null = null
   private currentNetwork: number | null = null
   private transactionListeners: Map<string, (status: TransactionStatus) => void> = new Map()
+  private web3 = useWeb3()
 
-  // 连接钱包
-  async connectWallet(): Promise<{ success: boolean; address?: string; error?: string }> {
+  // 初始化支付服务
+  async initialize(): Promise<{ success: boolean; error?: string }> {
     try {
-      if (typeof window.ethereum === 'undefined') {
-        return { success: false, error: 'MetaMask or Web3 wallet not found' }
-      }
-
-      // 请求账户访问
-      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
-      
-      if (accounts.length === 0) {
-        return { success: false, error: 'No accounts found' }
+      // 检查Web3连接状态
+      if (!this.web3.isConnected.value) {
+        return { success: false, error: 'Wallet not connected. Please connect your wallet first.' }
       }
 
       // 创建provider和signer
-      this.provider = new ethers.BrowserProvider(window.ethereum)
+      this.provider = new ethers.BrowserProvider(window.ethereum!)
       this.signer = await this.provider.getSigner()
 
       // 获取当前网络信息
       const network = await this.provider.getNetwork()
       this.currentNetwork = Number(network.chainId)
 
-      return { 
-        success: true, 
-        address: accounts[0] 
-      }
+      return { success: true }
     } catch (error: any) {
-      console.error('Wallet connection error:', error)
+      console.error('Payment service initialization error:', error)
       return { 
         success: false, 
-        error: error.message || 'Failed to connect wallet' 
+        error: error.message || 'Failed to initialize payment service' 
       }
     }
   }
 
-  // 检查钱包连接状态
-  async checkConnection(): Promise<{ connected: boolean; address?: string }> {
+  // 检查支付服务状态
+  async checkStatus(): Promise<{ ready: boolean; address?: string; error?: string }> {
     try {
-      if (typeof window.ethereum === 'undefined') {
-        return { connected: false }
+      if (!this.web3.isConnected.value) {
+        return { ready: false, error: 'Wallet not connected' }
       }
 
-      const accounts = await window.ethereum.request({ method: 'eth_accounts' })
-      
-      if (accounts.length > 0) {
-        if (!this.provider) {
-          this.provider = new ethers.BrowserProvider(window.ethereum)
-          this.signer = await this.provider.getSigner()
+      if (!this.provider || !this.signer) {
+        const initResult = await this.initialize()
+        if (!initResult.success) {
+          return { ready: false, error: initResult.error }
         }
-        // 获取当前网络信息
-        const network = await this.provider.getNetwork()
-        this.currentNetwork = Number(network.chainId)
-        return { connected: true, address: accounts[0] }
       }
 
-      return { connected: false }
-    } catch (error) {
-      console.error('Connection check error:', error)
-      return { connected: false }
+      return { 
+        ready: true, 
+        address: this.web3.address.value 
+      }
+    } catch (error: any) {
+      console.error('Payment service status check error:', error)
+      return { ready: false, error: error.message || 'Failed to check payment service status' }
     }
   }
 
@@ -194,11 +185,12 @@ export class Web3PaymentService {
   // 处理支付
   async processPayment(payment: PaymentRequest): Promise<PaymentResult> {
     try {
-      // console.log('Processing payment:', payment)
+      console.log('Processing payment:', payment)
       
-      if (!this.signer) {
-        console.error('Wallet not connected - no signer available')
-        return { success: false, error: 'Wallet not connected' }
+      // 确保支付服务已初始化
+      const statusCheck = await this.checkStatus()
+      if (!statusCheck.ready) {
+        return { success: false, error: statusCheck.error || 'Payment service not ready' }
       }
 
       const recipientAddress = payment.recipientAddress
@@ -213,12 +205,13 @@ export class Web3PaymentService {
         formattedAddress = recipientAddress.toLowerCase()
       }
       
-      // console.log('Payment details:', { 
-      //   originalAddress: recipientAddress, 
-      //   formattedAddress, 
-      //   amount, 
-      //   currency: payment.currency 
-      // })
+      console.log('Payment details:', { 
+        originalAddress: recipientAddress, 
+        formattedAddress, 
+        amount, 
+        currency: payment.currency,
+        chainId: payment.chainId
+      })
 
       // 检查余额是否足够
       const balanceCheck = await this.checkBalance(payment.currency, amount)
@@ -227,6 +220,10 @@ export class Web3PaymentService {
           success: false, 
           error: `Insufficient ${payment.currency} balance. You have ${balanceCheck.balance} ${payment.currency}, but need ${amount} ${payment.currency} plus gas fees.` 
         }
+      }
+
+      if (!this.signer) {
+        return { success: false, error: 'Signer not available' }
       }
 
       const networkTokens = TOKEN_ADDRESSES[this.currentNetwork as keyof typeof TOKEN_ADDRESSES]

@@ -1,0 +1,53 @@
+{
+  "contact": {
+    "title": "联系我们",
+    "subtitle": "我们很乐意听到您的声音。请发送消息给我们，我们会尽快回复。",
+    "sendMessage": "发送消息",
+    "form": {
+      "fullName": "姓名",
+      "emailAddress": "邮箱地址",
+      "subject": "主题",
+      "message": "消息",
+      "selectSubject": "选择主题",
+      "namePlaceholder": "您的姓名",
+      "emailPlaceholder": "your.email@example.com",
+      "messagePlaceholder": "告诉我们如何帮助您...",
+      "sendingMessage": "发送中...",
+      "sendMessage": "发送消息"
+    },
+    "subjects": {
+      "general": "一般咨询",
+      "support": "技术支持",
+      "billing": "账单问题",
+      "partnership": "合作伙伴",
+      "feedback": "反馈建议",
+      "other": "其他"
+    },
+    "getInTouch": "联系我们",
+    "contactInfo": {
+      "email": "邮箱",
+      "phone": "电话",
+      "office": "办公室",
+      "businessHours": "周一至周五 9:00-18:00 东部时间"
+    },
+    "faq": {
+      "title": "常见问题",
+      "accountHelp": "如何获得账户帮助？",
+      "accountHelpAnswer": "请联系我们的支持团队 support@novelhub.com 或使用上面的联系表单。",
+      "businessHours": "您的营业时间是什么？",
+      "businessHoursAnswer": "我们周一至周五上午9点到下午6点（东部时间）提供服务。",
+      "responseTime": "多久能收到回复？",
+      "responseTimeAnswer": "我们通常在营业日24小时内回复。"
+    },
+    "followUs": "关注我们",
+    "messages": {
+      "success": "感谢您的消息！我们会在24小时内回复您。",
+      "error": "抱歉，发送消息时出现错误。请重试。"
+    },
+    "seo": {
+      "title": "联系我们 - NovelHub",
+      "description": "与 NovelHub 取得联系。发送消息给我们，查找我们的联系信息，并获得账户帮助。",
+      "keywords": "联系, 支持, 帮助, NovelHub, 客户服务"
+    }
+  }
+}

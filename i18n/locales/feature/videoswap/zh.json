@@ -1,0 +1,58 @@
+{
+  "videoswap": {
+    "title": "视频人脸交换",
+    "description": "使用AI技术转换视频中的人脸",
+    "sourceVideo": "上传源视频",
+    "targetFace": "上传目标人脸",
+    "uploadVideo": "上传您的视频",
+    "uploadFace": "上传人脸图片",
+    "dragDropOrClick": "拖拽或点击浏览",
+    "supportedVideoFormats": "MP4, MOV, AVI 最大100MB",
+    "supportedImageFormats": "JPG, PNG 最大10MB",
+    "removeVideo": "删除视频",
+    "removeImage": "删除图片",
+    "processingOptions": "处理选项",
+    "quality": "质量",
+    "qualityLow": "低（快速）",
+    "qualityMedium": "中（平衡）",
+    "qualityHigh": "高（慢速）",
+    "faceDetection": "人脸检测",
+    "faceDetectionAuto": "自动",
+    "faceDetectionManual": "手动",
+    "outputFormat": "输出格式",
+    "outputFormatMp4": "MP4",
+    "outputFormatMov": "MOV",
+    "outputFormatAvi": "AVI",
+    "startFaceSwap": "开始人脸交换",
+    "processing": "处理中...",
+    "processingProgress": "处理进度",
+    "result": "结果",
+    "downloadVideo": "下载视频",
+    "processAnother": "处理另一个",
+    "whyChoose": "为什么选择我们的视频人脸交换？",
+    "lightningFast": "闪电般快速",
+    "lightningFastDesc": "使用我们优化的AI算法在几分钟内处理视频",
+    "highQuality": "高质量",
+    "highQualityDesc": "专业级结果，逼真的人脸交换",
+    "securePrivate": "安全私密",
+    "securePrivateDesc": "您的视频安全处理，绝不存储",
+    "processingSteps": {
+      "initializing": "初始化中...",
+      "analyzing": "分析视频中...",
+      "detecting": "检测人脸中...",
+      "processing": "处理人脸交换中...",
+      "rendering": "渲染输出中...",
+      "finalizing": "完成中..."
+    },
+    "messages": {
+      "uploadBothFiles": "请上传视频和人脸图片",
+      "processingSuccess": "视频人脸交换完成！",
+      "processingError": "处理视频失败，请重试。"
+    },
+    "seo": {
+      "title": "视频人脸交换 - NovelHub",
+      "description": "使用AI技术转换视频中的人脸。上传您的视频和目标人脸，创建令人惊叹的人脸交换视频。",
+      "keywords": "视频人脸交换, AI人脸交换, 视频编辑, 人脸替换, 深度伪造"
+    }
+  }
+}

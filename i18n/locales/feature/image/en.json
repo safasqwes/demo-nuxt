@@ -1,0 +1,30 @@
+{
+  "image": {
+    "title": "AI Image Processing",
+    "description": "Transform your images with powerful AI-powered tools",
+    "uploadImage": "Upload your image",
+    "supportedFormats": "JPG, PNG, WEBP up to 20MB",
+    "preview": "Image Preview",
+    "enhancement": "Enhancement",
+    "autoEnhance": "Auto Enhance",
+    "upscale2x": "Upscale 2x",
+    "removeBackground": "Remove Background",
+    "styleTransfer": "Style Transfer",
+    "animeStyle": "Anime Style",
+    "oilPainting": "Oil Painting",
+    "sketchStyle": "Sketch Style",
+    "filters": "Filters",
+    "vintage": "Vintage",
+    "blackWhite": "Black & White",
+    "sepia": "Sepia",
+    "processedImage": "Processed Image",
+    "downloadResult": "Download Result",
+    "resetOriginal": "Reset to Original",
+    "processNew": "Process New Image",
+    "powerfulTools": "Powerful AI Image Tools",
+    "autoEnhanceDesc": "Automatically improve brightness, contrast, and colors",
+    "upscalingDesc": "Increase image resolution with AI upscaling",
+    "styleTransferDesc": "Apply artistic styles to your images",
+    "smartFiltersDesc": "Apply professional-grade filters and effects"
+  }
+}

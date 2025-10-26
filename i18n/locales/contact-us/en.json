@@ -1,0 +1,53 @@
+{
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "We'd love to hear from you. Send us a message and we'll respond as soon as possible.",
+    "sendMessage": "Send us a message",
+    "form": {
+      "fullName": "Full Name",
+      "emailAddress": "Email Address",
+      "subject": "Subject",
+      "message": "Message",
+      "selectSubject": "Select a subject",
+      "namePlaceholder": "Your full name",
+      "emailPlaceholder": "your.email@example.com",
+      "messagePlaceholder": "Tell us how we can help you...",
+      "sendingMessage": "Sending Message...",
+      "sendMessage": "Send Message"
+    },
+    "subjects": {
+      "general": "General Inquiry",
+      "support": "Technical Support",
+      "billing": "Billing Question",
+      "partnership": "Partnership",
+      "feedback": "Feedback",
+      "other": "Other"
+    },
+    "getInTouch": "Get in touch",
+    "contactInfo": {
+      "email": "Email",
+      "phone": "Phone",
+      "office": "Office",
+      "businessHours": "Mon-Fri 9AM-6PM EST"
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "accountHelp": "How can I get help with my account?",
+      "accountHelpAnswer": "Contact our support team at support@novelhub.com or use the contact form above.",
+      "businessHours": "What are your business hours?",
+      "businessHoursAnswer": "We're available Monday through Friday, 9AM to 6PM EST.",
+      "responseTime": "How quickly will I get a response?",
+      "responseTimeAnswer": "We typically respond within 24 hours during business days."
+    },
+    "followUs": "Follow Us",
+    "messages": {
+      "success": "Thank you for your message! We'll get back to you within 24 hours.",
+      "error": "Sorry, there was an error sending your message. Please try again."
+    },
+    "seo": {
+      "title": "Contact Us - NovelHub",
+      "description": "Get in touch with NovelHub. Send us a message, find our contact information, and get help with your account.",
+      "keywords": "contact, support, help, NovelHub, customer service"
+    }
+  }
+}

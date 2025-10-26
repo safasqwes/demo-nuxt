@@ -94,20 +94,6 @@ export const useWeb3 = () => {
       const signature = await signer.signMessage(message)
       console.log('signature', signature)
 
-      // const hash = ethers.hashMessage(message)
-      // console.log('hash', hash)
-      // const bytes = ethers.getBytes(signature, "signature");
-      // const r = ethers.hexlify(bytes.slice(0, 32));
-      // const s = ethers.hexlify(bytes.slice(32, 64));
-      // const v = ethers.Signature.getNormalizedV(bytes[64]!);
-      // console.log('r', r)
-      // console.log('s', s)
-      // console.log('v', v)
-      // const publicKey = ethers.SigningKey.recoverPublicKey(hash, signature)
-      // console.log('publicKey', publicKey)
-      // const result = ethers.verifyMessage(message, signature)
-      // console.log('result', result)
-
       return { success: true, signature }
     } catch (err: any) {
       if (err.code === 4001) {

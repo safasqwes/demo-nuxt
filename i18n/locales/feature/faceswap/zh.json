@@ -1,0 +1,28 @@
+{
+  "faceswap": {
+    "title": "人脸交换",
+    "description": "使用AI技术在两张图片之间交换人脸",
+    "sourceImage": "源图片",
+    "targetImage": "目标图片",
+    "uploadSource": "上传源图片",
+    "uploadTarget": "上传目标图片",
+    "dragDrop": "拖拽或点击浏览",
+    "supportedFormats": "JPG, PNG 最大10MB",
+    "processingOptions": "处理选项",
+    "quality": "质量",
+    "faceDetection": "人脸检测",
+    "blendMode": "混合模式",
+    "startFaceSwap": "开始人脸交换",
+    "processing": "处理中...",
+    "result": "结果",
+    "downloadImage": "下载图片",
+    "processAnother": "处理另一张",
+    "whyChoose": "为什么选择我们的人脸交换？",
+    "instantResults": "即时结果",
+    "instantResultsDesc": "使用我们先进的AI在几秒钟内获得人脸交换结果",
+    "realisticOutput": "逼真输出",
+    "realisticOutputDesc": "无缝混合的自然人脸交换",
+    "privacyFirst": "隐私优先",
+    "privacyFirstDesc": "您的图片安全处理，绝不存储"
+  }
+}

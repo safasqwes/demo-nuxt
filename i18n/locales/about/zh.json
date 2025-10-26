@@ -1,0 +1,37 @@
+{
+  "about": {
+    "title": "关于 NovelHub",
+    "whatIsNovelHub": "🎯 什么是 NovelHub？",
+    "description": "NovelHub 是一个使用尖端技术构建的现代网络小说平台。我们为读者提供来自世界各地的数千部网络小说、轻小说和连载小说的访问。我们的使命是通过快速、美观和用户友好的阅读体验，将读者与精彩的故事联系起来。",
+    "platformFeatures": "✨ 平台特色",
+    "features": {
+      "library": "📚 丰富的网络小说和轻小说库",
+      "multilang": "🌍 多语言支持和翻译",
+      "performance": "⚡ 使用 SSG 技术的闪电般快速页面加载",
+      "responsive": "📱 适用于所有设备的响应式设计",
+      "bookmark": "🔖 书签和阅读进度跟踪",
+      "customizable": "🎨 可定制的阅读体验"
+    },
+    "popularGenres": "📚 热门类型",
+    "genres": {
+      "fantasy": "⚔️ 奇幻",
+      "cultivation": "🔮 修仙",
+      "contemporary": "💼 现代",
+      "scifi": "🚀 科幻",
+      "romance": "💕 言情",
+      "gameworld": "🎮 游戏世界"
+    },
+    "techStack": "🛠️ 技术栈",
+    "seo": {
+      "title": "关于我们 - NovelHub | 网络小说阅读平台",
+      "description": "了解 NovelHub，一个使用尖端技术构建的现代网络小说平台。发现我们连接读者与世界各地精彩故事的使命。",
+      "keywords": "关于 novelhub, 网络小说平台, 轻小说网站, 在线阅读平台, 小说类型, 奇幻, 修仙, 科幻, 言情",
+      "ogTitle": "关于我们 - NovelHub | 网络小说平台",
+      "ogDescription": "连接读者与世界各地精彩故事的现代网络小说平台。快速、美观、用户友好。",
+      "ogUrl": "https://novelhub.example.com/about",
+      "twitterTitle": "关于我们 - NovelHub",
+      "twitterDescription": "了解 NovelHub，您通往网络小说和轻小说的门户。",
+      "canonical": "https://novelhub.example.com/about"
+    }
+  }
+}

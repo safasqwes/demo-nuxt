@@ -1,0 +1,45 @@
+{
+  "home": {
+    "hero": {
+      "title": "欢迎来到 NovelHub",
+      "subtitle": "AI驱动内容创作的终极平台",
+      "getStarted": "开始使用",
+      "learnMore": "了解更多"
+    },
+    "features": {
+      "title": "强大功能",
+      "subtitle": "创建精彩内容所需的一切",
+      "faceSwap": "人脸交换",
+      "faceSwapDesc": "使用AI在图片间交换人脸",
+      "videoSwap": "视频人脸交换",
+      "videoSwapDesc": "使用人脸交换技术转换视频",
+      "imageProcessing": "图像处理",
+      "imageProcessingDesc": "增强和转换您的图像",
+      "effects": "视觉效果",
+      "effectsDesc": "为您的内容添加令人惊叹的效果"
+    },
+    "cta": {
+      "title": "准备开始了吗？",
+      "subtitle": "加入数千名使用 NovelHub 的创作者",
+      "signUp": "立即注册",
+      "contactUs": "联系我们"
+    },
+    "search": {
+      "placeholder": "搜索小说...",
+      "button": "搜索"
+    },
+    "featured": {
+      "title": "精选小说",
+      "comingSoon": "即将推出..."
+    },
+    "seo": {
+      "title": "首页 - NovelHub | 阅读网络小说和轻小说",
+      "description": "欢迎来到 NovelHub！发现数千部精彩的网络小说，涵盖奇幻、修仙、科幻、言情等各类题材。闪电般的阅读体验，响应式设计。",
+      "keywords": "网络小说首页, 轻小说, 在线阅读, 奇幻小说, 修仙故事, 小说库",
+      "ogTitle": "首页 - NovelHub | 在线阅读网络小说",
+      "ogDescription": "发现数千部各类题材的网络小说。快速、美观、用户友好的阅读体验。",
+      "twitterTitle": "首页 - NovelHub | 在线阅读网络小说",
+      "twitterDescription": "发现数千部各类题材的网络小说。"
+    }
+  }
+}

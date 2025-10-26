@@ -1,57 +1,54 @@
 <template>
   <div class="about">
     <div class="about-card">
-      <h2>About NovelHub</h2>
+      <h2>{{ $t('about.title') }}</h2>
       
       <div class="content">
         <section>
-          <h3>🎯 What is NovelHub?</h3>
+          <h3>{{ $t('about.whatIsNovelHub') }}</h3>
           <p>
-            NovelHub is a modern web novel platform built with cutting-edge technology. 
-            We provide readers with access to thousands of web novels, light novels, and serialized 
-            fiction from around the world. Our mission is to connect readers with amazing stories 
-            through a fast, beautiful, and user-friendly reading experience.
+            {{ $t('about.description') }}
           </p>
         </section>
         
         <section>
-          <h3>✨ Platform Features</h3>
+          <h3>{{ $t('about.platformFeatures') }}</h3>
           <ul>
-            <li>📚 Extensive library of web novels and light novels</li>
-            <li>🌍 Multi-language support and translations</li>
-            <li>⚡ Lightning-fast page loads with SSG technology</li>
-            <li>📱 Responsive design for all devices</li>
-            <li>🔖 Bookmark and reading progress tracking</li>
-            <li>🎨 Customizable reading experience</li>
+            <li>{{ $t('about.features.library') }}</li>
+            <li>{{ $t('about.features.multilang') }}</li>
+            <li>{{ $t('about.features.performance') }}</li>
+            <li>{{ $t('about.features.responsive') }}</li>
+            <li>{{ $t('about.features.bookmark') }}</li>
+            <li>{{ $t('about.features.customizable') }}</li>
           </ul>
         </section>
         
         <section>
-          <h3>📚 Popular Genres</h3>
+          <h3>{{ $t('about.popularGenres') }}</h3>
           <div class="links">
             <a href="#" rel="noopener">
-              ⚔️ Fantasy
+              {{ $t('about.genres.fantasy') }}
             </a>
             <a href="#" rel="noopener">
-              🔮 Cultivation
+              {{ $t('about.genres.cultivation') }}
             </a>
             <a href="#" rel="noopener">
-              💼 Contemporary
+              {{ $t('about.genres.contemporary') }}
             </a>
             <a href="#" rel="noopener">
-              🚀 Sci-Fi
+              {{ $t('about.genres.scifi') }}
             </a>
             <a href="#" rel="noopener">
-              💕 Romance
+              {{ $t('about.genres.romance') }}
             </a>
             <a href="#" rel="noopener">
-              🎮 Game World
+              {{ $t('about.genres.gameworld') }}
             </a>
           </div>
         </section>
         
         <section class="tech-stack">
-          <h3>🛠️ Technology Stack</h3>
+          <h3>{{ $t('about.techStack') }}</h3>
           <div class="tech-grid">
             <div class="tech-item">
               <span class="tech-icon">⚡</span>
@@ -78,44 +75,45 @@
 
 <script setup lang="ts">
 // Page SEO metadata
+const { t } = useI18n()
 useHead({
-  title: 'About Us - NovelHub | Web Novel Reading Platform',
+  title: t('about.seo.title'),
   meta: [
     {
       name: 'description',
-      content: 'Learn about NovelHub, a modern web novel platform built with cutting-edge technology. Discover our mission to connect readers with amazing stories from around the world.',
+      content: t('about.seo.description'),
     },
     {
       name: 'keywords',
-      content: 'about novelhub, web novel platform, light novel site, online reading platform, novel genres, fantasy, cultivation, sci-fi, romance',
+      content: t('about.seo.keywords'),
     },
     // Open Graph
     {
       property: 'og:title',
-      content: 'About Us - NovelHub | Web Novel Platform',
+      content: t('about.seo.ogTitle'),
     },
     {
       property: 'og:description',
-      content: 'Modern web novel platform connecting readers with amazing stories worldwide. Fast, beautiful, and user-friendly.',
+      content: t('about.seo.ogDescription'),
     },
     {
       property: 'og:url',
-      content: 'https://novelhub.example.com/about',
+      content: t('about.seo.ogUrl'),
     },
     // Twitter
     {
       name: 'twitter:title',
-      content: 'About Us - NovelHub',
+      content: t('about.seo.twitterTitle'),
     },
     {
       name: 'twitter:description',
-      content: 'Learn about NovelHub, your gateway to web novels and light novels.',
+      content: t('about.seo.twitterDescription'),
     },
   ],
   link: [
     {
       rel: 'canonical',
-      href: 'https://novelhub.example.com/about',
+      href: t('about.seo.canonical'),
     },
   ],
 })

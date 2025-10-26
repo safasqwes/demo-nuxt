@@ -78,7 +78,7 @@
                   class="bg-gradient-to-r from-green-600 to-green-700 text-white py-3 px-8 rounded-lg font-semibold hover:from-green-700 hover:to-green-800 transition-all duration-200">
           Continue Reading
         </NuxtLink>
-        <NuxtLink to="/payment-products" 
+        <NuxtLink to="/products" 
                   class="bg-white text-gray-700 py-3 px-8 rounded-lg font-semibold border-2 border-gray-300 hover:border-gray-400 transition-all duration-200">
           Browse More Content
         </NuxtLink>
