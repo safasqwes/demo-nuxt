@@ -2,43 +2,50 @@
   <div class="min-h-screen flex flex-col bg-gradient-to-br from-green-900 to-gray-50">
     <!-- Site Header with Navigation -->
     <header class="bg-gradient-to-r from-green-800 to-green-900 text-white py-5 shadow-lg" role="banner">
-      <div class="max-w-6xl mx-auto px-5 flex flex-row justify-between items-center gap-2">
-        <!-- Logo with link to home -->
-        <NuxtLink to="/" class="flex items-center gap-3 text-white no-underline transition-opacity hover:opacity-90">
-          <!-- SVG Logo -->
-          <img src="/logo.svg" alt="NovelHub Logo" class="w-10 h-10 md:w-12 md:h-12" />
-          <!-- Website name - hidden on mobile, visible on desktop -->
-          <span class="text-2xl md:text-3xl font-bold hidden md:block">NovelHub</span>
-        </NuxtLink>
-        
-        <!-- Navigation Links - Desktop -->
-        <nav class="hidden md:flex items-center space-x-6">
-          <NuxtLink to="/" class="text-white hover:text-green-200 transition-colors">{{ $t('navigation.home') }}</NuxtLink>
-          <NuxtLink to="/feature/videoswap" class="text-white hover:text-green-200 transition-colors">{{ $t('navigation.videoswap') }}</NuxtLink>
-          <NuxtLink to="/pricing" class="text-white hover:text-green-200 transition-colors">{{ $t('navigation.pricing') }}</NuxtLink>
-          <!-- <NuxtLink to="/web3-payment" class="text-white hover:text-green-200 transition-colors">Web3 Pay</NuxtLink> -->
-        </nav>
-        
-        <!-- Language Switcher -->
-        <div class="hidden md:block">
-          <LanguageSwitcher />
+      <div class="w-full px-5 md:px-8 flex flex-row items-center gap-2 relative">
+        <!-- Left Section: Logo -->
+        <div class="flex items-center flex-shrink-0">
+          <NuxtLink to="/" class="flex items-center gap-3 text-white no-underline transition-opacity hover:opacity-90">
+            <!-- SVG Logo -->
+            <img src="/logo.svg" alt="NovelHub Logo" class="w-10 h-10 md:w-12 md:h-12" />
+            <!-- Website name - hidden on mobile, visible on desktop -->
+            <span class="text-2xl md:text-3xl font-bold hidden md:block">NovelHub</span>
+          </NuxtLink>
         </div>
         
-        <!-- Mobile Menu Button -->
-        <button 
-          class="md:hidden flex items-center justify-center w-10 h-10 text-white hover:bg-white hover:bg-opacity-20 rounded-md transition-colors"
-          @click="toggleMobileMenu"
-          aria-label="Toggle mobile menu"
-        >
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-          </svg>
-        </button>
+        <!-- Center Section: Navigation Links - Desktop -->
+        <nav class="hidden md:flex items-center justify-center space-x-6 absolute left-1/2 transform -translate-x-1/2">
+          <NuxtLink 
+            v-for="item in menuItems" 
+            :key="item.path"
+            :to="item.path" 
+            class="text-white hover:text-green-200 transition-colors"
+          >
+            {{ $t(item.label) }}
+          </NuxtLink>
+        </nav>
         
-        <!-- User Menu / Auth Buttons (aligned to the right) -->
-        <div class="flex items-center gap-2">
+        <!-- Right Section: Language Switcher, Mobile Menu Button, and Auth -->
+        <div class="flex items-center gap-2 flex-shrink-0 ml-auto">
+          <!-- Language Switcher -->
+          <div class="hidden md:block">
+            <LanguageSwitcher />
+          </div>
+          
+          <!-- Mobile Menu Button -->
+          <button 
+            class="md:hidden flex items-center justify-center w-10 h-10 text-white hover:bg-white hover:bg-opacity-20 rounded-md transition-colors"
+            @click="toggleMobileMenu"
+            aria-label="Toggle mobile menu"
+          >
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+          
+          <!-- User Menu / Auth Buttons (aligned to the right) -->
           <!-- Coins Display (when logged in) -->
-          <div v-if="userStore && userStore.isAuthenticated" class="flex items-center gap-3 mr-2">
+          <div v-if="googleButton.isMounted && userStore && userStore.isAuthenticated" class="flex items-center gap-3 mr-2">
             <!-- Gold Coins -->
             <div class="flex items-center gap-1 bg-yellow-100 bg-opacity-20 px-2 py-1 rounded-md">
               <CurrencyDollarIcon class="w-4 h-4 text-yellow-500" />
@@ -53,7 +60,7 @@
           </div>
           
           <!-- User Menu (when logged in) -->
-          <div v-if="userStore && userStore.isAuthenticated" class="relative user-menu">
+          <div v-if="googleButton.isMounted && userStore && userStore.isAuthenticated" class="relative user-menu">
             <button 
               class="flex items-center gap-1 md:gap-2 px-2 py-2 md:px-4 md:py-2 bg-white bg-opacity-20 border-0 rounded-md text-white cursor-pointer transition-all hover:bg-opacity-30 hover:shadow-primary"
               @click="toggleUserMenu"
@@ -108,14 +115,21 @@
           </div>
           
           <!-- Auth Buttons (when not logged in) -->
-          <div v-if="!(userStore && userStore.isAuthenticated)" class="flex gap-2">
+          <div v-if="googleButton.shouldShow" class="flex gap-2">
             <!-- Google 登录按钮容器 -->
-            <div id="google-signin-button" class="flex items-center gap-0 md:gap-2">
-              <!-- 当插件未加载时显示备用按钮 -->
+            <div 
+              id="google-signin-button" 
+              class="relative flex items-center gap-0 md:gap-2"
+              :style="googleButton.containerStyle.value"
+            >
+              <!-- 备用按钮 -->
               <button 
-                v-if="!googleAuthReady"
-                class="flex items-center gap-0 md:gap-2 px-2 py-2 md:px-4 md:py-2.5 bg-white border border-primary-300 rounded-lg text-gray-700 text-xs md:text-sm font-medium cursor-pointer transition-all shadow-sm hover:bg-primary-50 hover:border-primary-400 hover:shadow-primary hover:-translate-y-0.5 active:translate-y-0 active:shadow-sm disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none"
-                :disabled="userStore.loading"
+                :class="[
+                  'absolute inset-0 flex items-center justify-center gap-0 md:gap-2 px-2 py-2 md:px-4 md:py-2.5 bg-white border border-primary-300 rounded-lg text-gray-700 text-xs md:text-sm font-medium cursor-pointer transition-opacity duration-300 shadow-sm hover:bg-primary-50 hover:border-primary-400 hover:shadow-primary disabled:opacity-60 disabled:cursor-not-allowed',
+                  googleButton.isReady ? 'opacity-0 pointer-events-none' : 'opacity-100'
+                ]"
+                :disabled="userStore.loading || googleButton.state.value === GoogleButtonState.RENDERING"
+                :style="googleButton.containerStyle.value"
                 @click="() => $googleAuth.handleGoogleLoginFallback(useRuntimeConfig().public.googleClientId, (response) => console.log('Fallback login:', response), notify)"
               >
                 <svg class="flex-shrink-0" viewBox="0 0 24 24" width="18" height="18">
@@ -129,51 +143,59 @@
                 </span>
               </button>
             </div>
-            
-            <!-- Web3登录组件 -->
-            <!-- <Web3Login @login-success="handleWeb3LoginSuccess" /> -->
           </div>
         </div>
       </div>
       
-      <!-- Mobile Menu -->
-      <div v-if="showMobileMenu" class="md:hidden bg-green-800 border-t border-green-700">
-        <div class="px-5 py-4 space-y-3">
-          <NuxtLink 
-            to="/" 
-            class="block text-white hover:text-green-200 transition-colors py-2"
-            @click="closeMobileMenu"
-          >
-            Home
-          </NuxtLink>
-          <NuxtLink 
-            to="/about" 
-            class="block text-white hover:text-green-200 transition-colors py-2"
-            @click="closeMobileMenu"
-          >
-            About
-          </NuxtLink>
-          <NuxtLink 
-            to="/use-cases" 
-            class="block text-white hover:text-green-200 transition-colors py-2"
-            @click="closeMobileMenu"
-          >
-            Use Cases
-          </NuxtLink>
-          <NuxtLink 
-            to="/blog" 
-            class="block text-white hover:text-green-200 transition-colors py-2"
-            @click="closeMobileMenu"
-          >
-            Blog
-          </NuxtLink>
-          <NuxtLink 
-            to="/pricing" 
-            class="block text-white hover:text-green-200 transition-colors py-2"
-            @click="closeMobileMenu"
-          >
-            Pricing
-          </NuxtLink>
+      <!-- Mobile Drawer Overlay -->
+      <div 
+        v-if="showMobileMenu" 
+        class="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden transition-opacity duration-300"
+        @click="closeMobileMenu"
+      ></div>
+      
+      <!-- Mobile Drawer (Left Side) -->
+      <div 
+        :class="[
+          'fixed top-0 left-0 h-full w-64 bg-gradient-to-br from-green-800 to-green-900 text-white z-50 md:hidden transform transition-transform duration-300 ease-in-out shadow-2xl',
+          showMobileMenu ? 'translate-x-0' : '-translate-x-full'
+        ]"
+      >
+        <div class="flex flex-col h-full">
+          <!-- Drawer Header -->
+          <div class="flex items-center justify-between p-5 border-b border-green-700">
+            <NuxtLink to="/" class="flex items-center gap-3 text-white no-underline" @click="closeMobileMenu">
+              <img src="/logo.svg" alt="NovelHub Logo" class="w-10 h-10" />
+              <span class="text-2xl font-bold">NovelHub</span>
+            </NuxtLink>
+            <button 
+              @click="closeMobileMenu"
+              class="flex items-center justify-center w-8 h-8 text-white hover:bg-white hover:bg-opacity-20 rounded-md transition-colors"
+              aria-label="Close menu"
+            >
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+          
+          <!-- Drawer Menu Items -->
+          <nav class="flex-1 px-5 py-4 space-y-2 overflow-y-auto">
+            <NuxtLink 
+              v-for="item in menuItems" 
+              :key="item.path"
+              :to="item.path" 
+              class="block text-white hover:text-green-200 hover:bg-white hover:bg-opacity-10 transition-colors py-3 px-4 rounded-md"
+              @click="closeMobileMenu"
+            >
+              {{ $t(item.label) }}
+            </NuxtLink>
+          </nav>
+          
+          <!-- Drawer Footer (Language Switcher) -->
+          <div class="p-5 border-t border-green-700">
+            <LanguageSwitcher />
+          </div>
         </div>
       </div>
     </header>
@@ -193,17 +215,27 @@
       :show="showPointsModal" 
       @close="handleClosePointsModal" 
     />
+
+    <!-- Login Modal -->
+    <LoginModal />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, nextTick, computed } from 'vue'
 import { useUserStore } from '~/stores/user'
 import { useNotification } from '~/utils/useNotification'
 import { CurrencyDollarIcon } from '@heroicons/vue/24/outline'
-// Google Auth functions are now available via $googleAuth plugin
 import Swal from 'sweetalert2'
+import { useGoogleButton } from '~/composables/useGoogleButton'
+import { GoogleButtonState } from '~/utils/googleButtonState'
 
+// 共享的菜单配置（pricing 页面已隐藏）
+const menuItems = [
+  { path: '/', label: 'navigation.home' },
+  { path: '/feature/videoswap', label: 'navigation.videoswap' },
+  { path: '/nano-banana', label: 'navigation.nanobanana' },
+]
 
 const userStore = useUserStore()
 const { notify } = useNotification()
@@ -211,14 +243,13 @@ const router = useRouter()
 const { $googleAuth } = useNuxtApp()
 
 const showUserMenu = ref(false)
-const googleAuthReady = ref(false)
 const showPointsModal = ref(false)
 const showMobileMenu = ref(false)
 
-// Initialize user store from localStorage
-onMounted(() => {
-  userStore.initFromStorage()
-})
+// 使用 Google 按钮 Composable（封装所有逻辑）
+const googleButton = useGoogleButton()
+
+// Initialize user store will be done in onMounted hook below
 
 const userInitials = computed(() => {
   const name = userStore?.displayName || 'User'
@@ -233,12 +264,31 @@ const toggleUserMenu = () => {
 // Toggle mobile menu
 const toggleMobileMenu = () => {
   showMobileMenu.value = !showMobileMenu.value
+  // 阻止/恢复背景滚动
+  if (showMobileMenu.value) {
+    document.body.style.overflow = 'hidden'
+  } else {
+    document.body.style.overflow = ''
+  }
 }
 
 // Close mobile menu
 const closeMobileMenu = () => {
   showMobileMenu.value = false
+  document.body.style.overflow = ''
 }
+
+// 监听路由变化，关闭抽屉
+watch(() => {
+  if (router && router.currentRoute && router.currentRoute.value) {
+    return router.currentRoute.value.path
+  }
+  return ''
+}, () => {
+  if (showMobileMenu.value) {
+    closeMobileMenu()
+  }
+})
 
 // Daily claim handler
 const handleDailyClaim = async () => {
@@ -311,26 +361,43 @@ const handleLogout = async () => {
     // 清理 Google 登录状态
     $googleAuth.signOut()
     
-    // 调用用户 store 的 logout 方法
+    // 调用用户 store 的 logout 方法（这会清除所有认证状态）
     await userStore.logout()
+    
+    // 确保状态已经清除完成
+    await nextTick()
+    
+    // 触发全局退出成功事件，通知所有组件更新状态
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('user-logout-success'))
+      // 兼容旧的事件名
+      window.dispatchEvent(new CustomEvent('logout-success'))
+    }
     
     // 显示登出成功消息
     notify.info('Goodbye', 'You have been logged out')
     
-    // 跳转到首页
-    await router.push('/')
-    
-    // 清理浏览器历史记录（可选）
-    // window.history.replaceState({}, '', '/')
+    // 不刷新页面，只更新菜单栏（菜单栏会响应式更新）
+    // 菜单栏使用 userStore.isAuthenticated，会自动响应式更新
+    // watch 监听器会自动处理登录状态变化，重新初始化 Google 登录按钮
     
   } catch (error) {
     console.error('Logout error:', error)
     // 即使出错也要清理本地状态
     if (userStore) {
       userStore.clearAuth()
+      
+      // 确保状态已经清除完成
+      await nextTick()
+      
+      // 触发全局退出事件
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('user-logout-success'))
+        window.dispatchEvent(new CustomEvent('logout-success'))
+      }
     }
     notify.error('Logout Error', 'An error occurred during logout')
-    await router.push('/')
+    // 不刷新页面，只更新菜单栏
   }
 }
 
@@ -345,32 +412,18 @@ const handleClosePointsModal = () => {
   showPointsModal.value = false
 }
 
-// Close dropdown when clicking outside
+// 初始化 Google 按钮和监听登录状态
 onMounted(async () => {
-  // 初始化 Google 登录插件
-  try {
-    await $googleAuth.initialize()
-    googleAuthReady.value = true
-    
-    // 渲染 Google 登录按钮
-    nextTick(async () => {
-      const success = await $googleAuth.renderButtonWithRetry('google-signin-button', {
-        theme: 'outline',
-        size: 'large',
-        text: 'signin_with',
-        shape: 'rectangular',
-        logo_alignment: 'left'
-      }, 3, 100)
-      
-      if (!success) {
-        console.error('Failed to render Google button after all retries')
-      }
-    })
-  } catch (error) {
-    console.error('Failed to initialize Google Auth:', error)
-    googleAuthReady.value = false
-  }
+  userStore.initFromStorage()
+  await nextTick()
   
+  // 初始化 Google 按钮
+  await googleButton.init()
+  
+  // 监听登录状态变化
+  googleButton.watchAuthState()
+  
+  // 点击外部关闭用户菜单
   document.addEventListener('click', (e) => {
     const target = e.target as HTMLElement
     if (!target.closest('.user-menu')) {

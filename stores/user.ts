@@ -236,6 +236,8 @@ export const useUserStore = defineStore('user', {
         // 后端返回格式：{ code: 200, msg: "Google login successful", data: { success: true, user: {...}, token: "...", refreshToken: "...", claimInfo: {...} } }
         if (response.code === 200) {
           const data = response.data
+          
+          // 确保状态完整更新
           this.setToken(data.token, data.refreshToken)
           this.setUserInfo(data.user)
           this.updateActivity()
@@ -243,6 +245,15 @@ export const useUserStore = defineStore('user', {
           // 更新签到信息
           if (data.claimInfo) {
             this.setClaimInfo(data.claimInfo)
+          }
+          
+          // 如果后端返回了用户积分信息，也要更新
+          if (data.user) {
+            // 确保用户信息中的积分信息也更新
+            if (data.user.goldCoins !== undefined) {
+              this.userInfo = { ...this.userInfo, ...data.user }
+              this.setUserInfo(this.userInfo)
+            }
           }
           
           return { success: true }
@@ -542,11 +553,21 @@ export const useUserStore = defineStore('user', {
       this.claimLoading = true
       try {
         const { http } = await import('~/utils/http')
-        const response = await http.get('/api/auth/claim-info')
+        const response = await http.get('/api/user/points')
         
         if (response.code === 200) {
-          this.setClaimInfo(response.data)
-          return { success: true, data: response.data }
+          // 后端返回的数据结构包含 userPoint 和 claimInfo
+          const data = response.data
+          if (data.claimInfo) {
+            this.setClaimInfo(data.claimInfo)
+          }
+          // 更新用户积分信息
+          if (data.userPoint && this.userInfo) {
+            this.userInfo.goldCoins = data.userPoint.fixedPoints || 0
+            this.userInfo.silverCoins = data.userPoint.freePoints || 0
+            this.setUserInfo(this.userInfo)
+          }
+          return { success: true, data: data.claimInfo }
         }
         
         return { success: false, message: response.msg || 'Failed to get claim info' }
@@ -567,7 +588,7 @@ export const useUserStore = defineStore('user', {
       this.claimLoading = true
       try {
         const { http } = await import('~/utils/http')
-        const response = await http.post('/api/auth/claim-free-points')
+        const response = await http.post('/api/user/points/claim-free-points')
         
         if (response.code === 200) {
           // 更新签到信息
@@ -650,6 +671,8 @@ export const useUserStore = defineStore('user', {
         
         if (response.code === 200) {
           const data = response.data
+          
+          // 确保状态完整更新
           this.setToken(data.token, data.refreshToken)
           this.setUserInfo(data.user)
           this.updateActivity()
@@ -657,6 +680,23 @@ export const useUserStore = defineStore('user', {
           // 更新签到信息
           if (data.claimInfo) {
             this.setClaimInfo(data.claimInfo)
+          }
+          
+          // 如果后端返回了用户积分信息，也要更新
+          if (data.user) {
+            // 确保用户信息中的积分信息也更新
+            if (data.user.goldCoins !== undefined || data.user.silverCoins !== undefined) {
+              this.userInfo = { ...this.userInfo, ...data.user }
+              this.setUserInfo(this.userInfo)
+            }
+          }
+          
+          // 触发全局登录成功事件
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('user-login-success', {
+              detail: { user: data.user }
+            }))
+            window.dispatchEvent(new CustomEvent('login-success'))
           }
           
           return { success: true, data: response.data }

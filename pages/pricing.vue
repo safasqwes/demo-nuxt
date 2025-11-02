@@ -98,53 +98,15 @@
               </div>
             </div>
 
-            <!-- Currency Selection -->
-            <div class="mb-6">
-              <label class="block text-sm font-medium text-gray-700 mb-3">{{ $t('pricing.selectPaymentCurrency') }}</label>
-              <div class="grid grid-cols-2 gap-3">
-                <button v-for="token in supportedTokens" :key="token.symbol"
-                        @click="selectCurrency(token.symbol)"
-                        :class="[
-                          'p-3 rounded-lg border-2 transition-all duration-200',
-                          selectedCurrency === token.symbol 
-                            ? 'border-blue-500 bg-blue-50 text-blue-700' 
-                            : 'border-gray-200 hover:border-gray-300'
-                        ]">
-                  <div class="flex items-center space-x-2">
-                    <img :src="token.logo" :alt="token.name" class="w-6 h-6" />
-                    <span class="font-medium">{{ token.symbol }}</span>
-                  </div>
-                </button>
-              </div>
-            </div>
-
-            <!-- Price Display -->
-            <div v-if="priceInfo" class="bg-blue-50 rounded-lg p-4 mb-6">
-              <div class="flex items-center justify-between">
-                <span class="text-gray-700">{{ $t('pricing.youWillPay') }}</span>
-                <div class="text-right">
-                  <div class="text-xl font-bold text-blue-900">
-                    {{ priceInfo.tokenAmount }} {{ selectedCurrency }}
-                  </div>
-                  <div class="text-sm text-blue-600">
-                    ≈ ${{ priceInfo.fiatAmount }} USD
-                  </div>
-                </div>
-              </div>
-              <div class="mt-2 text-xs text-gray-500">
-                {{ $t('pricing.rate', { currency: selectedCurrency, rate: priceInfo.rate }) }}
-              </div>
-            </div>
-
             <!-- Action Buttons -->
             <div class="flex gap-3">
               <button @click="closePaymentModal"
                       class="flex-1 bg-gray-200 text-gray-800 py-3 px-6 rounded-lg font-semibold hover:bg-gray-300 transition-colors">
                 {{ $t('pricing.cancel') }}
               </button>
-              <button @click="proceedToPayment" 
-                      :disabled="!selectedCurrency || !priceInfo || isCreatingPayment"
-                      class="flex-1 bg-gradient-to-r from-green-600 to-green-700 text-white py-3 px-6 rounded-lg font-semibold hover:from-green-700 hover:to-green-800 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+              <button @click="goToStripePayment" 
+                      :disabled="isCreatingPayment"
+                      class="flex-1 bg-gradient-to-r from-purple-600 to-purple-700 text-white py-3 px-6 rounded-lg font-semibold hover:from-purple-700 hover:to-purple-800 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
                 <span v-if="isCreatingPayment" class="flex items-center justify-center">
                   <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -185,26 +147,13 @@ interface PaymentProduct {
   features: string[]
 }
 
-interface TokenInfo {
-  symbol: string
-  name: string
-  logo: string
-}
-
-interface PriceInfo {
-  tokenAmount: string
-  fiatAmount: string
-  rate: string
-}
+// Redirect to home page if pricing page is accessed directly (hidden until payment is ready)
 
 // Reactive data
 const products = ref<PaymentProduct[]>([])
 const selectedProduct = ref<PaymentProduct | null>(null)
-const selectedCurrency = ref('')
-const priceInfo = ref<PriceInfo | null>(null)
 const showPaymentModal = ref(false)
 const isCreatingPayment = ref(false)
-const supportedTokens = ref<TokenInfo[]>([])
 
 // Services
 const { notify } = useNotification()
@@ -251,14 +200,17 @@ const selectProduct = async (product: PaymentProduct) => {
   const { verifLogin } = await import('~/utils/verifLogin')
   
   const isLoggedIn = await verifLogin({
-    message: t('pricing.pleaseLogin'),
+    message: t('pricing.pleaseLogin') || '请登录以选择方案',
     onSuccess: () => {
-      // 用户登录成功
+      // 用户登录成功，继续选择产品
+      selectedProduct.value = product
+      showPaymentModal.value = true
     },
     onCancel: () => {
       // 用户取消登录
+      notify.info('提示', '需要登录后才能选择购买方案')
     },
-    loginType: 'both' // 支持 Google 和 Web3 登录
+    loginType: 'google' // 只显示 Google 登录
   })
 
   // 如果用户未登录或取消登录，则不继续
@@ -266,71 +218,30 @@ const selectProduct = async (product: PaymentProduct) => {
     return
   }
 
-  // 用户已登录，继续选择产品
-  selectedProduct.value = product
-  selectedCurrency.value = ''
-  priceInfo.value = null
-  showPaymentModal.value = true
-}
-
-// Select currency and get price
-const selectCurrency = async (currency: string) => {
-  selectedCurrency.value = currency
-  
-  if (selectedProduct.value) {
-    try {
-      const result = await paymentService.getTokenPrice(currency, selectedProduct.value.fiatPrice)
-      if (result.success && result.priceInfo) {
-        priceInfo.value = result.priceInfo
-      } else {
-        notify.error(t('pricing.priceError'), result.message || t('pricing.failedToGetTokenPrice'))
-      }
-    } catch (error) {
-      console.error('Get price error:', error)
-      notify.error(t('pricing.priceError'), t('pricing.failedToGetTokenPrice'))
-    }
+  // 用户已登录，继续选择产品（如果 onSuccess 中没有处理）
+  if (!selectedProduct.value) {
+    selectedProduct.value = product
+    showPaymentModal.value = true
   }
 }
 
-// Proceed to payment
-const proceedToPayment = async () => {
-  if (selectedProduct.value && selectedCurrency.value && priceInfo.value) {
-    isCreatingPayment.value = true
-    
-    try {
-      // Create order first
-      const orderResult = await paymentService.createOrder({
-        productId: selectedProduct.value.id,
-        currency: selectedCurrency.value,
-        amount: priceInfo.value.tokenAmount
-      })
-      
-      if (!orderResult.success || !orderResult.order) {
-        notify.error(t('pricing.orderError'), orderResult.message || t('pricing.failedToCreateOrder'))
-        return
-      }
-      
-      // Create payment
-      const paymentResult = await paymentService.createPayment({
-        orderId: orderResult.order.id,
-        currency: selectedCurrency.value,
-        amount: priceInfo.value.tokenAmount
-      })
-      
-      if (!paymentResult.success) {
-        notify.error(t('pricing.paymentError'), paymentResult.message || t('pricing.failedToCreatePayment'))
-        return
-      }
-      
-      // Redirect to payment page
-      await navigateTo(`/payment?paymentId=${paymentResult.paymentId}`)
-      
-    } catch (error) {
-      console.error('Payment creation error:', error)
-      notify.error(t('pricing.paymentError'), t('pricing.failedToCreatePayment'))
-    } finally {
-      isCreatingPayment.value = false
-    }
+// Go to Stripe payment page
+const goToStripePayment = async () => {
+  if (!selectedProduct.value) {
+    notify.error('Error', 'Please select a product first')
+    return
+  }
+
+  isCreatingPayment.value = true
+  
+  try {
+    // Redirect to payment page with planId
+    await navigateTo(`/payment?planId=${selectedProduct.value.id}`)
+  } catch (error) {
+    console.error('Navigation error:', error)
+    notify.error('Error', 'Failed to navigate to payment page')
+  } finally {
+    isCreatingPayment.value = false
   }
 }
 
@@ -338,8 +249,6 @@ const proceedToPayment = async () => {
 const closePaymentModal = () => {
   showPaymentModal.value = false
   selectedProduct.value = null
-  selectedCurrency.value = ''
-  priceInfo.value = null
 }
 
 // Start free trial - navigate to home page
@@ -365,8 +274,8 @@ const formatTimeRemaining = (ttl: number) => {
 
 // Initialize
 onMounted(async () => {
-  await initializeProducts()
-  supportedTokens.value = paymentService.getSupportedTokens()
+  // 隐藏 pricing 页面，重定向到首页
+  await navigateTo('/')
 })
 </script>
 

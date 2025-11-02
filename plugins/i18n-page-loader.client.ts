@@ -13,7 +13,10 @@ export default defineNuxtPlugin(async () => {
         if (languageFiles[pageKey]) {
           const module = await languageFiles[pageKey]() as { default: any }
           $i18n.mergeLocaleMessage(locale, module.default)
-          console.log(`[i18n] Loaded translations for ${folder}/${locale}`)
+          // 只在开发环境显示日志
+          if (import.meta.dev) {
+            console.log(`[i18n] Loaded translations for ${folder}/${locale}`)
+          }
         } else {
           console.warn(`[i18n] Translation file not found: ${pageKey}`)
         }

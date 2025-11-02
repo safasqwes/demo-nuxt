@@ -20,6 +20,105 @@
     </div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Test API Section -->
+      <div class="bg-white rounded-2xl shadow-lg p-8 mb-8 border-2 border-blue-200">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-2xl font-bold text-gray-900">🧪 API 测试</h2>
+          <span class="px-3 py-1 rounded-full text-sm" :class="userStatus.isAuthenticated ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'">
+            {{ userStatus.isAuthenticated ? '已登录' : '未登录' }}
+          </span>
+        </div>
+        
+        <div class="space-y-4">
+          <!-- Test Buttons -->
+          <div class="flex items-center space-x-4">
+            <button @click="testDemoAPI" 
+                    :disabled="isTestingAPI"
+                    class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center">
+              <svg v-if="isTestingAPI" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              <span>{{ isTestingAPI ? '测试中...' : '测试 Demo API' }}</span>
+            </button>
+            
+            <button @click="clearTestResult" 
+                    v-if="testResult"
+                    class="bg-gray-500 text-white px-4 py-3 rounded-lg font-semibold hover:bg-gray-600 transition-colors">
+              清除结果
+            </button>
+          </div>
+
+          <!-- User Status Info -->
+          <div class="bg-gray-50 rounded-lg p-4">
+            <p class="text-sm text-gray-700"><strong>当前状态：</strong>{{ userStatus.description }}</p>
+            <p v-if="userStatus.fingerprint" class="text-xs text-gray-500 mt-1"><strong>Fingerprint：</strong>{{ userStatus.fingerprint }}</p>
+          </div>
+
+          <!-- Test Result -->
+          <div v-if="testResult" class="border rounded-lg overflow-hidden">
+            <div class="px-4 py-3" :class="testResult.success ? 'bg-green-50 border-b border-green-200' : 'bg-red-50 border-b border-red-200'">
+              <div class="flex items-center justify-between">
+                <span class="font-semibold" :class="testResult.success ? 'text-green-800' : 'text-red-800'">
+                  {{ testResult.success ? '✅ 调用成功' : '❌ 调用失败' }}
+                </span>
+                <span class="text-xs text-gray-500">{{ new Date(testResult.timestamp).toLocaleString() }}</span>
+              </div>
+            </div>
+            
+            <div class="p-4 bg-gray-50">
+              <div class="space-y-2 text-sm">
+                <!-- Request Info -->
+                <div v-if="testResult.requestInfo" class="pb-2 mb-2 border-b border-gray-200">
+                  <p class="font-semibold text-blue-700 mb-1">📤 请求信息</p>
+                  <p><strong>Fingerprint (fp)：</strong><span class="text-xs font-mono">{{ testResult.requestInfo.fp }}</span></p>
+                  <p><strong>Token：</strong>{{ testResult.requestInfo.hasToken ? '✅ 已发送' : '❌ 未发送' }}</p>
+                </div>
+                
+                <!-- Response Status -->
+                <div class="pb-2 mb-2 border-b border-gray-200">
+                  <p class="font-semibold mb-1" :class="testResult.success ? 'text-green-700' : 'text-red-700'">
+                    📥 响应状态
+                  </p>
+                  <p><strong>状态码 (code)：</strong>{{ testResult.code || 'N/A' }}</p>
+                  <p><strong>成功标志 (success)：</strong>{{ testResult.success ? '✅ true' : '❌ false' }}</p>
+                  <p v-if="testResult.message"><strong>消息 (message)：</strong>{{ testResult.message }}</p>
+                </div>
+                
+                <!-- Response Data -->
+                <div v-if="testResult.data" class="pb-2">
+                  <p class="font-semibold text-green-700 mb-1">📦 响应数据</p>
+                  <p><strong>认证状态：</strong>{{ testResult.data.authenticated ? '已认证' : '游客' }}</p>
+                  <p v-if="testResult.data.username"><strong>用户名：</strong>{{ testResult.data.username }}</p>
+                  <p v-if="testResult.data.fingerprint"><strong>服务器识别的 Fingerprint：</strong><span class="text-xs font-mono">{{ testResult.data.fingerprint }}</span></p>
+                  <p v-if="testResult.data.pointsDeducted !== undefined"><strong>扣除积分：</strong>{{ testResult.data.pointsDeducted }} ({{ testResult.data.pointsTypeName }})</p>
+                  <p v-if="testResult.data.remainingFreePoints !== undefined"><strong>剩余银币：</strong>{{ testResult.data.remainingFreePoints }}</p>
+                  <p v-if="testResult.data.remainingFixedPoints !== undefined"><strong>剩余金币：</strong>{{ testResult.data.remainingFixedPoints }}</p>
+                  <p v-if="testResult.data.usageInfo">
+                    <strong>使用次数：</strong>{{ testResult.data.usageInfo.usageCount }} / {{ testResult.data.usageInfo.dailyLimit }}
+                  </p>
+                  <p v-if="testResult.data.code"><strong>错误码：</strong>{{ testResult.data.code }}</p>
+                  <p v-if="testResult.data.required"><strong>所需积分：</strong>{{ testResult.data.required }}</p>
+                  <p v-if="testResult.data.dailyLimit !== undefined && testResult.data.usageCount !== undefined">
+                    <strong>每日限制：</strong>{{ testResult.data.usageCount }} / {{ testResult.data.dailyLimit }}
+                  </p>
+                  <p v-if="testResult.data.requireLogin"><strong>需要登录：</strong>✅ 是</p>
+                </div>
+                <div v-if="testResult.error" class="text-red-600">
+                  <p><strong>错误信息：</strong>{{ testResult.error }}</p>
+                </div>
+              </div>
+              
+              <!-- Full Response JSON -->
+              <details class="mt-4">
+                <summary class="cursor-pointer text-blue-600 hover:text-blue-800 font-medium">查看完整响应 JSON</summary>
+                <pre class="mt-2 p-3 bg-gray-800 text-green-400 text-xs rounded overflow-x-auto">{{ JSON.stringify(testResult.raw, null, 2) }}</pre>
+              </details>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Upload Section -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
         <!-- Video Upload -->
@@ -197,17 +296,23 @@
 </template>
 
 <script setup lang="ts">
+import { getFingerprint } from '~/utils/fingerprint'
+import xcode from '~/utils/xcode'
+
+// i18n
+const { t } = useI18n()
+
 // SEO Meta
 useHead({
-  title: () => $t('videoswap.seo.title'),
+  title: t('videoswap.seo.title'),
   meta: [
     {
       name: 'description',
-      content: () => $t('videoswap.seo.description'),
+      content: t('videoswap.seo.description'),
     },
     {
       name: 'keywords',
-      content: () => $t('videoswap.seo.keywords'),
+      content: t('videoswap.seo.keywords'),
     },
   ]
 })
@@ -217,6 +322,14 @@ interface ProcessingOptions {
   quality: 'low' | 'medium' | 'high'
   faceDetection: 'auto' | 'manual'
   outputFormat: 'mp4' | 'mov' | 'avi'
+}
+
+interface ApiResponse {
+  code: number
+  success: boolean
+  msg?: string
+  message?: string
+  data?: any
 }
 
 // Reactive data
@@ -241,6 +354,29 @@ const faceInput = ref<HTMLInputElement>()
 
 // Services
 const { notify } = useNotification()
+const userStore = useUserStore()
+
+// Test API state
+const isTestingAPI = ref(false)
+const testResult = ref<any>(null)
+const currentFingerprint = ref<string>('')
+
+// Get fingerprint on mount
+onMounted(async () => {
+  currentFingerprint.value = await getFingerprint()
+})
+
+// User status
+const userStatus = computed(() => {
+  const isAuthenticated = !!userStore.token
+  return {
+    isAuthenticated,
+    description: isAuthenticated 
+      ? `已登录用户 (${userStore.userInfo?.username || 'Unknown'})` 
+      : '未登录游客 (将使用 Fingerprint)',
+    fingerprint: currentFingerprint.value
+  }
+})
 
 // Methods
 const triggerVideoUpload = () => {
@@ -320,7 +456,7 @@ const processVideo = async () => {
     ]
 
     for (let i = 0; i < steps.length; i++) {
-      progressText.value = steps[i]
+      progressText.value = steps[i] || ''
       progress.value = ((i + 1) / steps.length) * 100
       await new Promise(resolve => setTimeout(resolve, 2000))
     }
@@ -362,6 +498,80 @@ const processAnother = () => {
 
 const goBack = () => {
   navigateTo('/')
+}
+
+// Test API methods
+const testDemoAPI = async () => {
+  isTestingAPI.value = true
+  testResult.value = null
+  
+  try {
+    // Ensure we have a fingerprint
+    if (!currentFingerprint.value) {
+      currentFingerprint.value = await getFingerprint()
+    }
+    
+    // Generate fingerprint headers (same as http.ts)
+    const signx = xcode.signx()
+    const aesSecret = signx.aesSecret
+    const fp1 = xcode.aseEncrypt(currentFingerprint.value, aesSecret)
+    
+    console.log('📤 发送请求 - Fingerprint Headers:', {
+      fp: currentFingerprint.value,
+      fp1: fp1.substring(0, 20) + '...',
+      'x-guide': aesSecret.substring(0, 20) + '...',
+      hasToken: !!userStore.token
+    })
+    
+    const response = await $fetch<ApiResponse>('/api/business/demo-test', {
+      method: 'POST',
+      body: {},
+      headers: {
+        'Content-Type': 'application/json',
+        'fp': currentFingerprint.value,
+        'fp1': fp1,
+        'x-guide': aesSecret,
+        ...(userStore.token ? { 'Authorization': `Bearer ${userStore.token}` } : {})
+      }
+    })
+    
+    console.log('📥 收到响应:', response)
+    
+    testResult.value = {
+      success: response?.success || false,
+      code: response?.code,
+      message: response?.msg || response?.message,
+      data: response?.data,
+      timestamp: Date.now(),
+      raw: response,
+      requestInfo: {
+        fp: currentFingerprint.value,
+        hasToken: !!userStore.token
+      }
+    }
+    
+    if (response?.success) {
+      notify.success('成功', '接口调用成功')
+    } else {
+      const errorMessage = response?.msg || response?.message || '接口调用失败'
+      notify.warning('注意', errorMessage)
+    }
+  } catch (error: any) {
+    console.error('Test API error:', error)
+    testResult.value = {
+      success: false,
+      error: error.message || '请求失败',
+      timestamp: Date.now(),
+      raw: error
+    }
+    notify.error('错误', error.message || '接口调用失败')
+  } finally {
+    isTestingAPI.value = false
+  }
+}
+
+const clearTestResult = () => {
+  testResult.value = null
 }
 
 // Cleanup URLs when component unmounts

@@ -188,7 +188,7 @@ const loadPointsHistory = async () => {
         goldCoins: number
         silverCoins: number
       }
-    }>('/api/auth/points/history', {
+    }>('/api/user/points/history', {
       page: currentPage.value,
       size: 10
     })

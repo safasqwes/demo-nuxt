@@ -1,0 +1,170 @@
+{
+  "useCases": {
+    "hero": {
+      "title": "Use Cases",
+      "subtitle": "Discover how NovelHub serves different types of readers and content creators"
+    },
+    "readers": {
+      "title": "📚 For Readers",
+      "casual": {
+        "icon": "🌙",
+        "title": "Casual Reading",
+        "description": "Perfect for readers who enjoy discovering new stories during their free time. Browse our extensive library and find your next favorite novel.",
+        "features": [
+          "Browse by genre and popularity",
+          "Read offline with mobile app",
+          "Bookmark favorite chapters",
+          "Track reading progress"
+        ]
+      },
+      "binge": {
+        "icon": "⚡",
+        "title": "Binge Reading",
+        "description": "For readers who love to immerse themselves in complete series. Access full novels and binge-read to your heart's content.",
+        "features": [
+          "Complete novel series access",
+          "Fast, uninterrupted reading",
+          "Chapter-by-chapter navigation",
+          "Reading time estimates"
+        ]
+      },
+      "exploration": {
+        "icon": "🔍",
+        "title": "Genre Exploration",
+        "description": "Discover new genres and expand your reading horizons. From fantasy to sci-fi, romance to cultivation novels.",
+        "features": [
+          "Advanced search and filters",
+          "Genre-based recommendations",
+          "Similar novels suggestions",
+          "Trending and popular lists"
+        ]
+      }
+    },
+    "creators": {
+      "title": "✍️ For Content Creators",
+      "authors": {
+        "icon": "📝",
+        "title": "Web Novel Authors",
+        "description": "Publish and monetize your web novels on our platform. Reach a global audience and build a dedicated reader base.",
+        "features": [
+          "Easy content publishing tools",
+          "Revenue sharing program",
+          "Reader engagement analytics",
+          "Community building features"
+        ]
+      },
+      "translators": {
+        "icon": "🌍",
+        "title": "Translators",
+        "description": "Help bring international novels to new audiences. Join our translation program and contribute to global literature.",
+        "features": [
+          "Translation management tools",
+          "Quality control systems",
+          "Collaborative translation features",
+          "Fair compensation structure"
+        ]
+      },
+      "illustrators": {
+        "icon": "🎨",
+        "title": "Illustrators",
+        "description": "Create visual content for novels and build your portfolio. Connect with authors and contribute to storytelling.",
+        "features": [
+          "Portfolio showcase platform",
+          "Author collaboration tools",
+          "Commission management",
+          "Creative community access"
+        ]
+      }
+    },
+    "education": {
+      "title": "🎓 For Educational Use",
+      "language": {
+        "icon": "📖",
+        "title": "Language Learning",
+        "description": "Improve language skills through immersive reading. Access novels in multiple languages with built-in translation tools.",
+        "features": [
+          "Multi-language content library",
+          "Built-in translation features",
+          "Difficulty level indicators",
+          "Vocabulary building tools"
+        ]
+      },
+      "research": {
+        "icon": "🏫",
+        "title": "Academic Research",
+        "description": "Access a vast collection of web novels for academic research in literature, cultural studies, and digital humanities.",
+        "features": [
+          "Academic research tools",
+          "Citation and reference management",
+          "Content analysis features",
+          "Institutional access options"
+        ]
+      },
+      "bookClubs": {
+        "icon": "👥",
+        "title": "Book Clubs",
+        "description": "Organize and manage book club discussions around web novels. Create reading groups and share insights.",
+        "features": [
+          "Group reading features",
+          "Discussion forums",
+          "Reading schedule management",
+          "Shared annotations and notes"
+        ]
+      }
+    },
+    "business": {
+      "title": "💼 For Businesses",
+      "corporate": {
+        "icon": "🏢",
+        "title": "Corporate Libraries",
+        "description": "Provide employees with access to our novel library for recreational reading and team building activities.",
+        "features": [
+          "Bulk licensing options",
+          "Usage analytics and reporting",
+          "Custom content curation",
+          "Employee engagement tools"
+        ]
+      },
+      "integration": {
+        "icon": "📱",
+        "title": "App Integration",
+        "description": "Integrate our novel reading API into your mobile apps or websites to provide reading content to your users.",
+        "features": [
+          "RESTful API access",
+          "SDK for mobile development",
+          "White-label solutions",
+          "Technical support and documentation"
+        ]
+      },
+      "marketResearch": {
+        "icon": "📊",
+        "title": "Market Research",
+        "description": "Access reading trends and user behavior data to understand market preferences and content consumption patterns.",
+        "features": [
+          "Reading trend analytics",
+          "Genre popularity data",
+          "User behavior insights",
+          "Custom research reports"
+        ]
+      }
+    },
+    "cta": {
+      "title": "🚀 Get Started Today",
+      "description": "Ready to explore how NovelHub can serve your needs? Choose your path and start your journey.",
+      "viewPricing": "View Pricing Plans",
+      "contactSales": "Contact Sales"
+    },
+    "seo": {
+      "title": "Use Cases - NovelHub | How We Serve Different Users",
+      "description": "Discover how NovelHub serves readers, content creators, educators, and businesses. Explore our use cases and find the perfect solution for your needs.",
+      "keywords": "use cases, web novel platform, readers, content creators, authors, translators, educators, businesses, API integration",
+      "ogTitle": "Use Cases - NovelHub | Web Novel Platform",
+      "ogDescription": "Explore how NovelHub serves different types of users from casual readers to content creators and businesses.",
+      "ogUrl": "https://novelhub.example.com/use-cases",
+      "twitterTitle": "Use Cases - NovelHub",
+      "twitterDescription": "Discover how NovelHub serves readers, creators, and businesses.",
+      "canonical": "https://novelhub.example.com/use-cases"
+    }
+  }
+}
+

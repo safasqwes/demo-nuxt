@@ -6,8 +6,8 @@
         <h1 class="hero-title">{{ $t('home.hero.title') }}</h1>
         <p class="hero-subtitle">{{ $t('home.hero.subtitle') }}</p>
         <div class="hero-search">
-          <input type="text" :placeholder="$t('home.search.placeholder')" class="search-input" />
-          <button class="search-btn">{{ $t('home.search.button') }}</button>
+          <input type="text" :placeholder="searchPlaceholder" class="search-input" />
+          <button class="search-btn">{{ searchButtonText }}</button>
         </div>
       </div>
     </section>
@@ -21,27 +21,33 @@
 </template>
 
 <script setup lang="ts">
+// i18n
+const { t } = useI18n()
+
+// 使用 computed 确保响应式更新翻译
+const searchPlaceholder = computed(() => t('home.search.placeholder'))
+const searchButtonText = computed(() => t('home.search.button'))
 
 // Page SEO metadata
 useHead({
-  title: () => $t('home.seo.title'),
+  title: t('home.seo.title'),
   meta: [
     {
       name: 'description',
-      content: () => $t('home.seo.description'),
+      content: t('home.seo.description'),
     },
     {
       name: 'keywords',
-      content: () => $t('home.seo.keywords'),
+      content: t('home.seo.keywords'),
     },
     // Open Graph
     {
       property: 'og:title',
-      content: () => $t('home.seo.ogTitle'),
+      content: t('home.seo.ogTitle'),
     },
     {
       property: 'og:description',
-      content: () => $t('home.seo.ogDescription'),
+      content: t('home.seo.ogDescription'),
     },
     {
       property: 'og:url',
@@ -50,11 +56,11 @@ useHead({
     // Twitter
     {
       name: 'twitter:title',
-      content: () => $t('home.seo.twitterTitle'),
+      content: t('home.seo.twitterTitle'),
     },
     {
       name: 'twitter:description',
-      content: () => $t('home.seo.twitterDescription'),
+      content: t('home.seo.twitterDescription'),
     },
   ],
   link: [

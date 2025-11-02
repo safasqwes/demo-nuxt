@@ -1,0 +1,170 @@
+{
+  "useCases": {
+    "hero": {
+      "title": "使用案例",
+      "subtitle": "探索 NovelHub 如何服务于不同类型的读者和内容创作者"
+    },
+    "readers": {
+      "title": "📚 为读者服务",
+      "casual": {
+        "icon": "🌙",
+        "title": "休闲阅读",
+        "description": "非常适合在空闲时间喜欢发现新故事的读者。浏览我们丰富的图书馆，找到您的下一本最喜欢的小说。",
+        "features": [
+          "按类型和热度浏览",
+          "使用移动应用离线阅读",
+          "收藏喜爱的章节",
+          "跟踪阅读进度"
+        ]
+      },
+      "binge": {
+        "icon": "⚡",
+        "title": "沉浸式阅读",
+        "description": "适合喜欢沉浸在完整系列中的读者。访问完整小说，尽情阅读。",
+        "features": [
+          "完整小说系列访问",
+          "快速、不间断的阅读",
+          "逐章导航",
+          "阅读时间估算"
+        ]
+      },
+      "exploration": {
+        "icon": "🔍",
+        "title": "类型探索",
+        "description": "发现新类型，拓展您的阅读视野。从奇幻到科幻，从言情到修仙小说。",
+        "features": [
+          "高级搜索和筛选",
+          "基于类型的推荐",
+          "相似小说推荐",
+          "热门和流行榜单"
+        ]
+      }
+    },
+    "creators": {
+      "title": "✍️ 为内容创作者服务",
+      "authors": {
+        "icon": "📝",
+        "title": "网络小说作者",
+        "description": "在我们的平台上发布并变现您的网络小说。接触全球受众，建立忠实的读者群。",
+        "features": [
+          "简单的内容发布工具",
+          "收益分享计划",
+          "读者参与度分析",
+          "社区建设功能"
+        ]
+      },
+      "translators": {
+        "icon": "🌍",
+        "title": "译者",
+        "description": "帮助将国际小说带给新的受众。加入我们的翻译计划，为全球文学做出贡献。",
+        "features": [
+          "翻译管理工具",
+          "质量控制系统",
+          "协作翻译功能",
+          "公平的薪酬结构"
+        ]
+      },
+      "illustrators": {
+        "icon": "🎨",
+        "title": "插画师",
+        "description": "为小说创作视觉内容，建立您的作品集。与作者联系，为故事讲述做出贡献。",
+        "features": [
+          "作品集展示平台",
+          "作者协作工具",
+          "委托管理",
+          "创意社区访问"
+        ]
+      }
+    },
+    "education": {
+      "title": "🎓 教育用途",
+      "language": {
+        "icon": "📖",
+        "title": "语言学习",
+        "description": "通过沉浸式阅读提高语言技能。访问多种语言的小说，配有内置翻译工具。",
+        "features": [
+          "多语言内容库",
+          "内置翻译功能",
+          "难度级别指示器",
+          "词汇构建工具"
+        ]
+      },
+      "research": {
+        "icon": "🏫",
+        "title": "学术研究",
+        "description": "访问大量网络小说集合，用于文学、文化研究和数字人文学科的学术研究。",
+        "features": [
+          "学术研究工具",
+          "引用和参考文献管理",
+          "内容分析功能",
+          "机构访问选项"
+        ]
+      },
+      "bookClubs": {
+        "icon": "👥",
+        "title": "读书俱乐部",
+        "description": "围绕网络小说组织和管理读书俱乐部讨论。创建阅读小组并分享见解。",
+        "features": [
+          "小组阅读功能",
+          "讨论论坛",
+          "阅读计划管理",
+          "共享注释和笔记"
+        ]
+      }
+    },
+    "business": {
+      "title": "💼 为企业服务",
+      "corporate": {
+        "icon": "🏢",
+        "title": "企业图书馆",
+        "description": "为员工提供我们的小说图书馆访问权限，用于休闲阅读和团队建设活动。",
+        "features": [
+          "批量许可选项",
+          "使用情况分析和报告",
+          "定制内容策划",
+          "员工参与工具"
+        ]
+      },
+      "integration": {
+        "icon": "📱",
+        "title": "应用集成",
+        "description": "将我们的小说阅读 API 集成到您的移动应用或网站中，为用户提供阅读内容。",
+        "features": [
+          "RESTful API 访问",
+          "移动开发 SDK",
+          "白标解决方案",
+          "技术支持和文档"
+        ]
+      },
+      "marketResearch": {
+        "icon": "📊",
+        "title": "市场研究",
+        "description": "访问阅读趋势和用户行为数据，以了解市场偏好和内容消费模式。",
+        "features": [
+          "阅读趋势分析",
+          "类型流行度数据",
+          "用户行为洞察",
+          "定制研究报告"
+        ]
+      }
+    },
+    "cta": {
+      "title": "🚀 立即开始",
+      "description": "准备好探索 NovelHub 如何满足您的需求了吗？选择您的路径，开始您的旅程。",
+      "viewPricing": "查看定价方案",
+      "contactSales": "联系销售"
+    },
+    "seo": {
+      "title": "使用案例 - NovelHub | 我们如何服务不同用户",
+      "description": "探索 NovelHub 如何为读者、内容创作者、教育工作者和企业提供服务。探索我们的使用案例，找到满足您需求的完美解决方案。",
+      "keywords": "使用案例, 网络小说平台, 读者, 内容创作者, 作者, 译者, 教育工作者, 企业, API 集成",
+      "ogTitle": "使用案例 - NovelHub | 网络小说平台",
+      "ogDescription": "探索 NovelHub 如何为从休闲读者到内容创作者和企业的不同类型用户提供服务。",
+      "ogUrl": "https://novelhub.example.com/use-cases",
+      "twitterTitle": "使用案例 - NovelHub",
+      "twitterDescription": "探索 NovelHub 如何为读者、创作者和企业提供服务。",
+      "canonical": "https://novelhub.example.com/use-cases"
+    }
+  }
+}
+

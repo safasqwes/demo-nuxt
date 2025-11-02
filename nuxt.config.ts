@@ -212,45 +212,47 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
-  // SEO Configuration
+  // SEO Configuration - 全局默认配置
+  // 详细的 SEO 配置可在各个页面的 useHead() 中覆盖
   app: {
+    ...(process.env.NUXT_APP_BASE_URL ? { baseURL: process.env.NUXT_APP_BASE_URL } : {}),
+    buildAssetsDir: '_nutstatic/',
     head: {
       htmlAttrs: {
-        lang: 'en',
-        dir: 'ltr'
+        lang: 'en',  // 默认语言，会被 i18n 插件自动覆盖为当前语言
+        dir: 'ltr'   // 文本方向：ltr=从左到右
       },
       charset: 'utf-8',
       viewport: 'width=device-width, initial-scale=1',
-      title: 'NovelHub - Read Web Novels & Light Novels Online',
+      title: 'NovelHub',  // Fallback title for error pages
       meta: [
-        { name: 'description', content: 'NovelHub is your gateway to thousands of web novels and light novels. Read fantasy, cultivation, sci-fi, romance, and more genres from authors around the world.' },
-        { name: 'keywords', content: 'web novels, light novels, online novels, fantasy novels, cultivation novels, sci-fi novels, romance novels, read novels online, free novels' },
-        { name: 'author', content: 'NovelHub' },
+        // Global meta tags
         { name: 'robots', content: 'index, follow' },
+        { name: 'author', content: 'NovelHub' },
         
-        // Open Graph / Facebook
+        // Open Graph 默认标签（社交分享）
         { property: 'og:type', content: 'website' },
         { property: 'og:site_name', content: 'NovelHub' },
         { property: 'og:title', content: 'NovelHub - Read Web Novels & Light Novels Online' },
-        { property: 'og:description', content: 'Your gateway to thousands of web novels and light novels. Read fantasy, cultivation, sci-fi, romance, and more.' },
+        { property: 'og:description', content: 'Your gateway to thousands of web novels and light novels from around the world.' },
         { property: 'og:image', content: '/og-image.jpg' },
         { property: 'og:locale', content: 'en_US' },
         
-        // Twitter Card
+        // Twitter Card 默认标签
         { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:site', content: '@NovelHub' },
         { name: 'twitter:title', content: 'NovelHub - Read Web Novels & Light Novels Online' },
-        { name: 'twitter:description', content: 'Your gateway to thousands of web novels and light novels from around the world.' },
+        { name: 'twitter:description', content: 'Your gateway to thousands of web novels and light novels.' },
         { name: 'twitter:image', content: '/twitter-image.jpg' },
         
-        // Mobile
-        { name: 'theme-color', content: '#667eea' },
+        // Mobile configuration
+        { name: 'theme-color', content: '#3a9d3a' },
         { name: 'mobile-web-app-capable', content: 'yes' },
         { name: 'apple-mobile-web-app-capable', content: 'yes' },
         { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' },
       ],
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-        { rel: 'canonical', href: 'https://novelhub.example.com' },
       ],
     },
   },
@@ -260,14 +262,13 @@ export default defineNuxtConfig({
   
   // Runtime configuration
   runtimeConfig: {
-    // Private keys (only available on server-side)
-    backendApiUrl: process.env.BACKEND_API_URL || 'http://localhost:8080/api',
     // Public keys (exposed to client-side)
     public: {
       apiBase: '/api',
+      // 服务端 API 域名，所有请求都会拼接该域名
+      apiServerUrl: process.env.NUXT_PUBLIC_API_SERVER_URL || 'http://localhost:8080',
       googleClientId: process.env.NUXT_PUBLIC_GOOGLE_CLIENT_ID || '819627263362-ov95e4dfdafddtrfuq837gh6q4jgo7tn.apps.googleusercontent.com',
-      stripePublishableKey: process.env.NUXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '',
-      baseUrl: process.env.BASE_URL || 'http://localhost:3000'
+      stripePublishableKey: process.env.NUXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ''
     }
   },
   

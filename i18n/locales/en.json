@@ -31,7 +31,8 @@
     "logout": "Logout",
     "profile": "Profile",
     "settings": "Settings",
-    "videoswap": "Video Face Swap"
+    "videoswap": "Video Face Swap",
+    "nanobanana": "Nano Banana Image"
   },
   "auth": {
     "login": "Login",

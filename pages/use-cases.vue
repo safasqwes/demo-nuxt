@@ -1,48 +1,39 @@
 <template>
   <div class="use-cases">
     <div class="hero-section">
-      <h1>Use Cases</h1>
-      <p class="hero-subtitle">Discover how NovelHub serves different types of readers and content creators</p>
+      <h1>{{ $t('useCases.hero.title') }}</h1>
+      <p class="hero-subtitle">{{ $t('useCases.hero.subtitle') }}</p>
     </div>
     
     <div class="content">
       <!-- Readers Section -->
       <section class="use-case-section">
-        <h2>📚 For Readers</h2>
+        <h2>{{ $t('useCases.readers.title') }}</h2>
         <div class="use-cases-grid">
           <div class="use-case-card">
-            <div class="use-case-icon">🌙</div>
-            <h3>Casual Reading</h3>
-            <p>Perfect for readers who enjoy discovering new stories during their free time. Browse our extensive library and find your next favorite novel.</p>
+            <div class="use-case-icon">{{ $t('useCases.readers.casual.icon') }}</div>
+            <h3>{{ $t('useCases.readers.casual.title') }}</h3>
+            <p>{{ $t('useCases.readers.casual.description') }}</p>
             <ul>
-              <li>Browse by genre and popularity</li>
-              <li>Read offline with mobile app</li>
-              <li>Bookmark favorite chapters</li>
-              <li>Track reading progress</li>
+              <li v-for="(feature, index) in $tm('useCases.readers.casual.features')" :key="index">{{ feature }}</li>
             </ul>
           </div>
           
           <div class="use-case-card">
-            <div class="use-case-icon">⚡</div>
-            <h3>Binge Reading</h3>
-            <p>For readers who love to immerse themselves in complete series. Access full novels and binge-read to your heart's content.</p>
+            <div class="use-case-icon">{{ $t('useCases.readers.binge.icon') }}</div>
+            <h3>{{ $t('useCases.readers.binge.title') }}</h3>
+            <p>{{ $t('useCases.readers.binge.description') }}</p>
             <ul>
-              <li>Complete novel series access</li>
-              <li>Fast, uninterrupted reading</li>
-              <li>Chapter-by-chapter navigation</li>
-              <li>Reading time estimates</li>
+              <li v-for="(feature, index) in $tm('useCases.readers.binge.features')" :key="index">{{ feature }}</li>
             </ul>
           </div>
           
           <div class="use-case-card">
-            <div class="use-case-icon">🔍</div>
-            <h3>Genre Exploration</h3>
-            <p>Discover new genres and expand your reading horizons. From fantasy to sci-fi, romance to cultivation novels.</p>
+            <div class="use-case-icon">{{ $t('useCases.readers.exploration.icon') }}</div>
+            <h3>{{ $t('useCases.readers.exploration.title') }}</h3>
+            <p>{{ $t('useCases.readers.exploration.description') }}</p>
             <ul>
-              <li>Advanced search and filters</li>
-              <li>Genre-based recommendations</li>
-              <li>Similar novels suggestions</li>
-              <li>Trending and popular lists</li>
+              <li v-for="(feature, index) in $tm('useCases.readers.exploration.features')" :key="index">{{ feature }}</li>
             </ul>
           </div>
         </div>
@@ -50,41 +41,32 @@
 
       <!-- Content Creators Section -->
       <section class="use-case-section">
-        <h2>✍️ For Content Creators</h2>
+        <h2>{{ $t('useCases.creators.title') }}</h2>
         <div class="use-cases-grid">
           <div class="use-case-card">
-            <div class="use-case-icon">📝</div>
-            <h3>Web Novel Authors</h3>
-            <p>Publish and monetize your web novels on our platform. Reach a global audience and build a dedicated reader base.</p>
+            <div class="use-case-icon">{{ $t('useCases.creators.authors.icon') }}</div>
+            <h3>{{ $t('useCases.creators.authors.title') }}</h3>
+            <p>{{ $t('useCases.creators.authors.description') }}</p>
             <ul>
-              <li>Easy content publishing tools</li>
-              <li>Revenue sharing program</li>
-              <li>Reader engagement analytics</li>
-              <li>Community building features</li>
+              <li v-for="(feature, index) in $tm('useCases.creators.authors.features')" :key="index">{{ feature }}</li>
             </ul>
           </div>
           
           <div class="use-case-card">
-            <div class="use-case-icon">🌍</div>
-            <h3>Translators</h3>
-            <p>Help bring international novels to new audiences. Join our translation program and contribute to global literature.</p>
+            <div class="use-case-icon">{{ $t('useCases.creators.translators.icon') }}</div>
+            <h3>{{ $t('useCases.creators.translators.title') }}</h3>
+            <p>{{ $t('useCases.creators.translators.description') }}</p>
             <ul>
-              <li>Translation management tools</li>
-              <li>Quality control systems</li>
-              <li>Collaborative translation features</li>
-              <li>Fair compensation structure</li>
+              <li v-for="(feature, index) in $tm('useCases.creators.translators.features')" :key="index">{{ feature }}</li>
             </ul>
           </div>
           
           <div class="use-case-card">
-            <div class="use-case-icon">🎨</div>
-            <h3>Illustrators</h3>
-            <p>Create visual content for novels and build your portfolio. Connect with authors and contribute to storytelling.</p>
+            <div class="use-case-icon">{{ $t('useCases.creators.illustrators.icon') }}</div>
+            <h3>{{ $t('useCases.creators.illustrators.title') }}</h3>
+            <p>{{ $t('useCases.creators.illustrators.description') }}</p>
             <ul>
-              <li>Portfolio showcase platform</li>
-              <li>Author collaboration tools</li>
-              <li>Commission management</li>
-              <li>Creative community access</li>
+              <li v-for="(feature, index) in $tm('useCases.creators.illustrators.features')" :key="index">{{ feature }}</li>
             </ul>
           </div>
         </div>
@@ -92,41 +74,32 @@
 
       <!-- Educational Section -->
       <section class="use-case-section">
-        <h2>🎓 For Educational Use</h2>
+        <h2>{{ $t('useCases.education.title') }}</h2>
         <div class="use-cases-grid">
           <div class="use-case-card">
-            <div class="use-case-icon">📖</div>
-            <h3>Language Learning</h3>
-            <p>Improve language skills through immersive reading. Access novels in multiple languages with built-in translation tools.</p>
+            <div class="use-case-icon">{{ $t('useCases.education.language.icon') }}</div>
+            <h3>{{ $t('useCases.education.language.title') }}</h3>
+            <p>{{ $t('useCases.education.language.description') }}</p>
             <ul>
-              <li>Multi-language content library</li>
-              <li>Built-in translation features</li>
-              <li>Difficulty level indicators</li>
-              <li>Vocabulary building tools</li>
+              <li v-for="(feature, index) in $tm('useCases.education.language.features')" :key="index">{{ feature }}</li>
             </ul>
           </div>
           
           <div class="use-case-card">
-            <div class="use-case-icon">🏫</div>
-            <h3>Academic Research</h3>
-            <p>Access a vast collection of web novels for academic research in literature, cultural studies, and digital humanities.</p>
+            <div class="use-case-icon">{{ $t('useCases.education.research.icon') }}</div>
+            <h3>{{ $t('useCases.education.research.title') }}</h3>
+            <p>{{ $t('useCases.education.research.description') }}</p>
             <ul>
-              <li>Academic research tools</li>
-              <li>Citation and reference management</li>
-              <li>Content analysis features</li>
-              <li>Institutional access options</li>
+              <li v-for="(feature, index) in $tm('useCases.education.research.features')" :key="index">{{ feature }}</li>
             </ul>
           </div>
           
           <div class="use-case-card">
-            <div class="use-case-icon">👥</div>
-            <h3>Book Clubs</h3>
-            <p>Organize and manage book club discussions around web novels. Create reading groups and share insights.</p>
+            <div class="use-case-icon">{{ $t('useCases.education.bookClubs.icon') }}</div>
+            <h3>{{ $t('useCases.education.bookClubs.title') }}</h3>
+            <p>{{ $t('useCases.education.bookClubs.description') }}</p>
             <ul>
-              <li>Group reading features</li>
-              <li>Discussion forums</li>
-              <li>Reading schedule management</li>
-              <li>Shared annotations and notes</li>
+              <li v-for="(feature, index) in $tm('useCases.education.bookClubs.features')" :key="index">{{ feature }}</li>
             </ul>
           </div>
         </div>
@@ -134,41 +107,32 @@
 
       <!-- Business Section -->
       <section class="use-case-section">
-        <h2>💼 For Businesses</h2>
+        <h2>{{ $t('useCases.business.title') }}</h2>
         <div class="use-cases-grid">
           <div class="use-case-card">
-            <div class="use-case-icon">🏢</div>
-            <h3>Corporate Libraries</h3>
-            <p>Provide employees with access to our novel library for recreational reading and team building activities.</p>
+            <div class="use-case-icon">{{ $t('useCases.business.corporate.icon') }}</div>
+            <h3>{{ $t('useCases.business.corporate.title') }}</h3>
+            <p>{{ $t('useCases.business.corporate.description') }}</p>
             <ul>
-              <li>Bulk licensing options</li>
-              <li>Usage analytics and reporting</li>
-              <li>Custom content curation</li>
-              <li>Employee engagement tools</li>
+              <li v-for="(feature, index) in $tm('useCases.business.corporate.features')" :key="index">{{ feature }}</li>
             </ul>
           </div>
           
           <div class="use-case-card">
-            <div class="use-case-icon">📱</div>
-            <h3>App Integration</h3>
-            <p>Integrate our novel reading API into your mobile apps or websites to provide reading content to your users.</p>
+            <div class="use-case-icon">{{ $t('useCases.business.integration.icon') }}</div>
+            <h3>{{ $t('useCases.business.integration.title') }}</h3>
+            <p>{{ $t('useCases.business.integration.description') }}</p>
             <ul>
-              <li>RESTful API access</li>
-              <li>SDK for mobile development</li>
-              <li>White-label solutions</li>
-              <li>Technical support and documentation</li>
+              <li v-for="(feature, index) in $tm('useCases.business.integration.features')" :key="index">{{ feature }}</li>
             </ul>
           </div>
           
           <div class="use-case-card">
-            <div class="use-case-icon">📊</div>
-            <h3>Market Research</h3>
-            <p>Access reading trends and user behavior data to understand market preferences and content consumption patterns.</p>
+            <div class="use-case-icon">{{ $t('useCases.business.marketResearch.icon') }}</div>
+            <h3>{{ $t('useCases.business.marketResearch.title') }}</h3>
+            <p>{{ $t('useCases.business.marketResearch.description') }}</p>
             <ul>
-              <li>Reading trend analytics</li>
-              <li>Genre popularity data</li>
-              <li>User behavior insights</li>
-              <li>Custom research reports</li>
+              <li v-for="(feature, index) in $tm('useCases.business.marketResearch.features')" :key="index">{{ feature }}</li>
             </ul>
           </div>
         </div>
@@ -176,14 +140,14 @@
 
       <!-- Getting Started Section -->
       <section class="getting-started">
-        <h2>🚀 Get Started Today</h2>
-        <p>Ready to explore how NovelHub can serve your needs? Choose your path and start your journey.</p>
+        <h2>{{ $t('useCases.cta.title') }}</h2>
+        <p>{{ $t('useCases.cta.description') }}</p>
         <div class="cta-buttons">
-          <NuxtLink to="/products" class="cta-button primary">
-            View Pricing Plans
+          <NuxtLink to="/pricing" class="cta-button primary">
+            {{ $t('useCases.cta.viewPricing') }}
           </NuxtLink>
           <NuxtLink to="/contact-us" class="cta-button secondary">
-            Contact Sales
+            {{ $t('useCases.cta.contactSales') }}
           </NuxtLink>
         </div>
       </section>
@@ -193,44 +157,45 @@
 
 <script setup lang="ts">
 // Page SEO metadata
+const { t } = useI18n()
 useHead({
-  title: 'Use Cases - NovelHub | How We Serve Different Users',
+  title: t('useCases.seo.title'),
   meta: [
     {
       name: 'description',
-      content: 'Discover how NovelHub serves readers, content creators, educators, and businesses. Explore our use cases and find the perfect solution for your needs.',
+      content: t('useCases.seo.description'),
     },
     {
       name: 'keywords',
-      content: 'use cases, web novel platform, readers, content creators, authors, translators, educators, businesses, API integration',
+      content: t('useCases.seo.keywords'),
     },
     // Open Graph
     {
       property: 'og:title',
-      content: 'Use Cases - NovelHub | Web Novel Platform',
+      content: t('useCases.seo.ogTitle'),
     },
     {
       property: 'og:description',
-      content: 'Explore how NovelHub serves different types of users from casual readers to content creators and businesses.',
+      content: t('useCases.seo.ogDescription'),
     },
     {
       property: 'og:url',
-      content: 'https://novelhub.example.com/use-cases',
+      content: t('useCases.seo.ogUrl'),
     },
     // Twitter
     {
       name: 'twitter:title',
-      content: 'Use Cases - NovelHub',
+      content: t('useCases.seo.twitterTitle'),
     },
     {
       name: 'twitter:description',
-      content: 'Discover how NovelHub serves readers, creators, and businesses.',
+      content: t('useCases.seo.twitterDescription'),
     },
   ],
   link: [
     {
       rel: 'canonical',
-      href: 'https://novelhub.example.com/use-cases',
+      href: t('useCases.seo.canonical'),
     },
   ],
 })

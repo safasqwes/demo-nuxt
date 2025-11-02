@@ -52,7 +52,7 @@ export class PaymentService {
   // 获取支持的产品列表
   async getProducts(): Promise<{ success: boolean; products?: PlanResponse[]; error?: string }> {
     try {
-      const response = await http.get(`${this.baseUrl}/plans`)
+      const response = await http.get('/api/orders/plans')
       return { success: true, products: response.data }
     } catch (error: any) {
       console.error('Get products error:', error)
@@ -63,7 +63,7 @@ export class PaymentService {
   // 获取套餐列表 (别名方法，为了向后兼容)
   async getPlans(): Promise<{ success: boolean; plans?: PlanResponse[]; error?: string }> {
     try {
-      const response = await http.get(`${this.baseUrl}/plans`)
+      const response = await http.get('/api/orders/plans')
       return { success: true, plans: response.data }
     } catch (error: any) {
       console.error('Get plans error:', error)

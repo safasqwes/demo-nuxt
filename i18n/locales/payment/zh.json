@@ -1,0 +1,167 @@
+{
+  "payment": {
+    "header": {
+      "title": "Web3 加密货币支付",
+      "subtitle": "使用您的 Web3 钱包通过以太坊、USDT 或其他支持的加密货币进行支付",
+      "selectNetwork": "选择测试网络"
+    },
+    "network": {
+      "sepolia": "Sepolia",
+      "sepoliaTokens": "ETH, USDT, USDC, DAI",
+      "polygonAmoy": "Polygon Amoy",
+      "polygonAmoyTokens": "MATIC, USDT, USDC, DAI",
+      "current": "网络：",
+      "connected": "已连接到",
+      "switchTo": "切换到",
+      "switchNetwork": "切换网络：",
+      "supportedTokens": "支持的代币："
+    },
+    "wallet": {
+      "title": "支付详情",
+      "notConnected": "钱包未连接",
+      "notConnectedDesc": "请连接您的钱包以继续支付",
+      "connected": "钱包已连接",
+      "refreshBalance": "刷新余额",
+      "loading": "加载中...",
+      "balance": "余额："
+    },
+    "paymentInfo": {
+      "title": "支付信息",
+      "orderNumber": "订单号：",
+      "plan": "方案：",
+      "amount": "金额：",
+      "cryptoAmount": "加密货币金额：",
+      "recipientAddress": "收款地址：",
+      "chainId": "链 ID："
+    },
+    "planDetails": {
+      "title": "套餐详情",
+      "name": "套餐名称：",
+      "type": "套餐类型：",
+      "subscription": "订阅",
+      "oneTime": "一次性",
+      "price": "价格：",
+      "points": "积分：",
+      "pointsUnit": "积分",
+      "duration": "时长：",
+      "status": "状态：",
+      "active": "激活",
+      "inactive": "未激活",
+      "created": "创建时间：",
+      "description": "描述：",
+      "features": "特性：",
+      "pointsValue": "积分价值",
+      "pointsValueDesc": "支付成功后您将获得 {points} 积分。积分可用于解锁高级内容和功能。",
+      "loading": "加载套餐详情中...",
+      "na": "不适用"
+    },
+    "form": {
+      "amount": "支付金额",
+      "description": "描述",
+      "descriptionPlaceholder": "NovelHub 高级订阅支付",
+      "estimatedGas": "预估 Gas 费：",
+      "orderPayment": "订单支付",
+      "externalPayment": "外部支付",
+      "currencyLocked": "货币已锁定",
+      "currencyLockedDesc": "外部支付模式下无法更改货币",
+      "amountLocked": "金额和货币已从外部来源锁定",
+      "orderAmountLocked": "订单 #{orderNumber} - 金额和货币已锁定"
+    },
+    "actions": {
+      "connectWallet": "连接钱包",
+      "connecting": "连接中...",
+      "pay": "支付 {amount} {currency}",
+      "processingPayment": "处理支付中...",
+      "paymentInProgress": "支付进行中...",
+      "inProgressNote": "支付进行中...请等待确认",
+      "transaction": "交易：",
+      "cannotSwitchNetwork": "支付进行中无法切换网络。请等待当前支付完成。"
+    },
+    "paymentStatus": {
+      "title": "支付状态",
+      "status": "状态：",
+      "pending": "待处理",
+      "completed": "已完成",
+      "processing": "处理中",
+      "expired": "已过期",
+      "cancelled": "已取消",
+      "txHash": "交易哈希：",
+      "confirmations": "确认数：",
+      "confirmed": "交易已确认",
+      "confirmationsCount": "{count} 次确认",
+      "paymentCompleted": "支付成功完成！"
+    },
+    "timeout": {
+      "title": "支付超时",
+      "remaining": "剩余时间："
+    },
+    "currencies": {
+      "title": "支持的货币"
+    },
+    "history": {
+      "title": "最近支付",
+      "empty": "暂无支付记录",
+      "completed": "已完成"
+    },
+    "security": {
+      "title": "安全与隐私",
+      "blockchain": "所有交易均由区块链技术保护",
+      "privateKeys": "我们绝不存储您的私钥或助记词",
+      "smartContracts": "智能合约确保安全透明的支付"
+    },
+    "faucet": {
+      "title": "需要测试代币？",
+      "getFreeEth": "从以下地址获取免费 ETH：",
+      "getFreeMatic": "从以下地址获取免费 MATIC：",
+      "sepoliaFaucet": "Sepolia 水龙头",
+      "polygonFaucet": "Polygon 水龙头"
+    },
+    "messages": {
+      "walletConnected": "钱包已连接",
+      "connectedTo": "已连接到 {address}",
+      "connectionFailed": "连接失败",
+      "failedToConnect": "连接钱包失败。请重试。",
+      "unsupportedNetwork": "不支持的网络",
+      "pleaseSwitch": "请切换到支持的测试网络（Sepolia 或 Polygon Amoy）",
+      "networkSwitched": "网络已切换",
+      "switchedTo": "成功切换到 {network} 测试网",
+      "networkSwitchFailed": "网络切换失败",
+      "failedToSwitch": "切换网络失败",
+      "paymentInProgress": "支付进行中",
+      "pleaseWait": "请等待当前支付完成后再开始新的支付。",
+      "insufficientBalance": "余额不足",
+      "insufficientFunds": "您有 {balance} {currency}，但需要 {amount} {currency} 加 Gas 费。请向您的钱包添加更多资金。",
+      "transactionSubmitted": "交易已提交",
+      "transactionSubmittedDesc": "您的交易已提交到区块链。等待确认中...",
+      "transactionFailed": "交易失败",
+      "transactionFailedDesc": "您的交易失败。请重试。",
+      "transactionRejected": "交易被拒绝",
+      "youCancelled": "您取消了交易。",
+      "gasEstimationFailed": "Gas 估算失败",
+      "paymentFailed": "支付失败",
+      "paymentFailedDesc": "无法处理支付。请重试。",
+      "unexpectedError": "发生意外错误。请重试。",
+      "paymentConfirmed": "支付已确认，{confirmations} 次确认！",
+      "paymentSuccessful": "支付成功",
+      "paymentSuccessfulDesc": "您的支付已确认并处理！",
+      "paymentPending": "支付待处理",
+      "paymentPendingDesc": "交易已提交。等待 {remaining} 次额外确认。",
+      "verificationFailed": "支付验证失败",
+      "verificationFailedDesc": "验证支付失败",
+      "verificationError": "验证错误",
+      "verificationErrorDesc": "验证支付失败。请联系支持。",
+      "paymentNotFound": "未找到支付",
+      "paymentNotFoundDesc": "未找到支付或支付 ID 无效",
+      "paymentLoadError": "支付加载错误",
+      "paymentLoadErrorDesc": "加载支付信息失败。请重试。",
+      "paymentTimeout": "支付超时",
+      "paymentTimeoutDesc": "支付已过期。请创建新的支付。"
+    },
+    "seo": {
+      "title": "Web3 加密货币支付 - NovelHub",
+      "description": "使用您的 Web3 钱包通过以太坊、USDT、USDC 和其他支持的加密货币为 NovelHub 服务付款。",
+      "keywords": "web3 支付, 加密货币支付, 以太坊, usdt, 区块链支付, novelhub"
+    }
+  }
+}
+

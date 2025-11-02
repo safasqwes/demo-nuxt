@@ -1,0 +1,29 @@
+{
+  "paymentSuccess": {
+    "title": "Payment Successful!",
+    "message": "Your payment has been confirmed and processed successfully.",
+    "orderDetails": {
+      "title": "Order Details",
+      "orderId": "Order ID:",
+      "amount": "Amount:",
+      "description": "Description:",
+      "status": "Status:",
+      "transaction": "Transaction:"
+    },
+    "nextSteps": {
+      "title": "What's Next?",
+      "step1": "Your subscription/content has been activated",
+      "step2": "You can now access all premium features",
+      "step3": "A confirmation email has been sent to your account"
+    },
+    "actions": {
+      "continueReading": "Continue Reading",
+      "browseMore": "Browse More Content"
+    },
+    "seo": {
+      "title": "Payment Successful - NovelHub",
+      "description": "Your payment has been successfully processed. Continue enjoying premium content on NovelHub."
+    }
+  }
+}
+

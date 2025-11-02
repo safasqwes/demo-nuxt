@@ -29,7 +29,7 @@
           <ul class="space-y-2">
             <li><NuxtLink to="/about" class="text-green-200 hover:text-white transition-colors text-sm">{{ $t('footer.links.aboutUs') }}</NuxtLink></li>
             <li><NuxtLink to="/use-cases" class="text-green-200 hover:text-white transition-colors text-sm">{{ $t('footer.links.useCases') }}</NuxtLink></li>
-            <li><NuxtLink to="/pricing" class="text-green-200 hover:text-white transition-colors text-sm">{{ $t('footer.links.pricing') }}</NuxtLink></li>
+            <!-- Pricing link hidden until payment functionality is ready -->
           </ul>
         </div>
 

@@ -25,12 +25,28 @@ if (typeof window !== 'undefined') {
 }
 
 // Get runtime config
-const getConfig = () => {
-  // 使用默认配置，避免在模块顶层调用 useRuntimeConfig
+const getRuntimeConfig = () => {
+  // 在客户端和服务端都能安全使用的配置获取方式
+  if (typeof window !== 'undefined') {
+    // 客户端：从 window 或 useRuntimeConfig 获取
+    try {
+      const config = useRuntimeConfig()
+      return config
+    } catch {
+      // 如果无法获取，使用默认值
+      return {
+        public: {
+          apiBase: '/api',
+          apiServerUrl: process.env.NUXT_PUBLIC_API_SERVER_URL || 'http://localhost:8080'
+        }
+      }
+    }
+  }
+  // 服务端：使用默认配置或环境变量
   return {
     public: {
       apiBase: '/api',
-      baseUrl: 'http://localhost:3000'
+      apiServerUrl: process.env.NUXT_PUBLIC_API_SERVER_URL || 'http://localhost:8080'
     }
   }
 }
@@ -38,13 +54,30 @@ const getConfig = () => {
 // Origin from
 const origin_from = getMd5ByString('NovelHub')
 
-// Create axios instance
+// Get API server URL from runtime config
+const getApiServerUrl = (): string => {
+  try {
+    const config = getRuntimeConfig()
+    const apiServerUrl = config.public?.apiServerUrl as string | undefined
+    
+    if (apiServerUrl && typeof apiServerUrl === 'string') {
+      // 确保 URL 不以 / 结尾，避免拼接时出现问题
+      return apiServerUrl.endsWith('/') ? apiServerUrl.slice(0, -1) : apiServerUrl
+    }
+  } catch (error) {
+    console.warn('Failed to get runtime config, using default:', error)
+  }
+  
+  // 默认配置
+  const defaultUrl = process.env.NUXT_PUBLIC_API_SERVER_URL || 'http://localhost:8080'
+  return defaultUrl.endsWith('/') ? defaultUrl.slice(0, -1) : defaultUrl
+}
+
+// Create axios instance with configured API server URL
 const instance = axios.create({
-  baseURL: process.env.NODE_ENV === 'production' 
-    ? 'https://your-production-api.com' 
-    : '/', // Use Nuxt proxy in development
+  baseURL: getApiServerUrl(),
   timeout: 30000,
-  withCredentials: false,
+  withCredentials: true, // 跨域请求时可能需要携带凭证
   // Add connection timeout and retry configuration
   maxRedirects: 5,
   validateStatus: (status) => status < 500, // Don't throw for 4xx errors

@@ -31,7 +31,8 @@
     "logout": "退出",
     "profile": "个人资料",
     "settings": "设置",
-    "videoswap": "视频人脸交换"
+    "videoswap": "视频人脸交换",
+    "nanobanana": "Nano Banana 图像生成"
   },
   "auth": {
     "login": "登录",

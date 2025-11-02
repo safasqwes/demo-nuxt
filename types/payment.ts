@@ -178,3 +178,45 @@ export interface PaymentStatus {
   confirmations: number
   requiredConfirmations: number
 }
+
+// Stripe 创建 Checkout Session 请求
+export interface CreateStripeCheckoutRequest {
+  planId: number
+  successUrl?: string
+  cancelUrl?: string
+}
+
+// Stripe 创建 Checkout Session 响应
+export interface CreateStripeCheckoutResponse {
+  success: boolean
+  sessionId?: string
+  sessionUrl?: string
+  error?: string
+}
+
+// Binance Pay 创建订单请求
+export interface CreateBinancePayOrderRequest {
+  planId: number
+  returnUrl?: string
+  cancelUrl?: string
+}
+
+// Binance Pay 创建订单响应
+export interface CreateBinancePayOrderResponse {
+  success: boolean
+  prepayId?: string
+  qrcodeLink?: string
+  qrContent?: string
+  checkoutUrl?: string
+  deeplink?: string
+  universalUrl?: string
+  expireTime?: number
+  error?: string
+}
+
+// Binance Pay 订单状态
+export interface BinancePayOrderStatus {
+  status: 'INITIAL' | 'PENDING' | 'PAID' | 'CANCELED' | 'ERROR' | 'REFUNDING' | 'REFUNDED' | 'EXPIRED'
+  transactionId?: string
+  transactTime?: number
+}

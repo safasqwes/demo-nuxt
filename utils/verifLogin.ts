@@ -131,14 +131,11 @@ export const handleGoogleLoginAction = async () => {
   const { $googleAuth } = useNuxtApp()
 
   try {
-    // 检查 FedCM 支持
-    $googleAuth.checkFedcmSupport()
-
     // 获取 Google Client ID（从 Nuxt 运行时配置中获取）
     const config = useRuntimeConfig()
     const clientId = config.public.googleClientId
 
-    // 处理 Google 登录
+    // 处理 Google 登录（使用传统的 renderButton 方式，不使用 FedCM）
     await $googleAuth.handleGoogleLogin(clientId, (response: any) => {
       $googleAuth.handleGoogleCallback(response, userStore.googleLogin, notify, () => {
         // 登录成功，触发全局事件

@@ -1,0 +1,29 @@
+{
+  "paymentSuccess": {
+    "title": "支付成功！",
+    "message": "您的支付已确认并成功处理。",
+    "orderDetails": {
+      "title": "订单详情",
+      "orderId": "订单号：",
+      "amount": "金额：",
+      "description": "描述：",
+      "status": "状态：",
+      "transaction": "交易："
+    },
+    "nextSteps": {
+      "title": "接下来做什么？",
+      "step1": "您的订阅/内容已激活",
+      "step2": "您现在可以访问所有高级功能",
+      "step3": "确认邮件已发送到您的账户"
+    },
+    "actions": {
+      "continueReading": "继续阅读",
+      "browseMore": "浏览更多内容"
+    },
+    "seo": {
+      "title": "支付成功 - NovelHub",
+      "description": "您的支付已成功处理。继续享受 NovelHub 上的高级内容。"
+    }
+  }
+}
+

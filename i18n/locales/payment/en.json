@@ -1,0 +1,167 @@
+{
+  "payment": {
+    "header": {
+      "title": "Web3 Crypto Payment",
+      "subtitle": "Pay with your Web3 wallet using Ethereum, USDT, or other supported cryptocurrencies",
+      "selectNetwork": "Select Test Network"
+    },
+    "network": {
+      "sepolia": "Sepolia",
+      "sepoliaTokens": "ETH, USDT, USDC, DAI",
+      "polygonAmoy": "Polygon Amoy",
+      "polygonAmoyTokens": "MATIC, USDT, USDC, DAI",
+      "current": "Network:",
+      "connected": "Connected to",
+      "switchTo": "Switch to",
+      "switchNetwork": "Switch Network:",
+      "supportedTokens": "Supported Tokens:"
+    },
+    "wallet": {
+      "title": "Payment Details",
+      "notConnected": "Wallet not connected",
+      "notConnectedDesc": "Please connect your wallet to proceed with payment",
+      "connected": "Wallet connected",
+      "refreshBalance": "Refresh Balance",
+      "loading": "Loading...",
+      "balance": "Balance:"
+    },
+    "paymentInfo": {
+      "title": "Payment Information",
+      "orderNumber": "Order Number:",
+      "plan": "Plan:",
+      "amount": "Amount:",
+      "cryptoAmount": "Crypto Amount:",
+      "recipientAddress": "Recipient Address:",
+      "chainId": "Chain ID:"
+    },
+    "planDetails": {
+      "title": "Package Details",
+      "name": "Package Name:",
+      "type": "Package Type:",
+      "subscription": "Subscription",
+      "oneTime": "One-time",
+      "price": "Price:",
+      "points": "Points:",
+      "pointsUnit": "points",
+      "duration": "Duration:",
+      "status": "Status:",
+      "active": "Active",
+      "inactive": "Inactive",
+      "created": "Created:",
+      "description": "Description:",
+      "features": "Features:",
+      "pointsValue": "Points Value",
+      "pointsValueDesc": "You will receive {points} points upon successful payment. Points can be used to unlock premium content and features.",
+      "loading": "Loading package details...",
+      "na": "N/A"
+    },
+    "form": {
+      "amount": "Payment Amount",
+      "description": "Description",
+      "descriptionPlaceholder": "Payment for NovelHub Premium Subscription",
+      "estimatedGas": "Estimated Gas Fee:",
+      "orderPayment": "Order Payment",
+      "externalPayment": "External Payment",
+      "currencyLocked": "Currency Locked",
+      "currencyLockedDesc": "Currency cannot be changed in external payment mode",
+      "amountLocked": "Amount and currency are locked from external source",
+      "orderAmountLocked": "Order #{orderNumber} - Amount and currency are locked"
+    },
+    "actions": {
+      "connectWallet": "Connect Wallet",
+      "connecting": "Connecting...",
+      "pay": "Pay {amount} {currency}",
+      "processingPayment": "Processing Payment...",
+      "paymentInProgress": "Payment in Progress...",
+      "inProgressNote": "Payment in progress... Please wait for confirmation",
+      "transaction": "Transaction:",
+      "cannotSwitchNetwork": "Cannot switch network while payment is in progress. Please wait for the current payment to complete."
+    },
+    "paymentStatus": {
+      "title": "Payment Status",
+      "status": "Status:",
+      "pending": "Pending",
+      "completed": "Completed",
+      "processing": "Processing",
+      "expired": "Expired",
+      "cancelled": "Cancelled",
+      "txHash": "Transaction Hash:",
+      "confirmations": "Confirmations:",
+      "confirmed": "Transaction Confirmed",
+      "confirmationsCount": "{count} confirmations",
+      "paymentCompleted": "Payment completed successfully!"
+    },
+    "timeout": {
+      "title": "Payment Timeout",
+      "remaining": "Time Remaining:"
+    },
+    "currencies": {
+      "title": "Supported Currencies"
+    },
+    "history": {
+      "title": "Recent Payments",
+      "empty": "No payment history yet",
+      "completed": "Completed"
+    },
+    "security": {
+      "title": "Security & Privacy",
+      "blockchain": "All transactions are secured by blockchain technology",
+      "privateKeys": "We never store your private keys or seed phrases",
+      "smartContracts": "Smart contracts ensure secure and transparent payments"
+    },
+    "faucet": {
+      "title": "Need test tokens?",
+      "getFreeEth": "Get free ETH from:",
+      "getFreeMatic": "Get free MATIC from:",
+      "sepoliaFaucet": "Sepolia Faucet",
+      "polygonFaucet": "Polygon Faucet"
+    },
+    "messages": {
+      "walletConnected": "Wallet Connected",
+      "connectedTo": "Connected to {address}",
+      "connectionFailed": "Connection Failed",
+      "failedToConnect": "Failed to connect wallet. Please try again.",
+      "unsupportedNetwork": "Unsupported Network",
+      "pleaseSwitch": "Please switch to a supported testnet (Sepolia or Polygon Amoy)",
+      "networkSwitched": "Network Switched",
+      "switchedTo": "Successfully switched to {network} Testnet",
+      "networkSwitchFailed": "Network Switch Failed",
+      "failedToSwitch": "Failed to switch network",
+      "paymentInProgress": "Payment in Progress",
+      "pleaseWait": "Please wait for the current payment to complete before starting a new one.",
+      "insufficientBalance": "Insufficient Balance",
+      "insufficientFunds": "You have {balance} {currency}, but need {amount} {currency} plus gas fees. Please add more funds to your wallet.",
+      "transactionSubmitted": "Transaction Submitted",
+      "transactionSubmittedDesc": "Your transaction has been submitted to the blockchain. Waiting for confirmation...",
+      "transactionFailed": "Transaction Failed",
+      "transactionFailedDesc": "Your transaction has failed. Please try again.",
+      "transactionRejected": "Transaction Rejected",
+      "youCancelled": "You cancelled the transaction.",
+      "gasEstimationFailed": "Gas Estimation Failed",
+      "paymentFailed": "Payment Failed",
+      "paymentFailedDesc": "Payment could not be processed. Please try again.",
+      "unexpectedError": "An unexpected error occurred. Please try again.",
+      "paymentConfirmed": "Payment confirmed with {confirmations} confirmations!",
+      "paymentSuccessful": "Payment Successful",
+      "paymentSuccessfulDesc": "Your payment has been confirmed and processed!",
+      "paymentPending": "Payment Pending",
+      "paymentPendingDesc": "Transaction submitted. Waiting for {remaining} more confirmations.",
+      "verificationFailed": "Payment Verification Failed",
+      "verificationFailedDesc": "Failed to verify payment",
+      "verificationError": "Verification Error",
+      "verificationErrorDesc": "Failed to verify payment. Please contact support.",
+      "paymentNotFound": "Payment Not Found",
+      "paymentNotFoundDesc": "Payment not found or invalid payment ID",
+      "paymentLoadError": "Payment Load Error",
+      "paymentLoadErrorDesc": "Failed to load payment information. Please try again.",
+      "paymentTimeout": "Payment Timeout",
+      "paymentTimeoutDesc": "Payment has expired. Please create a new payment."
+    },
+    "seo": {
+      "title": "Web3 Crypto Payment - NovelHub",
+      "description": "Pay with your Web3 wallet using Ethereum, USDT, USDC, and other supported cryptocurrencies for NovelHub services.",
+      "keywords": "web3 payment, crypto payment, ethereum, usdt, blockchain payment, novelhub"
+    }
+  }
+}
+
