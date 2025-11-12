@@ -24,9 +24,48 @@ export default defineNuxtConfig({
 
   // i18n configuration
   i18n: {
+    langDir: 'locales',
     locales: [
-      { code: 'en', name: 'English', file: 'en.json' },
-      { code: 'zh', name: '中文', file: 'zh.json' }
+      {
+        code: 'en',
+        name: 'English',
+        files: [
+          'en.json',
+          'home/en.json',
+          'about/en.json',
+          'contact-us/en.json',
+          'payment/en.json',
+          'payment-success/en.json',
+          'pricing/en.json',
+          'privacy-policy/en.json',
+          'terms-of-service/en.json',
+          'use-cases/en.json',
+          'feature/effect/en.json',
+          'feature/faceswap/en.json',
+          'feature/image/en.json',
+          'feature/videoswap/en.json',
+        ]
+      },
+      {
+        code: 'zh',
+        name: '中文',
+        files: [
+          'zh.json',
+          'home/zh.json',
+          'about/zh.json',
+          'contact-us/zh.json',
+          'payment/zh.json',
+          'payment-success/zh.json',
+          'pricing/zh.json',
+          'privacy-policy/zh.json',
+          'terms-of-service/zh.json',
+          'use-cases/zh.json',
+          'feature/effect/zh.json',
+          'feature/faceswap/zh.json',
+          'feature/image/zh.json',
+          'feature/videoswap/zh.json',
+        ]
+      }
     ],
     defaultLocale: 'en',
     strategy: 'no_prefix',
