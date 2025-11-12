@@ -128,7 +128,7 @@
         "email": "邮箱：",
         "address": "地址：",
         "phone": "电话：",
-        "emailValue": "legal@novelhub.com",
+        "emailValue": "legal{'@'}novelhub.com",
         "addressValue": "NovelHub 法律部门，网络小说街 123 号，数字城，DC 12345",
         "phoneValue": "+1 (555) 123-4567"
       }

@@ -10,7 +10,7 @@
       "message": "消息",
       "selectSubject": "选择主题",
       "namePlaceholder": "您的姓名",
-      "emailPlaceholder": "your.email@example.com",
+      "emailPlaceholder": "your.email{'@'}example.com",
       "messagePlaceholder": "告诉我们如何帮助您...",
       "sendingMessage": "发送中...",
       "sendMessage": "发送消息"
@@ -33,7 +33,7 @@
     "faq": {
       "title": "常见问题",
       "accountHelp": "如何获得账户帮助？",
-      "accountHelpAnswer": "请联系我们的支持团队 support@novelhub.com 或使用上面的联系表单。",
+      "accountHelpAnswer": "请联系我们的支持团队 support{'@'}novelhub.com 或使用上面的联系表单。",
       "businessHours": "您的营业时间是什么？",
       "businessHoursAnswer": "我们周一至周五上午9点到下午6点（东部时间）提供服务。",
       "responseTime": "多久能收到回复？",

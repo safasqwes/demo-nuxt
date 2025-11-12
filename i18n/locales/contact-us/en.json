@@ -10,7 +10,7 @@
       "message": "Message",
       "selectSubject": "Select a subject",
       "namePlaceholder": "Your full name",
-      "emailPlaceholder": "your.email@example.com",
+      "emailPlaceholder": "your.email{'@'}example.com",
       "messagePlaceholder": "Tell us how we can help you...",
       "sendingMessage": "Sending Message...",
       "sendMessage": "Send Message"
@@ -33,7 +33,7 @@
     "faq": {
       "title": "Frequently Asked Questions",
       "accountHelp": "How can I get help with my account?",
-      "accountHelpAnswer": "Contact our support team at support@novelhub.com or use the contact form above.",
+      "accountHelpAnswer": "Contact our support team at support{'@'}novelhub.com or use the contact form above.",
       "businessHours": "What are your business hours?",
       "businessHoursAnswer": "We're available Monday through Friday, 9AM to 6PM EST.",
       "responseTime": "How quickly will I get a response?",

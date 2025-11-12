@@ -128,7 +128,7 @@
         "email": "Email:",
         "address": "Address:",
         "phone": "Phone:",
-        "emailValue": "legal@novelhub.com",
+        "emailValue": "legal{'@'}novelhub.com",
         "addressValue": "NovelHub Legal Department, 123 Web Novel Street, Digital City, DC 12345",
         "phoneValue": "+1 (555) 123-4567"
       }
